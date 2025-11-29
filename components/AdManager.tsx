@@ -17,10 +17,24 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
   const interstitialSlotRef = useRef<any>(null);
   const isInitialized = useRef(false);
 
-  // 1. Inicialização Única (Apenas GAM, VideoWall está no index.html)
+  // 1. Inicialização Única
   useEffect(() => {
     if (isInitialized.current) return;
     isInitialized.current = true;
+
+    // --- VIDEOWALL SCRIPT (Videoo.tv) ---
+    // Injeção robusta para garantir execução
+    const scriptId = "videoowall-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://static.videoo.tv/a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba.js";
+      script.async = true;
+      script.defer = true;
+      script.setAttribute("data-id", "a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba");
+      script.setAttribute("data-cfasync", "false");
+      document.body.appendChild(script);
+    }
 
     // --- GOOGLE AD MANAGER INIT ---
     window.googletag = window.googletag || { cmd: [] };
@@ -33,13 +47,11 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
 
       // --- DEFINIÇÃO SLOTS ESPECIAIS ---
       
-      // Interstitial (OutOfPage)
-      // É crucial que este defineOutOfPageSlot seja chamado cedo
+      // Interstitial
       const interstitial = window.googletag.defineOutOfPageSlot(
         '/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial',
         window.googletag.enums.OutOfPageFormat.INTERSTITIAL
       );
-      
       if (interstitial) {
         interstitial.addService(pubads);
         interstitialSlotRef.current = interstitial;
@@ -50,13 +62,12 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
         '/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor',
         window.googletag.enums.OutOfPageFormat.TOP_ANCHOR
       );
-      
       if (anchor) {
         anchor.addService(pubads);
         anchorSlotRef.current = anchor;
       }
 
-      // Configurações Globais
+      // Configurações
       pubads.enableLazyLoad({
         fetchMarginPercent: 200, 
         renderMarginPercent: 100,
@@ -64,14 +75,9 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
       });
       
       pubads.collapseEmptyDivs();
-      
-      // Habilita serviços
       window.googletag.enableServices();
 
       // Exibir Slots Especiais Iniciais
-      // Nota: display(null) ou display(slot) para out-of-page dependendo da implementação,
-      // mas para OutOfPageFormat modernos, o define geralmente basta se o targeting bater.
-      // Forçamos o display para garantir.
       if (interstitial) window.googletag.display(interstitial);
       if (anchor) window.googletag.display(anchor);
     });
@@ -84,23 +90,20 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
     window.googletag.cmd.push(() => {
       const pubads = window.googletag.pubads();
       
-      // Atualiza targeting da página (Simula navegação real)
+      // Atualiza targeting da página
       pubads.setTargeting('page_view', currentView);
 
       // Slots para atualizar
-      const slotsToRefresh: any[] = []; 
-      
+      const slotsToRefresh: any[] = []; // Fix: Explicitly type array as any[]
       if (anchorSlotRef.current) slotsToRefresh.push(anchorSlotRef.current);
-      
-      // O Interstitial nem sempre deve ser atualizado a cada clique para evitar violação de política,
-      // mas tecnicamente aqui atualizamos para garantir que ele tenha chance de aparecer na nova "página".
       if (interstitialSlotRef.current) slotsToRefresh.push(interstitialSlotRef.current);
 
       if (slotsToRefresh.length > 0) {
-        // Pequeno delay para garantir que o render da nova página ocorreu
+        // Pequeno delay para garantir transição
         setTimeout(() => {
+           // console.log(`[AdManager] Refreshing ${slotsToRefresh.length} floating slots for view: ${currentView}`);
            pubads.refresh(slotsToRefresh);
-        }, 1500); // Aumentei o delay para 1.5s para dar tempo do usuário "entrar" na página antes do interstitial disparar
+        }, 800);
       }
     });
   }, [currentView]);
