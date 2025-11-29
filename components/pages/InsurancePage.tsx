@@ -3,6 +3,7 @@ import { INSURANCE_OPTIONS } from '../../constants';
 import { AdSlot } from '../AdSlot';
 import { ShieldCheck, HeartHandshake, Bike, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { IconHelper } from '../IconHelper';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 export const InsurancePage: React.FC = () => {
   // SEO Optimization
@@ -32,8 +33,29 @@ export const InsurancePage: React.FC = () => {
     }
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": INSURANCE_OPTIONS.map((ins, index) => ({
+      "@type": "FinancialProduct",
+      "position": index + 1,
+      "name": ins.title,
+      "description": `Seguro do tipo ${ins.type} oferecido por ${ins.provider}. Cobertura inclui: ${ins.coverage.join(', ')}.`,
+      "provider": {
+        "@type": "Organization",
+        "name": ins.provider
+      },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "BRL",
+        "price": ins.monthlyPrice.replace('R$', '').trim().replace(',', '.')
+      }
+    }))
+  };
+
   return (
     <div className="bg-white min-h-screen py-10">
+      <SchemaMarkup data={schemaData} />
       <div className="container mx-auto px-4 md:px-6">
         
         <div className="flex flex-col lg:flex-row items-center gap-12 mb-16 bg-gradient-to-r from-blue-900 to-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">

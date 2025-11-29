@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
 import { Accessibility, FileText, DollarSign, XCircle, CheckCircle2 } from 'lucide-react';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 const BPCGuide: React.FC = () => {
   // SEO Optimization
@@ -30,8 +31,50 @@ const BPCGuide: React.FC = () => {
     }
   }, []);
 
+  const schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Guia Oficial BPC/LOAS 2025: Requisitos e Valores",
+      "description": "Guia completo sobre como solicitar o Benefício de Prestação Continuada (BPC/LOAS) para idosos e pessoas com deficiência.",
+      "author": {
+        "@type": "Person",
+        "name": "Marcio Bevervanso"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Guia Social Brasil"
+      },
+      "datePublished": "2024-11-28",
+      "dateModified": new Date().toISOString().split('T')[0]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quem tem direito ao BPC/LOAS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Têm direito idosos com 65 anos ou mais e pessoas com deficiência de qualquer idade que comprovem impedimentos de longo prazo, desde que a renda familiar per capita seja igual ou inferior a 1/4 do salário mínimo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O BPC paga 13º salário?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não. O Benefício de Prestação Continuada (BPC) é um benefício assistencial e, por lei, não contempla o pagamento de 13º salário nem deixa pensão por morte."
+          }
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="bg-brand-light min-h-screen py-10">
+      <SchemaMarkup data={schemaData} />
       <div className="container mx-auto px-4 md:px-6 max-w-5xl">
         
         <div className="mb-8">

@@ -45,6 +45,7 @@ import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
+import { FloatingChat } from './components/FloatingChat';
 import { STATIC_QUIZZES } from './constants';
 
 // Mapeamento de Rotas (URL -> ViewState)
@@ -232,6 +233,7 @@ function App() {
       </main>
       <Footer onNavigate={handleNavigate} />
       <FloatingShare />
+      <FloatingChat />
       <ConsultationModal 
         isOpen={isConsultationOpen}
         onClose={() => setIsConsultationOpen(false)}

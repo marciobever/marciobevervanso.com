@@ -3,6 +3,7 @@ import { CREDIT_CARDS } from '../../constants';
 import { CreditCardVisual } from '../CreditCardVisual';
 import { AdSlot } from '../AdSlot';
 import { Check, Star } from 'lucide-react';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 export const CardsPage: React.FC = () => {
   
@@ -33,8 +34,29 @@ export const CardsPage: React.FC = () => {
     }
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": CREDIT_CARDS.map((card, index) => ({
+      "@type": "FinancialProduct",
+      "position": index + 1,
+      "name": card.name,
+      "description": `Cartão de crédito ${card.issuer} com benefícios como ${card.benefits.join(', ')}.`,
+      "brand": {
+        "@type": "Brand",
+        "name": card.issuer
+      },
+      "feesAndCommissionsSpecification": {
+        "@type": "feesAndCommissionsSpecification",
+        "name": "Anuidade",
+        "price": card.annualFee === "Grátis" ? "0" : card.annualFee
+      }
+    }))
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen py-10">
+      <SchemaMarkup data={schemaData} />
       <div className="container mx-auto px-4 md:px-6">
         
         <header className="mb-12 text-center max-w-3xl mx-auto">

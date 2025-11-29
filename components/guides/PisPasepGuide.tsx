@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
-import { Wallet, Calendar, AlertTriangle, Briefcase } from 'lucide-react';
+import { Wallet, Calendar, AlertTriangle, Briefcase, Table2, HelpCircle } from 'lucide-react';
 import { ViewState } from '../../types';
 
 interface Props {
@@ -9,67 +9,95 @@ interface Props {
 
 export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
   useEffect(() => {
-    document.title = "Abono Salarial 2025: Quem tem direito e Calendário PIS/PASEP";
+    document.title = "Tabela PIS 2025: Valor por Meses Trabalhados e Consulta CPF";
   }, []);
 
   return (
     <BroadcastLayout
-      title="Abono Salarial PIS/PASEP 2025: Guia Completo e Calendário"
-      subtitle="Verifique se você tem direito a receber até um salário mínimo extra este ano. Regras para trabalhadores CLT e Servidores Públicos."
+      title="Abono Salarial PIS/PASEP 2025: Tabela de Valores e Guia de Saque"
+      subtitle="Confira quanto você vai receber de acordo com os meses trabalhados no ano-base 2023. Veja como consultar o benefício na Carteira de Trabalho Digital."
       onNavigate={onNavigate}
-      quizTriggerLabel="Consultar Pagamento (Carteira Digital)"
+      quizTriggerLabel="Consultar Carteira Digital"
       onTakeQuiz={() => window.open('https://www.gov.br/pt-br/servicos/sacar-o-abono-salarial', '_blank')}
     >
-      <h2>Quem tem direito ao Abono Salarial?</h2>
+      <h2>O "Atraso" do Ano-Base: Entenda</h2>
       <p>
-        O abono salarial funciona como um 14º salário para trabalhadores de baixa renda. Para ter direito em 2025 (referente ao ano-base 2023), é preciso cumprir <strong>todos</strong> os requisitos abaixo:
+        Muitos trabalhadores ficam confusos sobre qual ano está sendo pago. Devido à pandemia, o calendário do PIS/PASEP sofreu um atraso de dois anos.
       </p>
-
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 not-prose my-8">
-         <ul className="space-y-4">
-            <li className="flex gap-3">
-               <div className="bg-green-100 p-1 rounded text-green-700 h-fit"><Briefcase size={20}/></div>
-               <div>
-                  <strong className="block text-slate-900">Cadastro há 5 anos</strong>
-                  <span className="text-sm text-gray-600">Estar cadastrado no PIS/PASEP há pelo menos cinco anos.</span>
-               </div>
-            </li>
-            <li className="flex gap-3">
-               <div className="bg-green-100 p-1 rounded text-green-700 h-fit"><Wallet size={20}/></div>
-               <div>
-                  <strong className="block text-slate-900">Média Salarial</strong>
-                  <span className="text-sm text-gray-600">Ter recebido remuneração média de até dois salários mínimos mensais no ano-base.</span>
-               </div>
-            </li>
-            <li className="flex gap-3">
-               <div className="bg-green-100 p-1 rounded text-green-700 h-fit"><Calendar size={20}/></div>
-               <div>
-                  <strong className="block text-slate-900">Tempo de Trabalho</strong>
-                  <span className="text-sm text-gray-600">Ter trabalhado com carteira assinada por pelo menos 30 dias no ano-base.</span>
-               </div>
-            </li>
-         </ul>
-      </div>
-
-      <h3>Qual o valor do benefício?</h3>
-      <p>
-         O valor é proporcional aos meses trabalhados. Quem trabalhou 12 meses recebe o teto (1 salário mínimo vigente). Quem trabalhou 1 mês recebe 1/12 do salário.
-      </p>
-
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl my-6 not-prose">
-         <h4 className="flex items-center gap-2 text-yellow-800 font-bold text-lg mb-2">
-            <AlertTriangle /> Atenção
-         </h4>
-         <p className="text-yellow-800 m-0">
-            Empregadas domésticas (pessoas físicas) <strong>não</strong> têm direito ao abono salarial, pois o empregador precisa ser Pessoa Jurídica (CNPJ).
+      <div className="bg-blue-50 p-4 rounded-xl border-l-4 border-brand-blue my-6 not-prose">
+         <p className="font-bold text-blue-900 m-0">
+            Em 2025, será pago o benefício referente ao trabalho realizado em <strong>2023</strong> (Ano-Base).
          </p>
       </div>
 
-      <h3>Diferença entre PIS e PASEP</h3>
-      <ul>
-         <li><strong>PIS:</strong> Pago pela Caixa Econômica para trabalhadores de empresas privadas.</li>
-         <li><strong>PASEP:</strong> Pago pelo Banco do Brasil para servidores públicos.</li>
+      <h3>Quem tem direito ao Abono Salarial?</h3>
+      <p>
+        Para ter direito ao saque, é necessário cumprir cumulativamente os seguintes requisitos:
+      </p>
+      <ul className="space-y-2 mb-8">
+         <li><strong>Cadastro:</strong> Estar cadastrado no PIS/PASEP há pelo menos cinco anos.</li>
+         <li><strong>Remuneração:</strong> Ter recebido remuneração mensal média de até dois salários mínimos durante o ano-base (2023).</li>
+         <li><strong>Atividade:</strong> Ter exercido atividade remunerada para Pessoa Jurídica, durante pelo menos 30 dias, consecutivos ou não, no ano-base.</li>
+         <li><strong>Dados:</strong> Ter seus dados informados pelo empregador (RAIS/eSocial) corretamente.</li>
       </ul>
+
+      <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 flex gap-3 items-start my-6 not-prose">
+         <AlertTriangle className="text-yellow-600 shrink-0 mt-1" />
+         <div className="text-sm text-yellow-800">
+            <strong>Empregadas Domésticas:</strong> Infelizmente, quem trabalha para Pessoa Física (como domésticas) não tem direito ao abono salarial, apenas quem trabalha para empresas (CNPJ).
+         </div>
+      </div>
+
+      <h3>Tabela de Valores 2025 (Estimada)</h3>
+      <p>
+         O valor do abono é proporcional ao número de meses trabalhados. O teto é o salário mínimo vigente na data do pagamento (Estimado em R$ 1.509,00 para 2025).
+      </p>
+
+      <div className="overflow-x-auto not-prose mb-8">
+         <table className="w-full text-left border-collapse bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
+            <thead className="bg-slate-100 text-slate-700">
+               <tr>
+                  <th className="p-3 font-bold text-center border-r border-gray-200">Meses Trabalhados</th>
+                  <th className="p-3 font-bold text-center">Valor do Benefício (R$)</th>
+               </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 text-sm text-slate-600">
+               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((mes) => (
+                  <tr key={mes} className="hover:bg-slate-50">
+                     <td className="p-3 text-center border-r border-gray-200">{mes} mês{mes > 1 ? 'es' : ''}</td>
+                     <td className="p-3 text-center font-bold text-green-600">
+                        R$ {Math.round((1509 / 12) * mes)},00
+                     </td>
+                  </tr>
+               ))}
+            </tbody>
+         </table>
+         <p className="text-xs text-gray-400 mt-2 text-center">*Valores baseados na estimativa do Salário Mínimo de R$ 1.509,00.</p>
+      </div>
+
+      <h3>Como consultar se vou receber?</h3>
+      <p>
+         A maneira mais confiável não é ir ao banco, mas sim consultar o aplicativo oficial do governo.
+      </p>
+      <ol className="list-decimal pl-5 space-y-3">
+         <li>Baixe o aplicativo <strong>Carteira de Trabalho Digital</strong> (Gov.br).</li>
+         <li>Faça login com seu CPF e senha.</li>
+         <li>No menu inferior, clique em "Benefícios".</li>
+         <li>Selecione "Abono Salarial".</li>
+         <li>Filtre pelo Ano-Base 2023. O app mostrará se está "Habilitado" e o valor.</li>
+      </ol>
+
+      <h3>Diferença entre PIS e PASEP</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6 not-prose">
+         <div className="bg-white p-4 border border-blue-200 rounded-xl shadow-sm">
+            <h4 className="font-bold text-blue-700 mb-2">PIS (Caixa)</h4>
+            <p className="text-sm text-slate-600">Destinado a funcionários de <strong>empresas privadas</strong>. O saque é feito via Cartão Cidadão, App Caixa Tem ou agências da Caixa.</p>
+         </div>
+         <div className="bg-white p-4 border border-yellow-200 rounded-xl shadow-sm">
+            <h4 className="font-bold text-yellow-700 mb-2">PASEP (Banco do Brasil)</h4>
+            <p className="text-sm text-slate-600">Destinado a <strong>servidores públicos</strong>. O crédito cai direto na conta do BB ou pode ser sacado via TED para não correntistas.</p>
+         </div>
+      </div>
 
     </BroadcastLayout>
   );

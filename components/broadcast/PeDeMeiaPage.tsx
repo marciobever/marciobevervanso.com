@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { GraduationCap, DollarSign, CalendarClock, FileText } from 'lucide-react';
+import { GraduationCap, DollarSign, CalendarClock, FileText, Smartphone, Lock, CheckCircle2 } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -10,74 +11,126 @@ interface Props {
 }
 
 export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
-  // SEO Optimization
   useEffect(() => {
-    document.title = "Pé-de-Meia 2025: Consulta de Pagamento e Cadastro | R$ 9.200 Estudantes";
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Tudo sobre o programa Pé-de-Meia para estudantes do ensino médio. Consulte o calendário de pagamentos, valor das parcelas e como desbloquear no Caixa Tem.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "pé de meia 2025, auxilio estudante, poupança ensino médio, consulta pé de meia, cadastro pé de meia, caixa tem, incentivo financeiro educacional";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
-    }
+    document.title = "Pé-de-Meia 2025: Como desbloquear no Caixa Tem e Valores";
   }, []);
+
+  const schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentService",
+      "name": "Pé-de-Meia",
+      "serviceType": "Financial Aid Service",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Ministério da Educação (MEC)"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Estudantes do Ensino Médio Público"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "9200",
+        "priceCurrency": "BRL",
+        "description": "Valor total acumulado ao final do ensino médio."
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Como sacar o dinheiro do Pé-de-Meia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O valor é depositado em uma conta digital Caixa Tem aberta automaticamente no nome do estudante. O saque pode ser feito pelo aplicativo ou em agências da Caixa."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quem tem direito ao programa Pé-de-Meia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Estudantes de 14 a 24 anos matriculados no ensino médio público, pertencentes a famílias inscritas no CadÚnico e com frequência escolar mínima de 80%."
+          }
+        }
+      ]
+    }
+  ];
 
   return (
     <BroadcastLayout
-      title="Benefício Pé-de-Meia 2025: Guia Completo e Valores"
-      subtitle="Entenda como funciona a poupança do ensino médio que pode pagar até R$ 9.200,00 por aluno para incentivar a conclusão dos estudos."
-      quizId="7" // ID for PeDeMeia Quiz
+      title="Pé-de-Meia: Como acessar o dinheiro no Caixa Tem (Passo a Passo)"
+      subtitle="Aprenda a desbloquear sua conta, consultar o saldo e entenda quando você pode sacar cada tipo de incentivo (Matrícula, Frequência e Conclusão)."
+      quizId="7"
       quizzes={quizzes}
       onNavigate={onNavigate}
-      quizTriggerLabel="Sou estudante, tenho direito?"
+      quizTriggerLabel="Consultar Elegibilidade"
     >
-      <h2>O que é o Pé-de-Meia?</h2>
+      <SchemaMarkup data={schemaData} />
+      <h2>Dinheiro na mão ou poupança?</h2>
       <p>
-        O Pé-de-Meia é um programa de incentivo financeiro-educacional, na modalidade de poupança, destinado a promover a permanência e a conclusão escolar de estudantes matriculados no ensino médio público. O objetivo é democratizar o acesso e reduzir a desigualdade social entre os jovens.
+        O Pé-de-Meia tem duas partes. Uma parte do dinheiro (Incentivo Matrícula e Frequência) você pode sacar mensalmente para usar como quiser. A outra parte (Incentivo Conclusão) fica guardada numa poupança e só pode ser sacada quando você terminar o 3º ano do Ensino Médio.
       </p>
 
-      <h3>Valores dos Pagamentos</h3>
-      <p>O programa oferece quatro tipos de incentivos que, somados, podem chegar a R$ 9.200,00 ao final do Ensino Médio:</p>
+      <h3>Como acessar o benefício (Tutorial)</h3>
+      <p>A conta é aberta automaticamente pela Caixa, mas você precisa desbloquear o acesso pelo aplicativo.</p>
 
+      <div className="space-y-4 not-prose my-8">
+         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="bg-blue-100 text-brand-blue w-10 h-10 rounded-lg flex items-center justify-center font-bold shrink-0"><Smartphone /></div>
+            <div>
+               <h4 className="font-bold text-slate-900">1. Baixe o App Caixa Tem</h4>
+               <p className="text-sm text-slate-600">Se você for menor de 18 anos, seu responsável legal deve autorizar a movimentação da conta pelo aplicativo dele primeiro.</p>
+            </div>
+         </div>
+         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="bg-blue-100 text-brand-blue w-10 h-10 rounded-lg flex items-center justify-center font-bold shrink-0"><Lock /></div>
+            <div>
+               <h4 className="font-bold text-slate-900">2. Faça o Login</h4>
+               <p className="text-sm text-slate-600">Use seu CPF e senha Gov.br. Se for o primeiro acesso, siga as instruções para validar o dispositivo.</p>
+            </div>
+         </div>
+         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div className="bg-blue-100 text-brand-blue w-10 h-10 rounded-lg flex items-center justify-center font-bold shrink-0"><DollarSign /></div>
+            <div>
+               <h4 className="font-bold text-slate-900">3. Procure por "Pé-de-Meia"</h4>
+               <p className="text-sm text-slate-600">No menu do app, clique na opção Pé-de-Meia para ver o extrato e os valores bloqueados/liberados.</p>
+            </div>
+         </div>
+      </div>
+
+      <h3>Valores detalhados</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 not-prose my-8">
          <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-100 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10"><DollarSign size={48} className="text-green-600"/></div>
-            <h4 className="text-green-700 font-bold text-lg mb-2">Incentivo Matrícula</h4>
-            <p className="text-3xl font-extrabold text-slate-900 mb-1">R$ 200,00</p>
-            <p className="text-sm text-gray-500">Pago uma vez ao ano, no ato da matrícula.</p>
+            <h4 className="text-green-700 font-bold text-lg mb-2">Para gastar agora</h4>
+            <ul className="space-y-3">
+               <li className="flex justify-between items-center border-b border-gray-50 pb-2">
+                  <span className="text-sm text-gray-600">Matrícula (1x ao ano)</span>
+                  <span className="font-bold text-slate-900">R$ 200,00</span>
+               </li>
+               <li className="flex justify-between items-center border-b border-gray-50 pb-2">
+                  <span className="text-sm text-gray-600">Frequência (9x ao ano)</span>
+                  <span className="font-bold text-slate-900">R$ 200,00</span>
+               </li>
+            </ul>
+            <p className="text-xs text-gray-400 mt-3">*Exige 80% de frequência escolar no mês.</p>
          </div>
-         <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-100 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10"><CalendarClock size={48} className="text-green-600"/></div>
-            <h4 className="text-green-700 font-bold text-lg mb-2">Incentivo Frequência</h4>
-            <p className="text-3xl font-extrabold text-slate-900 mb-1">R$ 1.800,00</p>
-            <p className="text-sm text-gray-500">Pago em 9 parcelas de R$ 200,00 por ano (exige 80% de presença).</p>
-         </div>
-         <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-100 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10"><GraduationCap size={48} className="text-green-600"/></div>
-            <h4 className="text-green-700 font-bold text-lg mb-2">Incentivo Conclusão</h4>
-            <p className="text-3xl font-extrabold text-slate-900 mb-1">R$ 1.000,00</p>
-            <p className="text-sm text-gray-500">Depositado ao final de cada ano letivo aprovado (saque apenas ao formar).</p>
-         </div>
-         <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-100 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10"><FileText size={48} className="text-green-600"/></div>
-            <h4 className="text-green-700 font-bold text-lg mb-2">Incentivo ENEM</h4>
-            <p className="text-3xl font-extrabold text-slate-900 mb-1">R$ 200,00</p>
-            <p className="text-sm text-gray-500">Pago uma única vez ao estudante do 3º ano que comparecer aos dois dias de prova.</p>
+         <div className="bg-white p-6 rounded-2xl shadow-sm border border-blue-100 relative overflow-hidden">
+            <h4 className="text-blue-700 font-bold text-lg mb-2">Poupança (Só no final)</h4>
+            <ul className="space-y-3">
+               <li className="flex justify-between items-center border-b border-gray-50 pb-2">
+                  <span className="text-sm text-gray-600">Conclusão (Por ano)</span>
+                  <span className="font-bold text-slate-900">R$ 1.000,00</span>
+               </li>
+               <li className="flex justify-between items-center border-b border-gray-50 pb-2">
+                  <span className="text-sm text-gray-600">Bônus ENEM (Único)</span>
+                  <span className="font-bold text-slate-900">R$ 200,00</span>
+               </li>
+            </ul>
+            <p className="text-xs text-gray-400 mt-3">*Acumula R$ 3.000 + Juros ao final dos 3 anos.</p>
          </div>
       </div>
 
@@ -85,12 +138,11 @@ export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
       <ul>
          <li>Estudantes de 14 a 24 anos.</li>
          <li>Matriculados no Ensino Médio da rede pública.</li>
-         <li>Pertencentes a famílias inscritas no <strong>CadÚnico</strong>.</li>
-         <li>Prioridade para beneficiários do Bolsa Família.</li>
+         <li>Pertencentes a famílias inscritas no <strong>CadÚnico</strong> com renda per capita de até R$ 218 (regra Bolsa Família).</li>
       </ul>
 
       <p>
-        <strong>Não é necessário se inscrever.</strong> O Ministério da Educação (MEC) cruza os dados da matrícula (enviados pelas escolas) com o CadÚnico. Se você for elegível, uma conta digital será aberta automaticamente no seu nome na CAIXA (acessível pelo App Caixa Tem).
+        <strong>Atenção:</strong> Se você reprovar de ano, perde o direito ao incentivo daquele ano, mas pode voltar a receber no próximo se passar.
       </p>
     </BroadcastLayout>
   );

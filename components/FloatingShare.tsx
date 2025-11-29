@@ -21,23 +21,20 @@ export const FloatingShare: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 animate-bounce-in">
+    <div className="fixed bottom-24 right-6 z-40 animate-bounce-in">
       <div className="relative group">
         <button
           onClick={handleShare}
-          className="bg-[#25D366] hover:bg-[#20ba5a] text-white p-4 rounded-full shadow-lg hover:shadow-green-500/30 transition-all transform hover:scale-110 flex items-center gap-2"
+          className="bg-[#25D366] hover:bg-[#20ba5a] text-white p-3 rounded-full shadow-lg hover:shadow-green-500/30 transition-all transform hover:scale-110 flex items-center gap-2"
           aria-label="Compartilhar no WhatsApp"
         >
-          <Share2 size={24} />
-          <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm">
-            Enviar no Grupo
-          </span>
+          <Share2 size={20} />
         </button>
         <button 
           onClick={() => setIsVisible(false)}
-          className="absolute -top-2 -right-2 bg-gray-200 text-gray-500 rounded-full p-1 shadow-sm hover:bg-gray-300 w-6 h-6 flex items-center justify-center text-xs"
+          className="absolute -top-2 -right-2 bg-gray-200 text-gray-500 rounded-full p-1 shadow-sm hover:bg-gray-300 w-5 h-5 flex items-center justify-center text-[10px]"
         >
-          <X size={12} />
+          <X size={10} />
         </button>
       </div>
     </div>

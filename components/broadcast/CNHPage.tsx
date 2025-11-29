@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Car, MapPin, FileText, ExternalLink, Calendar, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Car, MapPin, FileText, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen, UserCheck } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -66,58 +67,116 @@ const STATE_PROGRAMS: StateProgram[] = [
     prediction: 'Maio/2025',
     website: 'https://www.detran.pe.gov.br',
     specifics: ['Alunos de escola pública', 'Beneficiários de programas assistenciais', 'Trabalhadores rurais']
-  },
-  {
-    state: 'Amazonas',
-    programName: 'CNH Social',
-    status: 'Em Breve',
-    prediction: '1º Semestre de 2025',
-    website: 'https://detran.am.gov.br',
-    specifics: ['Moradores da capital e interior', 'Renda familiar de até 2 salários mínimos', 'Inscrição exclusiva pelo site']
   }
 ];
 
 export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
-  // SEO Optimization
   useEffect(() => {
-    document.title = "CNH Social 2025: Inscrições Abertas e Lista de Estados | CNH Gratuita";
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Saiba como tirar a CNH Social totalmente grátis em 2025. Confira os estados com inscrições abertas, requisitos do Detran e quem pode participar do programa CNH Popular.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "cnh social 2025, cnh gratuita, cnh popular, inscrição cnh social, carteira de motorista gratuita, detran cnh social, cnh jovem";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
-    }
+    document.title = "CNH Social 2025: Passo a Passo e Editais Abertos | Detran";
   }, []);
+
+  const schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentService",
+      "name": "CNH Social",
+      "serviceType": "Driving License Support",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Detran"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Baixa Renda"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "description": "Gratuidade total para taxas e exames de habilitação."
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quem tem direito à CNH Social?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Geralmente pessoas inscritas no CadÚnico, desempregados há mais de um ano, beneficiários do Bolsa Família ou estudantes de escola pública. As regras exatas variam por estado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como se inscrever na CNH Social 2025?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A inscrição é feita exclusivamente pelo site do Detran do seu estado (como Detran-ES, Detran-GO, Detran-CE) durante o período de abertura do edital."
+          }
+        }
+      ]
+    }
+  ];
 
   return (
     <BroadcastLayout
-      title="CNH Social 2025: Cronograma, Editais e Regras por Estado"
-      subtitle="Descubra como obter sua Carteira de Habilitação totalmente gratuita (Categoria A ou B). Veja abaixo a lista detalhada de estados participantes e prazos."
-      quizId="3" // ID for CNH Quiz
+      title="CNH Social 2025: Como se inscrever, Prazos e Critérios de Aprovação"
+      subtitle="Não perca o prazo. O programa oferece a 1ª habilitação gratuita para quem tem baixa renda. Entenda as 3 etapas para garantir sua vaga."
+      quizId="3"
       quizzes={quizzes}
       onNavigate={onNavigate}
       quizTriggerLabel="Verificar Minha Elegibilidade"
     >
+      <SchemaMarkup data={schemaData} />
       <h2>O que é a CNH Social?</h2>
       <p>
-        A CNH Social é um programa governamental (gerido pelos estados) que isenta pessoas de baixa renda de todas as taxas para tirar a carteira de motorista. O benefício cobre exames médicos, psicotécnicos, aulas teóricas, aulas práticas e a taxa de emissão do documento. O valor economizado pode chegar a <strong>R$ 3.000,00</strong>.
+        A CNH Social é um programa estadual que custeia 100% do processo de habilitação (exames, aulas teóricas, práticas e taxas) para pessoas de baixa renda. A economia é de cerca de <strong>R$ 3.000,00</strong>.
       </p>
+
+      <h3>As 3 Etapas da Aprovação</h3>
+      <div className="space-y-4 not-prose my-8">
+         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
+               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">1</span>
+               Inscrição Online
+            </h4>
+            <p className="text-sm text-slate-600">
+               Feita exclusivamente no site do DETRAN do seu estado. Você preenche os dados e o sistema cruza automaticamente com o <strong>CadÚnico</strong> para verificar a renda.
+            </p>
+         </div>
+         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
+               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">2</span>
+               Lista de Selecionados
+            </h4>
+            <p className="text-sm text-slate-600">
+               Após o fim do prazo, o DETRAN divulga a lista. Os critérios de desempate geralmente são: menor renda per capita, maior número de filhos e beneficiários do Bolsa Família.
+            </p>
+         </div>
+         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
+               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">3</span>
+               Matrícula Presencial
+            </h4>
+            <p className="text-sm text-slate-600">
+               Se aprovado, você tem um prazo curto (geralmente 15 dias) para ir ao DETRAN ou Autoescola parceira confirmar os dados. <strong>Se perder esse prazo, perde a vaga.</strong>
+            </p>
+         </div>
+      </div>
+
+      <h3>Critérios que Reprovam (Cuidado!)</h3>
+      <ul className="space-y-2 mb-8">
+         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> CadÚnico desatualizado há mais de 24 meses.</li>
+         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Renda per capita superior a meio salário mínimo.</li>
+         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Ter cometido infração de trânsito grave ou gravíssima nos últimos 12 meses (para quem tenta mudança de categoria).</li>
+         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Faltar à matrícula após ser convocado.</li>
+      </ul>
 
       <h3>Editais e Prazos por Estado (2025)</h3>
       <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
@@ -142,17 +201,6 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
                  <Calendar size={14} /> Previsão: {prog.prediction}
               </div>
 
-              <div className="bg-slate-50 rounded-lg p-3 mb-4">
-                 <p className="text-xs font-bold text-gray-400 uppercase mb-2">Destaques do Edital</p>
-                 <ul className="space-y-1.5">
-                    {prog.specifics.map((spec, i) => (
-                       <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
-                          <CheckCircle2 size={12} className="text-green-500 shrink-0 mt-0.5" /> {spec}
-                       </li>
-                    ))}
-                 </ul>
-              </div>
-
               <a 
                 href={prog.website} 
                 target="_blank" 
@@ -165,45 +213,8 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
         ))}
       </div>
       
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex gap-3 items-start my-6 not-prose">
-         <AlertCircle className="text-yellow-600 shrink-0 mt-0.5" />
-         <p className="text-sm text-yellow-800">
-            <strong>Atenção:</strong> Se o seu estado não está na lista acima, verifique diretamente no site do DETRAN da sua região. Alguns estados lançam editais surpresa durante o ano ou utilizam nomes diferentes para o programa.
-         </p>
-      </div>
-
-      <h3>Quem pode participar? (Regras Gerais)</h3>
-      <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100 not-prose my-6">
-         <ul className="space-y-3">
-            <li className="flex gap-3 text-brand-dark">
-               <div className="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-xs shrink-0">1</div>
-               <span>Ter mais de 18 anos e saber ler/escrever.</span>
-            </li>
-            <li className="flex gap-3 text-brand-dark">
-               <div className="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-xs shrink-0">2</div>
-               <span>Estar inscrito no <strong>CadÚnico</strong> (ativo e atualizado).</span>
-            </li>
-            <li className="flex gap-3 text-brand-dark">
-               <div className="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-xs shrink-0">3</div>
-               <span>Comprovar residência no estado há pelo menos 2 anos.</span>
-            </li>
-            <li className="flex gap-3 text-brand-dark">
-               <div className="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-xs shrink-0">4</div>
-               <span>Renda familiar de até 2 salários mínimos ou estar desempregado há mais de 1 ano.</span>
-            </li>
-         </ul>
-      </div>
-
-      <h3>Categorias Disponíveis</h3>
-      <ul>
-         <li><strong>Categoria A:</strong> Moto.</li>
-         <li><strong>Categoria B:</strong> Carro.</li>
-         <li><strong>Adição de Categoria:</strong> Para quem já tem moto e quer carro (ou vice-versa).</li>
-         <li><strong>Mudança para D/E:</strong> Alguns estados (como ES e GO) oferecem para motoristas profissionais (ônibus/caminhão) visando empregabilidade.</li>
-      </ul>
-
       <p>
-        As vagas são limitadas e a concorrência é alta. Mantenha seu CadÚnico atualizado, pois ele é o principal critério de desempate.
+        As vagas são limitadas e a concorrência é alta. Mantenha seu CadÚnico atualizado, pois ele é a base de tudo.
       </p>
     </BroadcastLayout>
   );

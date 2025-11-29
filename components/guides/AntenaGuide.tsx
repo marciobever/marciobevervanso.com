@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
-import { Tv, CheckCircle2, Zap } from 'lucide-react';
+import { Tv, CheckCircle2, Zap, Wifi, Phone, CalendarCheck } from 'lucide-react';
 import { ViewState } from '../../types';
 
 interface Props {
@@ -9,52 +9,91 @@ interface Props {
 
 export const AntenaGuide: React.FC<Props> = ({ onNavigate }) => {
   useEffect(() => {
-    document.title = "Kit Antena Digital Gratuito: Como Solicitar em 2025 | Siga Antenado";
+    document.title = "Kit Antena Digital Gratuito: Agendamento Siga Antenado e Instalação";
   }, []);
 
   return (
     <BroadcastLayout
-      title="Kit Antena Digital Gratuito: Como solicitar e quem tem direito"
-      subtitle="Troca da parabólica antiga pela nova digital é obrigatória e gratuita para beneficiários de programas sociais. Saiba como agendar a instalação."
+      title="Kit Antena Digital 2025: Quem tem direito e como agendar a instalação grátis"
+      subtitle="O sinal da parabólica antiga vai desligar. Veja se você pode receber o Kit da Nova Parabólica Digital totalmente de graça instalado na sua casa."
       onNavigate={onNavigate}
-      quizTriggerLabel="Agendar Instalação (Siga Antenado)"
+      quizTriggerLabel="Agendar no Siga Antenado"
       onTakeQuiz={() => window.open('https://sigaantenado.com.br/', '_blank')}
     >
-      <h2>Por que a troca é necessária?</h2>
+      <h2>Por que a parabólica antiga vai parar de funcionar?</h2>
       <p>
-        Com a chegada da tecnologia 5G no Brasil, o sinal das antenas parabólicas tradicionais (aquelas grandes e teladas) sofrerá interferência e deixará de funcionar corretamente. Para evitar que famílias fiquem sem TV, o governo criou o programa <strong>Siga Antenado</strong>.
+        Com a chegada do <strong>5G</strong> (internet móvel de alta velocidade) no Brasil, foi necessário utilizar a mesma frequência de sinal que as antenas parabólicas tradicionais (Banda C) usavam.
       </p>
+      <div className="bg-slate-100 p-4 rounded-xl my-4 not-prose flex items-center gap-4">
+         <Wifi size={32} className="text-blue-600 shrink-0" />
+         <p className="text-sm text-slate-700 m-0">
+            Se você não trocar a antena, o sinal 5G vai causar chuviscos, interferências e até derrubar o sinal da sua TV. Por isso, a troca pela <strong>Nova Parabólica Digital</strong> (Banda Ku) é obrigatória.
+         </p>
+      </div>
 
       <h3>O que vem no Kit Gratuito?</h3>
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 not-prose my-8">
-         <div className="flex flex-col sm:flex-row gap-6 items-center">
-            <div className="bg-blue-50 p-6 rounded-full text-brand-blue">
-               <Tv size={48} />
-            </div>
-            <ul className="space-y-3 flex-grow">
-               <li className="flex items-center gap-2"><CheckCircle2 className="text-green-500"/> 1 Antena Parabólica Digital (pequena)</li>
-               <li className="flex items-center gap-2"><CheckCircle2 className="text-green-500"/> 1 Receptor Digital</li>
-               <li className="flex items-center gap-2"><CheckCircle2 className="text-green-500"/> 1 Controle Remoto com pilhas</li>
-               <li className="flex items-center gap-2"><CheckCircle2 className="text-green-500"/> Instalação Gratuita feita por técnico</li>
-            </ul>
-         </div>
+      <p>Para famílias de baixa renda, o governo (através da entidade Siga Antenado) fornece tudo zero custo:</p>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 not-prose my-6">
+         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 className="text-green-500"/> 1 Antena Digital (menor e mais moderna)</li>
+            <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 className="text-green-500"/> 1 Receptor Digital (Conversor)</li>
+            <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 className="text-green-500"/> 1 Controle Remoto com pilhas</li>
+            <li className="flex items-center gap-2 text-sm font-medium"><CheckCircle2 className="text-green-500"/> Cabos e conectores</li>
+            <li className="flex items-center gap-2 col-span-1 sm:col-span-2 bg-green-50 p-2 rounded-lg text-green-800"><CheckCircle2 className="text-green-600"/> <strong>Instalação feita por técnico especializado</strong></li>
+         </ul>
       </div>
 
       <h3>Quem tem direito ao Kit Grátis?</h3>
-      <p>Para receber o equipamento instalado sem custo nenhum, é preciso atender a dois requisitos:</p>
-      <ol>
-         <li>Estar inscrito em algum programa social do Governo Federal (CadÚnico ativo);</li>
-         <li>Possuir uma <strong>antena parabólica tradicional</strong> instalada e funcionando em casa.</li>
+      <p>Para receber o equipamento instalado sem custo nenhum, é preciso atender simultaneamente a dois requisitos:</p>
+      <ol className="list-decimal pl-5 space-y-3">
+         <li><strong>Cadastro Único:</strong> Estar inscrito em algum programa social do Governo Federal (CadÚnico ativo) e ter renda familiar de até 3 salários mínimos.</li>
+         <li><strong>Antena Antiga:</strong> Possuir uma <strong>antena parabólica tradicional</strong> (aquela grande, de tela de arame, geralmente preta) instalada e funcionando em casa.</li>
       </ol>
 
-      <div className="bg-slate-900 text-white p-6 rounded-xl my-6 not-prose">
-         <h4 className="flex items-center gap-2 font-bold text-lg mb-2 text-yellow-400">
-            <Zap /> Quem usa antena "Espinha de Peixe"?
+      <div className="bg-yellow-50 p-6 rounded-xl my-6 not-prose border border-yellow-200">
+         <h4 className="flex items-center gap-2 font-bold text-lg mb-2 text-yellow-800">
+            <Zap /> Quem NÃO precisa trocar?
          </h4>
-         <p className="text-slate-300 text-sm m-0">
-            Quem usa antena digital comum (interna ou externa tipo espinha de peixe) ou TV por assinatura <strong>não precisa</strong> fazer a troca. O programa é exclusivo para quem usa Parabólica Grande.
+         <p className="text-yellow-900 text-sm mb-2">
+            O kit <strong>não</strong> é para quem usa:
          </p>
+         <ul className="list-disc pl-5 text-sm text-yellow-800 space-y-1">
+            <li>Antena digital comum ("espinha de peixe" ou interna);</li>
+            <li>TV por assinatura (Sky, Claro, etc);</li>
+            <li>Quem mora em locais onde o sinal da parabólica antiga já não é utilizado.</li>
+         </ul>
       </div>
+
+      <h3>Como fazer o agendamento?</h3>
+      <p>Você não precisa sair de casa. O processo é todo feito por telefone ou internet.</p>
+      
+      <div className="space-y-4 my-6 not-prose">
+         <div className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl">
+            <div className="bg-brand-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">1</div>
+            <div>
+               <h4 className="font-bold text-brand-dark">Tenha o NIS em mãos</h4>
+               <p className="text-sm text-gray-600">Você vai precisar do número do seu NIS (Número de Identificação Social) ou CPF.</p>
+            </div>
+         </div>
+         <div className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl">
+            <div className="bg-brand-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">2</div>
+            <div>
+               <h4 className="font-bold text-brand-dark">Acesse o Siga Antenado</h4>
+               <p className="text-sm text-gray-600">Entre no site <strong>sigaantenado.com.br</strong> ou ligue para <strong>0800 729 2404</strong>.</p>
+            </div>
+         </div>
+         <div className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl">
+            <div className="bg-brand-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">3</div>
+            <div>
+               <h4 className="font-bold text-brand-dark">Agende a visita</h4>
+               <p className="text-sm text-gray-600">Se aprovado, você escolherá o dia e horário para o técnico ir à sua casa instalar o equipamento.</p>
+            </div>
+         </div>
+      </div>
+
+      <p>
+         <strong>Importante:</strong> O técnico não pode cobrar nada. O equipamento e a instalação são 100% subsidiados.
+      </p>
 
     </BroadcastLayout>
   );
