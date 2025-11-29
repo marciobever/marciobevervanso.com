@@ -1,7 +1,13 @@
+
 import React from 'react';
 import { FileText, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
+import { ViewState } from '../types';
 
-const CadUnicoSection: React.FC = () => {
+interface CadUnicoSectionProps {
+  onNavigate?: (view: ViewState) => void;
+}
+
+const CadUnicoSection: React.FC<CadUnicoSectionProps> = ({ onNavigate }) => {
   return (
     <section id="cadunico" className="py-20 bg-brand-dark text-white relative overflow-hidden">
       {/* Abstract Shapes */}
@@ -35,7 +41,10 @@ const CadUnicoSection: React.FC = () => {
                 ))}
               </ul>
 
-              <button className="mt-4 bg-brand-blue hover:bg-brand-hover text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-brand-blue/20">
+              <button 
+                onClick={() => onNavigate && onNavigate('guide-cadunico')}
+                className="mt-4 bg-brand-blue hover:bg-brand-hover text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-brand-blue/20"
+              >
                 Passo a passo do CadÚnico <ArrowRight size={20} />
               </button>
             </div>

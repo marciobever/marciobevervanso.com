@@ -60,6 +60,7 @@ export interface NewsItem {
 export interface FaqItem {
   question: string;
   answer: string;
+  open?: boolean;
 }
 
 export interface Question {
@@ -99,7 +100,8 @@ export type ViewState =
   | 'guide-farmacia' 
   | 'guide-pis'      
   | 'guide-antena'   
-  | 'guide-idjovem'  
+  | 'guide-idjovem'
+  | 'guide-cadunico' // NEW
   | 'calendar'      
   | 'calendarios'   
   | 'analytics'
@@ -119,7 +121,7 @@ export type ViewState =
   | 'landing-dentista'
   | 'landing-cnh'
   | 'landing-pe-de-meia'
-  | 'landing-tarifa' // NEW
+  | 'landing-tarifa' 
   | 'landing-bpc-comparativo'
   | 'landing-bolsa-comparativo'
   | 'landing-general-rights'

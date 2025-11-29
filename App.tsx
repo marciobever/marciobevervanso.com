@@ -37,6 +37,7 @@ const FarmaciaGuide = lazy(() => import('./components/guides/FarmaciaGuide').the
 const PisPasepGuide = lazy(() => import('./components/guides/PisPasepGuide').then(m => ({ default: m.PisPasepGuide })));
 const AntenaGuide = lazy(() => import('./components/guides/AntenaGuide').then(m => ({ default: m.AntenaGuide })));
 const IdJovemGuide = lazy(() => import('./components/guides/IdJovemGuide').then(m => ({ default: m.IdJovemGuide })));
+const CadUnicoGuide = lazy(() => import('./components/guides/CadUnicoGuide').then(m => ({ default: m.CadUnicoGuide }))); // NEW
 
 // Pages
 const CardsPage = lazy(() => import('./components/pages/CardsPage').then(m => ({ default: m.CardsPage })));
@@ -53,7 +54,7 @@ const MCMVPage = lazy(() => import('./components/broadcast/MCMVPage').then(m => 
 const DentistaPage = lazy(() => import('./components/broadcast/DentistaPage').then(m => ({ default: m.DentistaPage })));
 const CNHPage = lazy(() => import('./components/broadcast/CNHPage').then(m => ({ default: m.CNHPage })));
 const PeDeMeiaPage = lazy(() => import('./components/broadcast/PeDeMeiaPage').then(m => ({ default: m.PeDeMeiaPage })));
-const TarifaSocialPage = lazy(() => import('./components/broadcast/TarifaSocialPage').then(m => ({ default: m.TarifaSocialPage }))); // NEW
+const TarifaSocialPage = lazy(() => import('./components/broadcast/TarifaSocialPage').then(m => ({ default: m.TarifaSocialPage })));
 const CardsNegativadoPage = lazy(() => import('./components/broadcast/CardsNegativadoPage').then(m => ({ default: m.CardsNegativadoPage })));
 const CardsLimitePage = lazy(() => import('./components/broadcast/CardsLimitePage').then(m => ({ default: m.CardsLimitePage })));
 const SeguroDividaPage = lazy(() => import('./components/broadcast/SeguroDividaPage').then(m => ({ default: m.SeguroDividaPage })));
@@ -85,7 +86,8 @@ const ROUTES: Record<string, ViewState> = {
   '/guia-pis-pasep-abono': 'guide-pis',
   '/guia-kit-antena-digital': 'guide-antena',
   '/guia-id-jovem-viagem': 'guide-idjovem',
-  '/tarifa-social-energia': 'landing-tarifa', // NEW
+  '/guia-cadastro-unico': 'guide-cadunico', // NEW
+  '/tarifa-social-energia': 'landing-tarifa',
   '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios': 'landing-mcmv',
   '/dentista-gratuito-sus-quiz-prioridade': 'landing-dentista',
   '/cnh-social-2025': 'landing-cnh',
@@ -163,7 +165,7 @@ function App() {
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
             <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
-            <CadUnicoSection />
+            <CadUnicoSection onNavigate={handleNavigate} />
             <FaqSection />
             <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
           </>
@@ -189,6 +191,7 @@ function App() {
       case 'guide-pis': return <PisPasepGuide onNavigate={handleNavigate} />;
       case 'guide-antena': return <AntenaGuide onNavigate={handleNavigate} />;
       case 'guide-idjovem': return <IdJovemGuide onNavigate={handleNavigate} />;
+      case 'guide-cadunico': return <CadUnicoGuide onNavigate={handleNavigate} />; // NEW
       case 'calendar': 
       case 'calendarios': return <CalendariosPage />;
       case 'analytics': return <AnalyticsDashboard />;
@@ -206,7 +209,7 @@ function App() {
       case 'landing-dentista': return <DentistaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-cnh': return <CNHPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-pe-de-meia': return <PeDeMeiaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
-      case 'landing-tarifa': return <TarifaSocialPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />; // NEW
+      case 'landing-tarifa': return <TarifaSocialPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-cards-negativado': return <CardsNegativadoPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-cards-limite': return <CardsLimitePage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-seguro-divida': return <SeguroDividaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
