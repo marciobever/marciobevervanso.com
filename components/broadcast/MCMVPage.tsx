@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Home, Percent, ShieldCheck, CheckSquare, FileText, Key } from 'lucide-react';
+import { Home, CheckSquare, Key } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -18,22 +19,6 @@ export const MCMVPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =
     const desc = "Saiba como funciona o Minha Casa Minha Vida 2025. Regras para casa grátis (Faixa 1), subsídios de até 95% e como se inscrever no programa habitacional.";
     if (metaDesc) {
       metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "minha casa minha vida 2025, inscrição mcmv, casa gratis bolsa familia, faixa 1, financiamento caixa, subsidio habitacao, cadastro habitacao";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
     }
   }, []);
 
@@ -51,28 +36,6 @@ export const MCMVPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =
         "@type": "Offer",
         "description": "Subsídio de até 95% ou isenção total para Faixa 1."
       }
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Quem tem direito à casa gratuita no Minha Casa Minha Vida?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Beneficiários do Bolsa Família e do BPC (Benefício de Prestação Continuada) que contratam imóveis na Faixa 1 (renda até R$ 2.640) estão isentos do pagamento das prestações."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Qual a renda máxima para participar do Minha Casa Minha Vida?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "O programa atende famílias com renda bruta mensal de até R$ 8.000,00, divididas em três faixas de renda."
-          }
-        }
-      ]
     }
   ];
 

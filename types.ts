@@ -110,24 +110,22 @@ export type ViewState =
   | 'guide-pis'      
   | 'guide-antena'   
   | 'guide-idjovem'
-  | 'guide-cadunico' // NEW
+  | 'guide-cadunico'
   | 'calendar'      
   | 'calendarios'   
   | 'analytics'
   | 'secret-menu'
   | 'cards'         
-  | 'card-details' // NEW: Individual card page
+  | 'card-details'
   | 'insurance'     
-  | 'insurance-quote' // NEW: Quote Page
+  | 'insurance-quote'
   | 'comparativo'   
   | 'loans'         
   | 'calculator'
   | 'all-benefits'
   | 'benefits-by-state'
-  // Admin Tools
   | 'admin-social'
   | 'admin-seo'
-  // Broadcast / Landing Pages Governamentais
   | 'landing-mcmv'
   | 'landing-dentista'
   | 'landing-cnh'
@@ -136,8 +134,20 @@ export type ViewState =
   | 'landing-bpc-comparativo'
   | 'landing-bolsa-comparativo'
   | 'landing-general-rights'
-  // Novas Landing Pages de Alta Conversão
   | 'landing-cards-negativado'
   | 'landing-cards-limite'
   | 'landing-seguro-divida'
-  | 'landing-seguro-vida';
+  | 'landing-seguro-vida'
+  // Legacy Routes (Migration)
+  | 'legacy-quiz'
+  | 'legacy-dental-priv'
+  | 'legacy-dental-plan'
+  | 'legacy-family-ben'
+  | 'legacy-reconstruction'
+  | 'legacy-single-mom'
+  | 'legacy-gas'
+  | 'legacy-fuel'
+  | 'legacy-bpc-bolsa'
+  | 'legacy-general-rights'
+  | 'legacy-cnh-rules'
+  | 'legacy-bolsa-rules';

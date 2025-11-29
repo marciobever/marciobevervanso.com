@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
-import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Share2, MoreHorizontal, Home, ChevronRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
 
@@ -172,9 +173,10 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
                 {relatedArticle && (
                   <button 
                     onClick={relatedArticle.onClick}
-                    className="flex items-center justify-center gap-2 text-brand-blue hover:text-brand-hover text-sm font-semibold hover:underline decoration-2 underline-offset-4 py-3 bg-blue-50/50 rounded-xl transition-all border border-transparent hover:border-blue-100"
+                    className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 rounded-xl bg-white border-2 border-blue-50 text-brand-blue font-bold hover:bg-blue-50 hover:border-brand-blue transition-all shadow-sm group"
                   >
-                    <FileText size={16} /> <span className="truncate max-w-[300px] md:max-w-none">Leia também: {relatedArticle.title}</span>
+                    <FileText size={18} className="group-hover:scale-110 transition-transform shrink-0"/> 
+                    <span className="text-sm">Leia também: {relatedArticle.title}</span>
                   </button>
                 )}
               </div>

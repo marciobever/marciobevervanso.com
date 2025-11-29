@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { GraduationCap, DollarSign, CalendarClock, FileText, Smartphone, Lock, CheckCircle2 } from 'lucide-react';
+import { Smartphone, Lock, DollarSign } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -18,22 +19,6 @@ export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
     const desc = "Descubra como receber o Pé-de-Meia. Calendário de pagamentos, como desbloquear no Caixa Tem e regras para estudantes do ensino médio receberem até R$ 9.200.";
     if (metaDesc) {
       metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "pe de meia 2025, programa pe de meia, poupança ensino medio, consulta pe de meia, caixa tem estudante, auxilio estudante, calendario pe de meia";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
     }
   }, []);
 
@@ -57,28 +42,6 @@ export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
         "priceCurrency": "BRL",
         "description": "Valor total acumulado ao final do ensino médio."
       }
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Como sacar o dinheiro do Pé-de-Meia?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "O valor é depositado em uma conta digital Caixa Tem aberta automaticamente no nome do estudante. O saque pode ser feito pelo aplicativo ou em agências da Caixa."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Quem tem direito ao programa Pé-de-Meia?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Estudantes de 14 a 24 anos matriculados no ensino médio público, pertencentes a famílias inscritas no CadÚnico e com frequência escolar mínima de 80%."
-          }
-        }
-      ]
     }
   ];
 
@@ -90,6 +53,10 @@ export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
       quizzes={quizzes}
       onNavigate={onNavigate}
       quizTriggerLabel="Consultar Elegibilidade"
+      relatedArticle={{
+        title: "Estudante tem direito a viagens grátis? Conheça o ID Jovem",
+        onClick: () => onNavigate('guide-idjovem')
+      }}
     >
       <SchemaMarkup data={schemaData} />
       <h2>Dinheiro na mão ou poupança?</h2>

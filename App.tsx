@@ -7,7 +7,7 @@ import BenefitList from './components/BenefitList';
 import CadUnicoSection from './components/CadUnicoSection';
 import FaqSection from './components/FaqSection';
 import Footer from './components/Footer';
-import FinancialSection from './components/FinancialSection'; // NEW IMPORT
+import FinancialSection from './components/FinancialSection';
 import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
@@ -19,7 +19,7 @@ import { CookieBanner } from './components/CookieBanner';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { AccessibilityBar } from './components/ui/AccessibilityBar';
 import { InstallPrompt } from './components/ui/InstallPrompt';
-import { ErrorBoundary } from './components/ErrorBoundary'; // NEW
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { STATIC_QUIZZES, CREDIT_CARDS } from './constants';
 
 // Lazy Load Components
@@ -43,9 +43,9 @@ const CadUnicoGuide = lazy(() => import('./components/guides/CadUnicoGuide').the
 
 // Pages
 const CardsPage = lazy(() => import('./components/pages/CardsPage')); 
-const CardDetailsPage = lazy(() => import('./components/pages/CardDetailsPage')); // NEW
+const CardDetailsPage = lazy(() => import('./components/pages/CardDetailsPage'));
 const InsurancePage = lazy(() => import('./components/pages/InsurancePage').then(m => ({ default: m.InsurancePage })));
-const InsuranceQuotePage = lazy(() => import('./components/pages/InsuranceQuotePage').then(m => ({ default: m.InsuranceQuotePage }))); // NEW
+const InsuranceQuotePage = lazy(() => import('./components/pages/InsuranceQuotePage').then(m => ({ default: m.InsuranceQuotePage })));
 const ComparativoPage = lazy(() => import('./components/pages/ComparativoPage').then(m => ({ default: m.ComparativoPage })));
 const LoansPage = lazy(() => import('./components/pages/LoansPage').then(m => ({ default: m.LoansPage })));
 const CalendariosPage = lazy(() => import('./components/pages/CalendariosPage').then(m => ({ default: m.CalendariosPage })));
@@ -63,6 +63,23 @@ const CardsNegativadoPage = lazy(() => import('./components/broadcast/CardsNegat
 const CardsLimitePage = lazy(() => import('./components/broadcast/CardsLimitePage').then(m => ({ default: m.CardsLimitePage })));
 const SeguroDividaPage = lazy(() => import('./components/broadcast/SeguroDividaPage').then(m => ({ default: m.SeguroDividaPage })));
 const SeguroVidaPage = lazy(() => import('./components/broadcast/SeguroVidaPage').then(m => ({ default: m.SeguroVidaPage })));
+
+// Legacy Pages (Wordpress Migration)
+const LegacyArticles = lazy(() => import('./components/pages/LegacyArticles').then(module => ({ default: module.QuizBeneficiosPage }))); // Placeholder for lazy load, we will pick specific exports in render
+import { 
+  QuizBeneficiosPage, 
+  BrasilSorridentePrivadoPage, 
+  BrasilSorridenteOdontoPage,
+  BeneficiosFamiliaPage,
+  AuxilioReconstrucaoPage,
+  AuxilioMaeSolteiraPage,
+  AuxilioGasPage,
+  AuxilioCombustivelPage,
+  BpcBolsaLegacyPage,
+  GuiaDireitosPage,
+  CnhLegacyPage,
+  BolsaFamiliaLegacyPage
+} from './components/pages/LegacyArticles';
 
 // Admin Tools
 const SocialPostGenerator = lazy(() => import('./components/admin/SocialPostGenerator').then(m => ({ default: m.SocialPostGenerator })));
@@ -103,7 +120,27 @@ const ROUTES: Record<string, ViewState> = {
   '/admin': 'secret-menu',
   '/admin/social': 'admin-social',
   '/admin/seo': 'admin-seo',
-  '/admin/analytics': 'analytics'
+  '/admin/analytics': 'analytics',
+  
+  // Legacy Wordpress Slugs Mapped to New Content
+  '/quiz-beneficios-sociais': 'legacy-quiz',
+  // Removed duplicate: '/cnh-social-2025': 'landing-cnh',
+  '/bolsa-familia': 'guide-bolsa', // Redirect to guide
+  '/brasil-sorridente': 'landing-dentista', // Redirect to landing
+  '/brasil-sorridente-vs-planos-privados-comparativo-2025': 'legacy-dental-priv',
+  '/brasil-sorridente-vs-planos-odontologicos-comparativo-2025': 'legacy-dental-plan',
+  '/beneficios-governo-familia-2025-comparativo': 'legacy-family-ben',
+  '/auxilio-reconstrucao-federal-estadual-comparativo-2025': 'legacy-reconstruction',
+  '/auxilio-mae-solteira-vs-bolsa-familia-2025': 'legacy-single-mom',
+  '/auxilio-gas-vs-gas-do-povo-regras-2025': 'legacy-gas',
+  '/auxilio-combustivel-guia-completo-como-funciona': 'legacy-fuel',
+  '/bpc-vs-bolsa-familia-2025-comparativo-beneficios': 'legacy-bpc-bolsa',
+  '/beneficios-sociais-governo-federal-guia-direitos-2025': 'legacy-general-rights',
+  '/cnh-gratuita-social-comparativo-regras-2025': 'legacy-cnh-rules',
+  // Removed duplicate: '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios': 'landing-mcmv', 
+  '/bpc-loas-2025-comparativo-regras-valores': 'guide-bpc', // Redirect
+  // Removed duplicate: '/beneficio-pe-de-meia-2025-guia-completo': 'landing-pe-de-meia',
+  '/bolsa-familia-comparativo-beneficios-regras': 'legacy-bolsa-rules'
 };
 
 function App() {
@@ -123,7 +160,7 @@ function App() {
   const [quizzes, setQuizzes] = useState<Quiz[]>(STATIC_QUIZZES);
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(null); // NEW
+  const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
   useEffect(() => {
@@ -246,6 +283,19 @@ function App() {
       case 'landing-bpc-comparativo':
       case 'landing-bolsa-comparativo':
       case 'landing-general-rights': return <ComparativoPage />;
+      // Legacy Render
+      case 'legacy-quiz': return <QuizBeneficiosPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-dental-priv': return <BrasilSorridentePrivadoPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-dental-plan': return <BrasilSorridenteOdontoPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-family-ben': return <BeneficiosFamiliaPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-reconstruction': return <AuxilioReconstrucaoPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-single-mom': return <AuxilioMaeSolteiraPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-gas': return <AuxilioGasPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-fuel': return <AuxilioCombustivelPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-bpc-bolsa': return <BpcBolsaLegacyPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-general-rights': return <GuiaDireitosPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-cnh-rules': return <CnhLegacyPage onNavigate={handleNavigate} quizzes={quizzes} />;
+      case 'legacy-bolsa-rules': return <BolsaFamiliaLegacyPage onNavigate={handleNavigate} quizzes={quizzes} />;
       default:
         return (
           <>

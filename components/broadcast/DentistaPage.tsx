@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Smile, AlertTriangle, CheckCircle2, MapPin, Stethoscope, HelpCircle, ArrowRight } from 'lucide-react';
+import { Smile, AlertTriangle, CheckCircle2, Stethoscope } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -18,22 +19,6 @@ export const DentistaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
     const desc = "Guia completo do Brasil Sorridente. Saiba como conseguir tratamento dentário gratuito pelo SUS, incluindo implantes, aparelhos ortodônticos e próteses.";
     if (metaDesc) {
       metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "brasil sorridente 2025, dentista gratuito sus, implante dentario gratuito, aparelho dentario sus, protese dentaria sus, saude bucal, dentista popular";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
     }
   }, []);
 
@@ -47,41 +32,11 @@ export const DentistaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
         "@type": "GovernmentOrganization",
         "name": "Sistema Único de Saúde (SUS)"
       },
-      "areaServed": {
-        "@type": "Country",
-        "name": "Brasil"
-      },
-      "audience": {
-        "@type": "Audience",
-        "audienceType": "População de Baixa Renda"
-      },
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "BRL"
       }
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "O SUS coloca implante dentário de graça?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sim, mas é limitado. Implantes dentários são oferecidos em alguns Centros de Especialidades Odontológicas (CEOs) credenciados e em parceria com universidades, não estando disponíveis em todas as unidades."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Como conseguir dentista gratuito pelo SUS?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "O primeiro passo é ir à Unidade Básica de Saúde (UBS) mais próxima com seu Cartão do SUS e documento de identidade para uma triagem com o clínico geral."
-          }
-        }
-      ]
     }
   ];
 
@@ -93,6 +48,10 @@ export const DentistaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes 
       quizzes={quizzes}
       onNavigate={onNavigate}
       quizTriggerLabel="Verificar Unidades Próximas"
+      relatedArticle={{
+        title: "Veja a lista completa: O que o SUS cobre de verdade (Implantes e Aparelho)",
+        onClick: () => onNavigate('legacy-dental-plan')
+      }}
     >
       <SchemaMarkup data={schemaData} />
       <h2>O que é o Brasil Sorridente?</h2>

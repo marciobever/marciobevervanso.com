@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Car, MapPin, FileText, ExternalLink, Calendar, CheckCircle2, AlertCircle, BookOpen, UserCheck } from 'lucide-react';
+import { MapPin, ExternalLink, Calendar, AlertCircle } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -78,22 +79,6 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
     const desc = "Tudo sobre a CNH Social 2025. Veja a lista de estados com inscrições abertas, requisitos para gratuidade e como tirar sua habilitação sem custo.";
     if (metaDesc) {
       metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "cnh social 2025, cnh gratuita, inscrição cnh social, detran cnh popular, carteira de motorista gratis, primeira habilitação, renovação cnh social";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
     }
   }, []);
 
@@ -107,10 +92,6 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
         "@type": "GovernmentOrganization",
         "name": "Detran"
       },
-      "areaServed": {
-        "@type": "Country",
-        "name": "Brasil"
-      },
       "audience": {
         "@type": "Audience",
         "audienceType": "Baixa Renda"
@@ -121,28 +102,6 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
         "priceCurrency": "BRL",
         "description": "Gratuidade total para taxas e exames de habilitação."
       }
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Quem tem direito à CNH Social?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Geralmente pessoas inscritas no CadÚnico, desempregados há mais de um ano, beneficiários do Bolsa Família ou estudantes de escola pública. As regras exatas variam por estado."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Como se inscrever na CNH Social 2025?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "A inscrição é feita exclusivamente pelo site do Detran do seu estado (como Detran-ES, Detran-GO, Detran-CE) durante o período de abertura do edital."
-          }
-        }
-      ]
     }
   ];
 
@@ -154,6 +113,10 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
       quizzes={quizzes}
       onNavigate={onNavigate}
       quizTriggerLabel="Verificar Minha Elegibilidade"
+      relatedArticle={{
+        title: "Dica: Como comprar moto sem entrada usando o FGTS",
+        onClick: () => onNavigate('loans')
+      }}
     >
       <SchemaMarkup data={schemaData} />
       <h2>O que é a CNH Social?</h2>

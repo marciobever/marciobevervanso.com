@@ -1,8 +1,11 @@
+
 // Utility for Google Analytics 4 Interactions
+
+const GA_MEASUREMENT_ID = 'G-SE2RJB817M';
 
 declare global {
   interface Window {
-    gtag: (command: string, targetId: string, config?: any) => void;
+    gtag: (...args: any[]) => void;
   }
 }
 
@@ -10,10 +13,10 @@ export const Analytics = {
   // Track Page Views (SPA support)
   trackPageView: (path: string) => {
     if (typeof window.gtag !== 'undefined') {
-      window.gtag('config', 'G-XXXXXXXXXX', {
+      window.gtag('config', GA_MEASUREMENT_ID, {
         page_path: path,
       });
-      console.log(`[GA4] PageView: ${path}`);
+      // console.log(`[GA4] PageView: ${path}`);
     }
   },
 
@@ -21,7 +24,7 @@ export const Analytics = {
   trackEvent: (eventName: string, params?: Record<string, any>) => {
     if (typeof window.gtag !== 'undefined') {
       window.gtag('event', eventName, params);
-      console.log(`[GA4] Event: ${eventName}`, params);
+      // console.log(`[GA4] Event: ${eventName}`, params);
     }
   },
 
