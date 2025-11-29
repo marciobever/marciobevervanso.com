@@ -94,8 +94,6 @@
       
       googletag.cmd.push(function() {
         // Targeting Logic (Replicated from WordPress script)
-        // Since we don't have WP ID in React, we skip id_post_wp or can mock it if needed
-        // But we DO implement UTM targeting which is critical for optimization
         if(window.location.search){
             var queryString = window.location.search;
             var urlParams = new URLSearchParams(queryString);
@@ -108,16 +106,21 @@
             if(utm_campaign) googletag.pubads().setTargeting('utm_campaign', [utm_campaign]);
         }
 
-        // Interstitial
+        // --- DEFINIÇÃO DOS SLOTS ---
+
+        // 1. Interstitial (Tela Cheia)
         var interstitialSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial', googletag.enums.OutOfPageFormat.INTERSTITIAL);
-        if (interstitialSlot) interstitialSlot.addService(googletag.pubads());
+        if (interstitialSlot) {
+            interstitialSlot.addService(googletag.pubads());
+        }
 
-        // Anchor (Prefer TOP as per original script, but BOTTOM is safer for web apps. Keeping generic anchor logic)
-        // Note: The script provided uses TOP_ANCHOR. We will try to respect that configuration logic.
+        // 2. Anchor (Rodapé/Topo fixo)
         var anchorSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor', googletag.enums.OutOfPageFormat.TOP_ANCHOR);
-        if (anchorSlot) anchorSlot.addService(googletag.pubads());
+        if (anchorSlot) {
+            anchorSlot.addService(googletag.pubads());
+        }
 
-        // Standard Content Slots (1 to 9)
+        // 3. Blocos de Conteúdo (1 a 9)
         var mapping = googletag.sizeMapping().addSize([0, 0], ['fluid',[250, 250],[300, 250],[336, 280]]).build();
 
         for (var i = 1; i <= 9; i++) {
@@ -127,13 +130,20 @@
                 .addService(googletag.pubads());
         }
 
-        // Global Settings
+        // --- ATIVAÇÃO GLOBAL ---
+        
         googletag.pubads().enableLazyLoad({ 
             fetchMarginPercent: 20, 
             renderMarginPercent: 10, 
             mobileScaling: 2.0 
         });
+        
         googletag.enableServices();
+
+        // --- EXIBIÇÃO FORÇADA DOS SLOTS ESPECIAIS ---
+        // (Isso estava faltando e é crucial para Anchor e Interstitial funcionarem)
+        if (interstitialSlot) googletag.display(interstitialSlot);
+        if (anchorSlot) googletag.display(anchorSlot);
       });
     </script>
 
