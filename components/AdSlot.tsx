@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, CreditCard, Banknote, ShieldCheck, Sparkles } from 'lucide-react';
 
@@ -134,11 +135,12 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
             GAM SLOT: 
             Hidden if showNative is true (to prevent white flash), 
             but kept in DOM for GAM to inject iframe.
+            Height Fix: min-h-[280px] covers standard 300x250 ads + padding, preventing CLS.
           */}
           <div 
             ref={adRef}
             id={id} 
-            className={`ad-container min-h-[90px] md:min-h-[250px] flex justify-center items-center bg-gray-50 rounded-lg overflow-hidden ${showNative ? 'hidden' : 'block'}`}
+            className={`ad-container min-h-[280px] md:min-h-[300px] flex justify-center items-center bg-gray-50 rounded-lg overflow-hidden transition-all duration-300 ${showNative ? 'hidden' : 'block'}`}
           >
           </div>
 
@@ -149,7 +151,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
           {showNative && (
             <div 
                 onClick={handleNativeClick}
-                className={`w-full rounded-2xl p-6 md:p-8 shadow-lg cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xl bg-gradient-to-r ${adContent.gradient} text-white relative overflow-hidden group`}
+                className={`w-full rounded-2xl p-6 md:p-8 shadow-lg cursor-pointer transition-all hover:scale-[1.01] hover:shadow-xl bg-gradient-to-r ${adContent.gradient} text-white relative overflow-hidden group min-h-[280px] flex flex-col justify-center`}
             >
                 {/* Background Decor */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:bg-white/20 transition-colors"></div>
@@ -157,7 +159,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
 
                 <div className="relative z-10 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 md:gap-6">
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-inner border border-white/10">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-inner border border-white/10 shrink-0">
                             <adContent.icon className="text-white" size={28} />
                         </div>
                         <div>
