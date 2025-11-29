@@ -22,20 +22,6 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
     if (isInitialized.current) return;
     isInitialized.current = true;
 
-    // --- VIDEOWALL SCRIPT (Videoo.tv) ---
-    // Injeção robusta para garantir execução
-    const scriptId = "videoowall-script";
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.src = "https://static.videoo.tv/a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba.js";
-      script.async = true;
-      script.defer = true;
-      script.setAttribute("data-id", "a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba");
-      script.setAttribute("data-cfasync", "false");
-      document.body.appendChild(script);
-    }
-
     // --- GOOGLE AD MANAGER INIT ---
     window.googletag = window.googletag || { cmd: [] };
 
