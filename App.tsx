@@ -12,7 +12,7 @@ import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
-import { AdManager } from './components/AdManager'; // IMPORT NOVO
+import { AdManager } from './components/AdManager';
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
 import { FloatingChat } from './components/FloatingChat';
@@ -65,8 +65,8 @@ const CardsLimitePage = lazy(() => import('./components/broadcast/CardsLimitePag
 const SeguroDividaPage = lazy(() => import('./components/broadcast/SeguroDividaPage').then(m => ({ default: m.SeguroDividaPage })));
 const SeguroVidaPage = lazy(() => import('./components/broadcast/SeguroVidaPage').then(m => ({ default: m.SeguroVidaPage })));
 
-// Legacy Pages (Wordpress Migration)
-const LegacyArticles = lazy(() => import('./components/pages/LegacyArticles').then(module => ({ default: module.QuizBeneficiosPage }))); // Placeholder for lazy load, we will pick specific exports in render
+// Legacy Pages
+const LegacyArticles = lazy(() => import('./components/pages/LegacyArticles').then(module => ({ default: module.QuizBeneficiosPage })));
 import { 
   QuizBeneficiosPage, 
   BrasilSorridentePrivadoPage, 
@@ -92,7 +92,9 @@ const ROUTES: Record<string, ViewState> = {
   '/estados': 'benefits-by-state',
   '/calendarios': 'calendarios',
   '/cartoes': 'cards',
+  '/detalhes-cartao': 'card-details',
   '/seguros': 'insurance',
+  '/cotacao-seguro': 'insurance-quote',
   '/comparativo': 'comparativo',
   '/emprestimos': 'loans',
   '/calculadora': 'calculator',
@@ -123,7 +125,7 @@ const ROUTES: Record<string, ViewState> = {
   '/admin/seo': 'admin-seo',
   '/admin/analytics': 'analytics',
   
-  // Legacy Wordpress Slugs Mapped to New Content
+  // Legacy
   '/quiz-beneficios-sociais': 'legacy-quiz',
   '/bolsa-familia': 'guide-bolsa', 
   '/brasil-sorridente': 'landing-dentista', 
@@ -144,7 +146,7 @@ const ROUTES: Record<string, ViewState> = {
 function App() {
   const getInitialView = (): ViewState => {
     try {
-      if (typeof window === 'undefined' || window.location.protocol === 'blob:') return 'home';
+      if (typeof window === 'undefined') return 'home';
       const path = window.location.pathname;
       const normalizedPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
       if (ROUTES[normalizedPath]) {
@@ -161,55 +163,58 @@ function App() {
   const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
+  // Initialize state from URL params to support direct links/reloads
   useEffect(() => {
-    const handlePopState = () => {
-      setCurrentView(getInitialView());
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    const params = new URLSearchParams(window.location.search);
+    const qId = params.get('quizId');
+    const cId = params.get('cardId');
+    const iId = params.get('insId');
+
+    if (qId) {
+      setActiveQuizId(qId);
+      if (currentView !== 'quizzes' && !currentView.startsWith('landing')) {
+         setCurrentView('quizzes');
+      }
+    }
+    if (cId) {
+      setSelectedCardId(cId);
+      if (currentView !== 'card-details') setCurrentView('card-details');
+    }
+    if (iId) {
+      setSelectedInsuranceId(iId);
+      if (currentView !== 'insurance-quote') setCurrentView('insurance-quote');
+    }
   }, []);
 
   useEffect(() => {
-    Analytics.trackPageView(currentView);
+    // Scroll top on mount
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentView]);
+  }, []);
 
   const handleNavigate = (view: ViewState) => {
     if (!view) {
-      setCurrentView('home');
+      window.location.href = '/';
       return;
     }
+    
+    // Find path for view
     const path = Object.keys(ROUTES).find(key => ROUTES[key] === view) || '/';
-    try {
-      if (window.history && typeof window.history.pushState === 'function') {
-         window.history.pushState({}, '', path);
-      }
-    } catch (error) {}
-    setCurrentView(view);
-    if (view !== 'quizzes') {
-      setActiveQuizId(null);
-    }
-    if (view !== 'card-details') {
-      setSelectedCardId(null);
-    }
-    if (view !== 'insurance-quote') {
-      setSelectedInsuranceId(null);
-    }
+    
+    // Use Full Page Reload for navigation to ensure scripts (VideoWall) re-trigger
+    window.location.href = path;
   };
 
   const handleStartQuiz = (id: string) => {
-    setActiveQuizId(id);
-    handleNavigate('quizzes');
+    // Navigate with param to persist state across reload
+    window.location.href = `/quiz?quizId=${id}`;
   };
 
   const handleViewCard = (cardId: string) => {
-    setSelectedCardId(cardId);
-    handleNavigate('card-details');
+    window.location.href = `/detalhes-cartao?cardId=${cardId}`;
   };
 
   const handleQuoteInsurance = (id: string) => {
-    setSelectedInsuranceId(id);
-    handleNavigate('insurance-quote');
+    window.location.href = `/cotacao-seguro?insId=${id}`;
   };
 
   const renderContent = () => {
@@ -236,7 +241,7 @@ function App() {
           <QuizPage 
             quizzes={quizzes} 
             activeQuizId={activeQuizId} 
-            onCloseQuiz={() => { setActiveQuizId(null); handleNavigate('quizzes'); }} 
+            onCloseQuiz={() => { window.location.href = '/quiz'; }} 
             onSelectQuiz={handleStartQuiz}
             onNavigate={handleNavigate}
           />
@@ -307,7 +312,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark flex flex-col">
-      <AdManager currentView={currentView} /> {/* Passando currentView para atualização */}
+      <AdManager currentView={currentView} />
       <NotificationBar onNavigate={handleNavigate} />
       <Header onNavigate={handleNavigate} />
       <main className="flex-grow">
