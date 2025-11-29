@@ -13,47 +13,48 @@ interface AdManagerProps {
 }
 
 export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
-  const anchorSlotRef = useRef<any>(null);
-  const interstitialSlotRef = useRef<any>(null);
   const isInitialized = useRef(false);
 
-  // 1. Inicialização Única
   useEffect(() => {
+    // Como o site agora força o reload da página na navegação, 
+    // rodamos a inicialização completa a cada montagem do componente.
     if (isInitialized.current) return;
     isInitialized.current = true;
 
-    // --- GOOGLE AD MANAGER INIT ---
     window.googletag = window.googletag || { cmd: [] };
 
     window.googletag.cmd.push(() => {
       const pubads = window.googletag.pubads();
 
-      // Targeting Global
+      // 1. Configurações Globais e SRA (Single Request Architecture)
+      // SRA é crucial para o bom funcionamento conjunto de Anchor + Interstitial
+      pubads.enableSingleRequest();
+      
+      // 2. Targeting Global
       pubads.setTargeting('site', 'marciobevervanso.com');
+      pubads.setTargeting('page_view', currentView);
+      // Cache Buster: Tenta forçar uma nova "sessão" para o AdServer entregar mais Interstitials
+      pubads.setTargeting('session_ts', Date.now().toString());
 
-      // --- DEFINIÇÃO SLOTS ESPECIAIS ---
+      // 3. Definição de Slots Especiais (Fora da página)
       
       // Interstitial
-      const interstitial = window.googletag.defineOutOfPageSlot(
+      const interstitialSlot = window.googletag.defineOutOfPageSlot(
         '/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial',
         window.googletag.enums.OutOfPageFormat.INTERSTITIAL
       );
-      if (interstitial) {
-        interstitial.addService(pubads);
-        interstitialSlotRef.current = interstitial;
-      }
 
       // Anchor (Topo)
-      const anchor = window.googletag.defineOutOfPageSlot(
+      const anchorSlot = window.googletag.defineOutOfPageSlot(
         '/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor',
         window.googletag.enums.OutOfPageFormat.TOP_ANCHOR
       );
-      if (anchor) {
-        anchor.addService(pubads);
-        anchorSlotRef.current = anchor;
-      }
 
-      // Configurações
+      // Adiciona o serviço aos slots especiais se foram criados com sucesso
+      if (interstitialSlot) interstitialSlot.addService(pubads);
+      if (anchorSlot) anchorSlot.addService(pubads);
+
+      // 4. Configurações de Performance
       pubads.enableLazyLoad({
         fetchMarginPercent: 200, 
         renderMarginPercent: 100,
@@ -61,38 +62,16 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
       });
       
       pubads.collapseEmptyDivs();
+      
+      // 5. Habilita os serviços
       window.googletag.enableServices();
 
-      // Exibir Slots Especiais Iniciais
-      if (interstitial) window.googletag.display(interstitial);
-      if (anchor) window.googletag.display(anchor);
+      // 6. Exibe os slots especiais
+      // Nota: Em SRA, define-se antes e exibe-se depois ou junto.
+      if (interstitialSlot) window.googletag.display(interstitialSlot);
+      if (anchorSlot) window.googletag.display(anchorSlot);
     });
-  }, []);
-
-  // 2. Refresh nas Mudanças de Rota
-  useEffect(() => {
-    if (!window.googletag || !window.googletag.cmd) return;
-
-    window.googletag.cmd.push(() => {
-      const pubads = window.googletag.pubads();
-      
-      // Atualiza targeting da página
-      pubads.setTargeting('page_view', currentView);
-
-      // Slots para atualizar
-      const slotsToRefresh: any[] = []; // Fix: Explicitly type array as any[]
-      if (anchorSlotRef.current) slotsToRefresh.push(anchorSlotRef.current);
-      if (interstitialSlotRef.current) slotsToRefresh.push(interstitialSlotRef.current);
-
-      if (slotsToRefresh.length > 0) {
-        // Pequeno delay para garantir transição
-        setTimeout(() => {
-           // console.log(`[AdManager] Refreshing ${slotsToRefresh.length} floating slots for view: ${currentView}`);
-           pubads.refresh(slotsToRefresh);
-        }, 800);
-      }
-    });
-  }, [currentView]);
+  }, []); // Dependência vazia, roda apenas uma vez no load da página
 
   return null;
 };

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, CreditCard, Banknote, ShieldCheck, Sparkles, ChevronRight } from 'lucide-react';
+import { CreditCard, Banknote, ShieldCheck, ChevronRight } from 'lucide-react';
 
 interface AdSlotProps {
   id: string; // Ex: "Content1"
@@ -52,7 +52,7 @@ const NATIVE_ADS = {
 export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey }) => {
   const adRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<any>(null);
-  const [showNative, setShowNative] = useState(true);
+  const [showNative, setShowNative] = useState(true); // Começa true, se o ad carregar vira false
 
   const getAdContent = () => {
     const l = label.toLowerCase();
@@ -66,18 +66,20 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
     const element = adRef.current;
     if (!element) return;
 
+    // Função de carregamento do slot
     const loadAd = () => {
       if (window.googletag && window.googletag.cmd) {
         window.googletag.cmd.push(() => {
+          // Limpeza preventiva
           if (slotRef.current) {
             window.googletag.destroySlots([slotRef.current]);
           }
 
           const slotPath = `/23287346478/marciobevervanso.com/marciobevervanso.com_${id}`;
           
+          // Tamanhos responsivos refinados
           const slotSizes = [[250, 250], [300, 250], [336, 280], [300, 600]];
           
-          // Mapeamento responsivo refinado
           const mapping = window.googletag.sizeMapping()
             .addSize([0, 0], ['fluid', [250, 250], [300, 250], [336, 280]]) 
             .addSize([768, 0], ['fluid', [336, 280], [728, 90], [300, 600]]) 
@@ -90,16 +92,18 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
             slot.addService(window.googletag.pubads());
             slotRef.current = slot;
 
+            // Listener para saber se o anúncio carregou ou veio vazio
             window.googletag.pubads().addEventListener('slotRenderEnded', (event: any) => {
               if (event.slot === slot) {
                 if (!event.isEmpty) {
-                  setShowNative(false);
+                  setShowNative(false); // Veio anúncio, esconde o nativo
                 } else {
-                  setShowNative(true);
+                  setShowNative(true); // Veio vazio, mostra o nativo
                 }
               }
             });
 
+            // Exibe e força o refresh (importante mesmo com SRA para lazy loaded ads)
             window.googletag.display(id);
             window.googletag.pubads().refresh([slot]);
           }
@@ -107,6 +111,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
       }
     };
 
+    // Observer para carregar apenas quando visível (Lazy Load nativo do React + GAM)
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         loadAd();
@@ -144,12 +149,14 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
              </span>
           </div>
 
+          {/* Container do Google Ad Manager */}
           <div 
             id={id} 
             ref={adRef}
             className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showNative ? 'h-0 opacity-0 overflow-hidden absolute' : 'min-h-[250px] opacity-100 relative'}`}
           ></div>
 
+          {/* Anúncio Nativo (Fallback) */}
           {showNative && (
             <div 
                 onClick={handleNativeClick}
