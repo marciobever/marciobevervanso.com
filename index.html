@@ -13,18 +13,13 @@
     <meta name="author" content="Marcio Bevervanso">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Facebook / WhatsApp (The "Pretty Card") -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://marciobevervanso.com/">
     <meta property="og:title" content="Consulta Oficial: Bolsa Família e CNH Social 2025">
     <meta property="og:description" content="Saiu o novo calendário e a lista de aprovados para CNH Gratuita. Toque para consultar seu CPF e verificar benefícios disponíveis hoje.">
-    <!-- Imagem profissional estilo governamental (Família/Segurança) -->
     <meta property="og:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1200&auto=format&fit=crop">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Guia Social Brasil">
-    <meta property="og:locale" content="pt_BR">
-
+    
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://marciobevervanso.com/">
@@ -32,28 +27,21 @@
     <meta property="twitter:description" content="Verifique agora: Calendário Bolsa Família, Cartões com Limite Alto e CNH Gratuita.">
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1200&auto=format&fit=crop">
     
-    <!-- Schema.org Structured Data (Organization & WebSite) -->
+    <!-- Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Guia Social Brasil - Marcio Bevervanso",
       "url": "https://marciobevervanso.com/",
-      "description": "Portal informativo sobre benefícios sociais, crédito popular e programas do governo.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://marciobevervanso.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "description": "Portal informativo sobre benefícios sociais, crédito popular e programas do governo."
     }
     </script>
 
+    <!-- Tailwind via CDN (Mantido para simplicidade, mas recomendado instalar via PostCSS em produção futura) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Videoowall Script -->
-    <script defer id="videoowall" data-id="a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba" data-cfasync="false"  src="https://static.videoo.tv/a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba.js"></script>
-
     <!-- Google Analytics 4 (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -122,16 +110,19 @@
   <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
   }
 }
 </script>
 </head>
   <body class="bg-brand-light text-brand-dark antialiased">
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

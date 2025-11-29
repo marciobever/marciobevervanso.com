@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
-import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
+import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Share2, MoreHorizontal, Home, ChevronRight } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
 
@@ -9,24 +9,17 @@ interface BroadcastLayoutProps {
   subtitle: string;
   children: React.ReactNode;
   quizTriggerLabel?: string;
-  
-  // New props for embedded quiz logic
   quizId?: string;
   quizzes?: Quiz[];
   onNavigate?: (view: ViewState) => void;
-  
-  // Optional related article link
   relatedArticle?: {
     title: string;
     onClick: () => void;
   };
-  
-  // Deprecated/Legacy props (optional for backward compatibility if needed)
   onTakeQuiz?: () => void; 
   updatedDate?: string;
 }
 
-// Fake comments data
 const COMMENTS = [
   { name: 'Maria Silva', time: 'há 2 min', text: 'Gente, funcionou mesmo! Fiz a simulação aqui e vi que tinha direito. Já fui no CRAS e deu tudo certo.', likes: 24, avatarColor: 'bg-purple-600' },
   { name: 'João Souza', time: 'há 5 min', text: 'Muito bom esse guia. Estava com dúvida sobre o valor do adicional por criança e aqui explicou tudo.', likes: 18, avatarColor: 'bg-blue-600' },
@@ -44,16 +37,14 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
   quizzes,
   onNavigate,
   relatedArticle,
-  onTakeQuiz, // Legacy handler, still supported if no quizId provided
+  onTakeQuiz, 
   updatedDate = new Date().toLocaleDateString('pt-BR')
 }) => {
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [viewers, setViewers] = useState(120);
   const [showSticky, setShowSticky] = useState(false);
 
-  // Effect for Fake Real-time Viewers & Sticky Footer Scroll
   useEffect(() => {
-    // Randomize viewers slightly
     const interval = setInterval(() => {
       setViewers(prev => {
         const change = Math.floor(Math.random() * 5) - 2;
@@ -61,7 +52,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
       });
     }, 4000);
 
-    // Scroll listener for sticky footer
     const handleScroll = () => {
       if (window.scrollY > 400) {
         setShowSticky(true);
@@ -78,7 +68,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
   }, []);
 
   const handleSimulateClick = () => {
-    // Safety check: ensure the quiz ID actually exists in the provided list
     const targetQuiz = quizzes?.find(q => q.id === quizId);
     
     if (quizId && quizzes && targetQuiz) {
@@ -89,15 +78,12 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
     } else if (onTakeQuiz) {
       onTakeQuiz();
     } else {
-       console.warn("Quiz not found or not provided");
-       // Optional: Navigate to main quiz page fallback
        if(onNavigate) onNavigate('quizzes');
     }
   };
 
   return (
     <div className="bg-slate-50 min-h-screen pb-24 md:pb-20 font-sans relative">
-      {/* Top Warning / Trust Bar */}
       <div className="bg-brand-dark text-white text-[10px] md:text-xs py-2 text-center font-medium tracking-wide flex justify-center items-center gap-2">
         <span>PORTAL OFICIAL • CONTEÚDO VERIFICADO</span>
         <span className="hidden md:inline">•</span>
@@ -109,18 +95,24 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
       <div className="container mx-auto px-4 md:px-6 py-6 max-w-4xl">
         
-        {/* Social Proof Bar - High Trust Factor */}
+        {/* Simple Breadcrumb for Landing Pages */}
+        <nav className="flex items-center text-xs text-gray-500 mb-6">
+           <button onClick={() => onNavigate && onNavigate('home')} className="hover:text-brand-blue"><Home size={14}/></button>
+           <ChevronRight size={12} className="mx-1"/>
+           <span className="text-gray-400">Notícias</span>
+           <ChevronRight size={12} className="mx-1"/>
+           <span className="text-brand-blue font-bold truncate max-w-[150px] md:max-w-none">{title.split(':')[0]}</span>
+        </nav>
+
         <div className="flex items-center gap-2 text-xs text-slate-500 mb-4 bg-white w-fit px-3 py-1 rounded-full shadow-sm border border-slate-100 mx-auto md:mx-0">
            <Eye size={14} className="text-red-500" />
            <span className="font-bold text-slate-700">{viewers} pessoas</span> estão lendo esta notícia agora.
         </div>
 
-        {/* Ad Container - Top (High Visibility) */}
         <div className="bg-slate-50/95 pt-2 pb-6 border-b border-gray-200 mb-6">
            <AdSlot id="Content1" label="Recomendado para Você" />
         </div>
 
-        {/* Header Content */}
         <header className="mb-8 text-center md:text-left">
            <span className="inline-flex items-center gap-1 py-1 px-3 rounded-md bg-blue-100/50 text-brand-blue text-xs font-bold uppercase tracking-widest mb-3 border border-blue-200">
              <Zap size={12} fill="currentColor" /> Atualizado em {updatedDate}
@@ -133,19 +125,16 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
            </p>
         </header>
 
-        {/* Main Content Area */}
         <article className="prose prose-lg prose-slate max-w-none bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
           
           {children}
 
-          {/* Native Ad Slot "In-Content" - High CTR Area */}
           <div className="my-8 not-prose">
              <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl p-1">
                 <AdSlot id="Content2" label="Publicidade" />
              </div>
           </div>
 
-          {/* DYNAMIC CONTENT: CTA Button OR Embedded Quiz */}
           <div className="my-10">
             {isQuizOpen && quizId && quizzes ? (
                <div id="embedded-quiz-container" className="animate-fade-in-up">
@@ -160,7 +149,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
                </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {/* Main CTA - Conversion Focus */}
                 <div 
                   className="bg-brand-light border-2 border-brand-blue rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-xl shadow-brand-blue/10 transform hover:scale-[1.01] transition-transform cursor-pointer relative overflow-hidden group" 
                   onClick={handleSimulateClick}
@@ -181,7 +169,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
                   </button>
                 </div>
 
-                {/* Related Article Link - SEO & Pageviews */}
                 {relatedArticle && (
                   <button 
                     onClick={relatedArticle.onClick}
@@ -200,7 +187,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
         </article>
 
-        {/* COMMENTS SECTION - SOCIAL PROOF */}
         <div className="mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 max-w-4xl mx-auto">
            <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
               <MessageCircle size={20} className="text-brand-blue" /> 
@@ -244,8 +230,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
       </div>
 
-      {/* STICKY MOBILE FOOTER CTA - REVENUE DRIVER */}
-      {/* Shows only on mobile/tablet when user scrolls past header */}
       <div className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-40 transition-transform duration-300 md:hidden ${showSticky && !isQuizOpen ? 'translate-y-0' : 'translate-y-full'}`}>
          <div className="flex items-center gap-3">
             <div className="flex-grow">

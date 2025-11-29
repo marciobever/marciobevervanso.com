@@ -1,50 +1,58 @@
 import React, { useEffect } from 'react';
 import { LOAN_OFFERS } from '../../constants';
 import { AdSlot } from '../AdSlot';
-import { Banknote, CheckCircle2, AlertTriangle, ArrowRight, Percent, Clock } from 'lucide-react';
+import { Banknote, CheckCircle2, AlertTriangle, ArrowRight, Percent, Clock, ShieldCheck } from 'lucide-react';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
+import { Breadcrumbs } from '../ui/Breadcrumbs';
 
 export const LoansPage: React.FC = () => {
 
   // SEO Optimization
   useEffect(() => {
     document.title = "Empréstimo para Negativado e Antecipação FGTS | Simulação Online";
-    
     const metaDesc = document.querySelector('meta[name="description"]');
     const desc = "Precisa de dinheiro rápido? Simule empréstimo pessoal online, antecipação do Saque-Aniversário FGTS e crédito consignado BPC/LOAS com as menores taxas.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "emprestimo para negativado, antecipação saque aniversário, emprestimo fgts, credito pessoal online, consignado bpc, emprestimo na hora via pix";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
-    }
+    if (metaDesc) { metaDesc.setAttribute('content', desc); }
   }, []);
+
+  // Generate Financial Product Schema for Google Rich Snippets
+  const financialSchema = {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Empréstimo FGTS e Pessoal",
+    "description": "Antecipação do Saque Aniversário FGTS e Empréstimo Pessoal para Negativados.",
+    "interestRate": "1.49",
+    "annualPercentageRate": "20.5",
+    "feesAndCommissionsSpecification": "Não há cobrança de tarifas antecipadas.",
+    "provider": {
+        "@type": "Organization",
+        "name": "Parceiros Certificados Banco Central"
+    }
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen py-10">
+      <SchemaMarkup data={financialSchema} />
+
       <div className="container mx-auto px-4 md:px-6">
         
+        <Breadcrumbs 
+          items={[
+            { label: 'Serviços Financeiros', href: 'home' },
+            { label: 'Empréstimos Online' }
+          ]}
+          onNavigate={(view) => window.scrollTo(0,0)} // Placeholder
+        />
+
         <header className="mb-12 text-center max-w-3xl mx-auto">
            <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border border-green-200 mb-4 inline-block">
-             Dinheiro Rápido
+             Dinheiro Rápido & Seguro
            </span>
            <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6">
              Empréstimos e Crédito Pessoal
            </h1>
            <p className="text-lg text-slate-600 leading-relaxed">
-             Compare as melhores taxas do mercado. Opções para <strong>negativados</strong>, antecipação do <strong>Saque-Aniversário FGTS</strong> e crédito consignado BPC/LOAS.
+             Compare as melhores taxas do mercado. Opções para <strong>negativados</strong>, antecipação do <strong>Saque-Aniversário FGTS</strong> e crédito consignado.
            </p>
         </header>
 
@@ -90,34 +98,11 @@ export const LoansPage: React.FC = () => {
                     Simular Sem Compromisso <ArrowRight size={18} />
                  </button>
                  
-                 <p className="text-center text-xs text-gray-400 mt-4">Sujeito a análise de crédito</p>
+                 <p className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1">
+                    <ShieldCheck size={12}/> Ambiente Seguro
+                 </p>
               </div>
            ))}
-        </div>
-
-        {/* Informative SEO Section */}
-        <div className="mt-20 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
-           <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-              <AlertTriangle className="text-yellow-500" /> Cuidado com Golpes
-           </h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 leading-relaxed">
-              <div>
-                 <p className="mb-4">
-                    <strong>Nunca pague adiantado:</strong> Nenhuma instituição financeira séria cobra taxas antecipadas para liberar empréstimo. Se pedirem depósito prévio, é golpe.
-                 </p>
-                 <p>
-                    <strong>Confira o site oficial:</strong> Sempre verifique se você está no site oficial do banco ou da financeira antes de digitar seus dados.
-                 </p>
-              </div>
-              <div>
-                 <p className="mb-4">
-                    <strong>Antecipação do FGTS:</strong> É uma modalidade segura onde o banco desconta direto do seu Fundo de Garantia. Não compromete sua renda mensal e aceita negativados.
-                 </p>
-                 <p>
-                    <strong>Consignado BPC/LOAS:</strong> Foi liberado novamente, mas com margem reduzida. Cuidado para não comprometer muito seu benefício.
-                 </p>
-              </div>
-           </div>
         </div>
 
         <div className="mt-12">
