@@ -3,6 +3,13 @@ import { GoogleGenAI } from "@google/genai";
 import { Send, User, Bot, Loader2, Search, Info } from 'lucide-react';
 import { AdSlot } from './AdSlot';
 
+// Declaração para satisfazer o TypeScript sem depender de @types/node
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
+
 interface Message {
   id: string;
   role: 'user' | 'model';

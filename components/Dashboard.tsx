@@ -3,6 +3,13 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Loader2, Plus, Trash2, Play, LayoutDashboard, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Quiz } from '../types';
 
+// Declaração para satisfazer o TypeScript sem depender de @types/node
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
+
 interface DashboardProps {
   quizzes: Quiz[];
   setQuizzes: React.Dispatch<React.SetStateAction<Quiz[]>>;

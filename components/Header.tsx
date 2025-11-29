@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Menu, X, CreditCard, Shield, Scale, Wallet, Home, CalendarClock } from 'lucide-react';
+import { Menu, X, CreditCard, Shield, Scale, Wallet, Home, CalendarClock, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
 import { ViewState } from '../types';
 import { ConsultationModal } from './ConsultationModal';
@@ -70,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             </h1>
 
             {/* Desktop Navigation - Semantic Links */}
-            <nav role="navigation" aria-label="Menu Principal" className="hidden md:flex items-center gap-1 lg:gap-2">
+            <nav role="navigation" aria-label="Menu Principal" className="hidden md:flex items-center gap-1 lg:gap-1.5 xl:gap-2">
               <a 
                 href="/beneficios" 
                 onClick={(e) => handleNav(e, 'all-benefits')} 
@@ -78,6 +78,14 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 aria-label="Ir para lista completa de benefícios"
               >
                   <Home size={16} aria-hidden="true" /> Benefícios
+              </a>
+              <a 
+                href="/estados" 
+                onClick={(e) => handleNav(e, 'benefits-by-state')} 
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-brand-medium hover:text-brand-blue hover:bg-blue-50 font-semibold text-sm transition-all"
+                aria-label="Ver benefícios por estado"
+              >
+                  <MapPin size={16} aria-hidden="true" /> Por Estado
               </a>
               <a 
                 href="#calendarios" 
@@ -96,14 +104,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                   <CreditCard size={16} aria-hidden="true" /> Cartões
               </a>
               <a 
-                href="#seguros" 
-                onClick={(e) => handleNav(e, 'insurance')} 
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-brand-medium hover:text-brand-blue hover:bg-blue-50 font-semibold text-sm transition-all"
-                aria-label="Ver opções de seguros baratos"
-              >
-                  <Shield size={16} aria-hidden="true" /> Seguros
-              </a>
-              <a 
                 href="#comparar" 
                 onClick={(e) => handleNav(e, 'comparativo')} 
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-brand-medium hover:text-brand-blue hover:bg-blue-50 font-semibold text-sm transition-all"
@@ -112,14 +112,14 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                   <Scale size={16} aria-hidden="true" /> Comparar
               </a>
               
-              <div className="h-6 w-px bg-gray-200 mx-2" role="separator"></div>
+              <div className="h-6 w-px bg-gray-200 mx-1" role="separator"></div>
 
               <button 
                 onClick={() => setIsConsultationOpen(true)}
-                className="bg-brand-blue hover:bg-brand-hover text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-brand-blue/20 transform hover:-translate-y-0.5 flex items-center gap-2"
+                className="bg-brand-blue hover:bg-brand-hover text-white px-4 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-brand-blue/20 transform hover:-translate-y-0.5 flex items-center gap-2"
                 aria-label="Abrir modal de consulta de CPF"
               >
-                <Wallet size={16} aria-hidden="true" /> Consultar CPF
+                <Wallet size={16} aria-hidden="true" /> Consultar
               </button>
             </nav>
 
@@ -144,6 +144,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
               
               <a href="/beneficios" onClick={(e) => handleNav(e, 'all-benefits')} className="flex items-center gap-3 text-brand-dark font-medium py-3 border-b border-gray-50">
                   <Home className="text-brand-blue" aria-hidden="true" /> Todos os Benefícios
+              </a>
+              <a href="/estados" onClick={(e) => handleNav(e, 'benefits-by-state')} className="flex items-center gap-3 text-brand-dark font-medium py-3 border-b border-gray-50">
+                  <MapPin className="text-brand-blue" aria-hidden="true" /> Benefícios por Estado
               </a>
               <a href="#calendarios" onClick={(e) => handleNav(e, 'calendarios')} className="flex items-center gap-3 text-brand-dark font-medium py-3 border-b border-gray-50">
                   <CalendarClock className="text-brand-blue" aria-hidden="true" /> Calendários de Pagamento
@@ -176,7 +179,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
       <ConsultationModal 
         isOpen={isConsultationOpen} 
         onClose={() => setIsConsultationOpen(false)} 
-        onNavigate={(view) => { setIsConsultationOpen(false); onNavigate(view); }}
+        onNavigate={(view: ViewState) => { setIsConsultationOpen(false); onNavigate(view); }}
       />
     </>
   );

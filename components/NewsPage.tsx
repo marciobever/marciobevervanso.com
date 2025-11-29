@@ -4,6 +4,13 @@ import { Loader2, RefreshCw, ExternalLink, Calendar, TrendingUp, AlertCircle } f
 import { NewsItem } from '../types';
 import { AdSlot } from './AdSlot';
 
+// Declaração para satisfazer o TypeScript sem depender de @types/node
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
+
 const NewsPage: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(false);
