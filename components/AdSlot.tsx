@@ -9,7 +9,7 @@ interface AdSlotProps {
   refreshKey?: string | number;
 }
 
-// Native Ads Fallback (Mantidos para preencher espaço vazio se o ad falhar)
+// Native Ads Fallback
 const NATIVE_ADS = {
   loans: {
     gradient: 'from-green-600 to-emerald-800',
@@ -39,8 +39,8 @@ const NATIVE_ADS = {
 
 export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey }) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const slotRef = useRef<any>(null); // Referência ao slot do GAM
-  const [showNative, setShowNative] = useState(true); 
+  const slotRef = useRef<any>(null);
+  const [showNative, setShowNative] = useState(true); // Exibe nativo por padrão até carregar o banner
 
   const getAdContent = () => {
     const l = label.toLowerCase();
@@ -54,66 +54,69 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
     const element = adRef.current;
     if (!element) return;
 
-    let observer: IntersectionObserver;
-
+    // Função para carregar o anúncio
     const loadAd = () => {
       if (window.googletag && window.googletag.cmd) {
         window.googletag.cmd.push(() => {
-          // 1. Limpar slot anterior se existir (Crucial para SPA)
+          // 1. Limpar slot anterior se existir (Importante para SPA)
           if (slotRef.current) {
             window.googletag.destroySlots([slotRef.current]);
           }
 
-          // 2. Definir o Slot Dinamicamente
-          // Caminho: /23287346478/marciobevervanso.com/marciobevervanso.com_Content1
+          // 2. Definir o Slot
           const slotPath = `/23287346478/marciobevervanso.com/marciobevervanso.com_${id}`;
           
-          // Mapeamento de Tamanhos Responsivos
+          // Tamanhos fixos conforme original (sem 'fluid' no defineSlot para evitar erros de renderização)
+          const slotSizes = [[250, 250], [300, 250], [336, 280]];
+
+          // Mapeamento responsivo
           const mapping = window.googletag.sizeMapping()
-            .addSize([0, 0], ['fluid', [250, 250], [300, 250], [336, 280]])
-            .addSize([768, 0], ['fluid', [336, 280], [728, 90]])
+            .addSize([0, 0], ['fluid', [250, 250], [300, 250], [336, 280]]) // Mobile
+            .addSize([768, 0], ['fluid', [336, 280], [728, 90]]) // Desktop
             .build();
 
-          const slot = window.googletag.defineSlot(slotPath, ['fluid', [300, 250], [336, 280]], id);
+          // Define o slot
+          const slot = window.googletag.defineSlot(slotPath, slotSizes, id);
           
           if (slot) {
             slot.defineSizeMapping(mapping);
             slot.addService(window.googletag.pubads());
             slotRef.current = slot;
 
-            // 3. Exibir
-            window.googletag.display(id);
-            window.googletag.pubads().refresh([slot]); // Força o fetch imediato
-
-            // 4. Listener para esconder o nativo se o banner carregar
+            // Listener para gerenciar Native vs Banner
             window.googletag.pubads().addEventListener('slotRenderEnded', (event: any) => {
               if (event.slot === slot) {
                 if (!event.isEmpty) {
+                  // Se carregou banner, esconde nativo
                   setShowNative(false);
                 } else {
-                  // Se estiver vazio, mantém o nativo (ou mostra, se estava oculto)
-                  setShowNative(true); 
+                  // Se não carregou, mantém nativo
+                  setShowNative(true);
                 }
               }
             });
+
+            // 3. Exibir e Atualizar
+            window.googletag.display(id);
+            window.googletag.pubads().refresh([slot]);
           }
         });
       }
     };
 
-    // Intersection Observer para Lazy Loading real
-    observer = new IntersectionObserver((entries) => {
+    // Observer para Lazy Load
+    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         loadAd();
         observer.disconnect();
       }
-    }, { rootMargin: '200px' }); // Carrega 200px antes de aparecer
+    }, { rootMargin: '200px' });
 
     observer.observe(element);
 
-    // Cleanup: Destruir slot ao desmontar componente (Navegação)
+    // Cleanup: Destruir slot ao desmontar componente
     return () => {
-      if (observer) observer.disconnect();
+      observer.disconnect();
       if (window.googletag && window.googletag.cmd && slotRef.current) {
         window.googletag.cmd.push(() => {
           window.googletag.destroySlots([slotRef.current]);
@@ -121,7 +124,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
         });
       }
     };
-  }, [id, refreshKey]); // Recarrega se o ID ou refreshKey mudar
+  }, [id, refreshKey]);
 
   const handleNativeClick = () => {
      window.location.href = adContent.link;
@@ -139,14 +142,14 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
              </span>
           </div>
 
-          {/* GAM Container */}
+          {/* GAM Container - Só aparece se showNative for false (carregou banner) */}
           <div 
             id={id} 
             ref={adRef}
-            className={`ad-container flex justify-center items-center bg-transparent transition-opacity duration-500 ${showNative ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 min-h-[250px]'}`}
+            className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 ${showNative ? 'h-0 opacity-0 overflow-hidden absolute' : 'min-h-[250px] opacity-100 relative'}`}
           ></div>
 
-          {/* Native Fallback (Exibido enquanto carrega ou se falhar) */}
+          {/* Native Fallback - Aparece se showNative for true (padrão ou vazio) */}
           {showNative && (
             <div 
                 onClick={handleNativeClick}
