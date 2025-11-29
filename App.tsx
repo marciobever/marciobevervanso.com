@@ -155,13 +155,13 @@ function App() {
         return (
           <>
             <Hero onNavigate={handleNavigate} />
-            <AdSlot id="Content1" label="Destaque Principal" />
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
+            <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
-            <AdSlot id="Content2" label="Publicidade" />
+            <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
             <CadUnicoSection />
             <FaqSection />
-            <AdSlot id="Content3" label="Mais Informações" />
+            <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
           </>
         );
       case 'dashboard': return <Dashboard quizzes={quizzes} setQuizzes={setQuizzes} onTakeQuiz={handleStartQuiz} />;
@@ -218,7 +218,8 @@ function App() {
         return (
           <>
             <Hero onNavigate={handleNavigate} />
-            <AdSlot id="Content1" label="Destaque Principal" />
+            <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
+            <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
           </>
         );
