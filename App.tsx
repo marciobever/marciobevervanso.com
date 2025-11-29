@@ -307,7 +307,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark flex flex-col">
-      <AdManager /> {/* Gerenciador de Anúncios Inicializado Aqui */}
+      <AdManager currentView={currentView} /> {/* Passando currentView para atualização */}
       <NotificationBar onNavigate={handleNavigate} />
       <Header onNavigate={handleNavigate} />
       <main className="flex-grow">
