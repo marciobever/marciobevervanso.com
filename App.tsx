@@ -12,6 +12,7 @@ import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
+import { AdManager } from './components/AdManager'; // IMPORT NOVO
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
 import { FloatingChat } from './components/FloatingChat';
@@ -124,9 +125,8 @@ const ROUTES: Record<string, ViewState> = {
   
   // Legacy Wordpress Slugs Mapped to New Content
   '/quiz-beneficios-sociais': 'legacy-quiz',
-  // Removed duplicate: '/cnh-social-2025': 'landing-cnh',
-  '/bolsa-familia': 'guide-bolsa', // Redirect to guide
-  '/brasil-sorridente': 'landing-dentista', // Redirect to landing
+  '/bolsa-familia': 'guide-bolsa', 
+  '/brasil-sorridente': 'landing-dentista', 
   '/brasil-sorridente-vs-planos-privados-comparativo-2025': 'legacy-dental-priv',
   '/brasil-sorridente-vs-planos-odontologicos-comparativo-2025': 'legacy-dental-plan',
   '/beneficios-governo-familia-2025-comparativo': 'legacy-family-ben',
@@ -137,9 +137,7 @@ const ROUTES: Record<string, ViewState> = {
   '/bpc-vs-bolsa-familia-2025-comparativo-beneficios': 'legacy-bpc-bolsa',
   '/beneficios-sociais-governo-federal-guia-direitos-2025': 'legacy-general-rights',
   '/cnh-gratuita-social-comparativo-regras-2025': 'legacy-cnh-rules',
-  // Removed duplicate: '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios': 'landing-mcmv', 
-  '/bpc-loas-2025-comparativo-regras-valores': 'guide-bpc', // Redirect
-  // Removed duplicate: '/beneficio-pe-de-meia-2025-guia-completo': 'landing-pe-de-meia',
+  '/bpc-loas-2025-comparativo-regras-valores': 'guide-bpc', 
   '/bolsa-familia-comparativo-beneficios-regras': 'legacy-bolsa-rules'
 };
 
@@ -309,6 +307,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark flex flex-col">
+      <AdManager /> {/* Gerenciador de Anúncios Inicializado Aqui */}
       <NotificationBar onNavigate={handleNavigate} />
       <Header onNavigate={handleNavigate} />
       <main className="flex-grow">

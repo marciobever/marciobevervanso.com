@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Guia Social">
     
-    <!-- Favicon (Ícone da Aba) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 12C8 8.68629 10.6863 6 14 6H34C37.3137 6 40 8.68629 40 12V36C40 39.3137 37.3137 42 34 42H14C10.6863 42 8 39.3137 8 36V12Z' fill='%230B5CAB'/%3E%3Cpath d='M17 25.5L21.5 30L31 20.5' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='35' cy='11' r='4' fill='%23FBBF24' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E">
 
     <!-- Primary Meta Tags -->
@@ -86,69 +86,11 @@
       gtag('config', 'G-SE2RJB817M', { send_page_view: false });
     </script>
 
-    <!-- GPT Script -->
+    <!-- GPT Script (Biblioteca Principal) -->
     <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-
     <script>
       window.googletag = window.googletag || {cmd: []};
-      
-      googletag.cmd.push(function() {
-        // Targeting Logic (Replicated from WordPress script)
-        if(window.location.search){
-            var queryString = window.location.search;
-            var urlParams = new URLSearchParams(queryString);
-            var utm_source = urlParams.get('utm_source');
-            var utm_medium = urlParams.get('utm_medium');
-            var utm_campaign = urlParams.get('utm_campaign');
-
-            if(utm_source) googletag.pubads().setTargeting('utm_source', [utm_source]);
-            if(utm_medium) googletag.pubads().setTargeting('utm_medium', [utm_medium]);
-            if(utm_campaign) googletag.pubads().setTargeting('utm_campaign', [utm_campaign]);
-        }
-
-        // --- DEFINIÇÃO DOS SLOTS ---
-
-        // 1. Interstitial (Tela Cheia)
-        var interstitialSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial', googletag.enums.OutOfPageFormat.INTERSTITIAL);
-        if (interstitialSlot) {
-            interstitialSlot.addService(googletag.pubads());
-        }
-
-        // 2. Anchor (Rodapé/Topo fixo)
-        var anchorSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor', googletag.enums.OutOfPageFormat.TOP_ANCHOR);
-        if (anchorSlot) {
-            anchorSlot.addService(googletag.pubads());
-        }
-
-        // 3. Blocos de Conteúdo (1 a 9)
-        var mapping = googletag.sizeMapping().addSize([0, 0], ['fluid',[250, 250],[300, 250],[336, 280]]).build();
-
-        for (var i = 1; i <= 9; i++) {
-            googletag.defineSlot("/23287346478/marciobevervanso.com/marciobevervanso.com_Content" + i, [[250, 250],[300, 250],[336, 280]], "Content" + i)
-                .defineSizeMapping(mapping)
-                .setCollapseEmptyDiv(true)
-                .addService(googletag.pubads());
-        }
-
-        // --- ATIVAÇÃO GLOBAL ---
-        
-        googletag.pubads().enableLazyLoad({ 
-            fetchMarginPercent: 20, 
-            renderMarginPercent: 10, 
-            mobileScaling: 2.0 
-        });
-        
-        googletag.enableServices();
-
-        // --- EXIBIÇÃO FORÇADA DOS SLOTS ESPECIAIS ---
-        // (Isso estava faltando e é crucial para Anchor e Interstitial funcionarem)
-        if (interstitialSlot) googletag.display(interstitialSlot);
-        if (anchorSlot) googletag.display(anchorSlot);
-      });
     </script>
-
-    <!-- VideoWall Script (Videoo.tv) -->
-    <script defer id="videoowall" data-id="a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba" data-cfasync="false" src="https://static.videoo.tv/a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba.js"></script>
 
     <script>
       tailwind.config = {
@@ -195,7 +137,6 @@
       body {
         overscroll-behavior-y: none;
       }
-      /* Ensure ads container has height to prevent CLS */
       .ad-container {
         display: flex; justify-content: center; align-items: center; margin: 0 auto;
         width: 100%; min-height: 250px; background-color: #f8fafc; border-radius: 8px; overflow: hidden;
