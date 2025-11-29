@@ -2,24 +2,30 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
     <meta name="theme-color" content="#0B5CAB" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Guia Social">
     
     <!-- Favicon (Ícone da Aba) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M8 12C8 8.68629 10.6863 6 14 6H34C37.3137 6 40 8.68629 40 12V36C40 39.3137 37.3137 42 34 42H14C10.6863 42 8 39.3137 8 36V12Z' fill='%230B5CAB'/%3E%3Cpath d='M17 25.5L21.5 30L31 20.5' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='35' cy='11' r='4' fill='%23FBBF24' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E">
 
     <!-- Primary Meta Tags -->
-    <title>Guia Oficial 2025: Benefícios, CNH Social e Empréstimos | Marcio Bevervanso</title>
-    <meta name="title" content="Guia Oficial 2025: Benefícios, CNH Social e Empréstimos | Marcio Bevervanso">
-    <meta name="description" content="Portal de Consulta Unificada. Verifique o Calendário Bolsa Família 2025, inscrições para CNH Social Gratuita, lista de Cartões para Negativados e novas regras do BPC/LOAS.">
+    <title>Guia Social Brasil 2025: Consulta de Benefícios e Cidadania</title>
+    <meta name="title" content="Guia Social Brasil 2025: Consulta de Benefícios e Cidadania">
+    <meta name="description" content="Portal informativo independente. Consulte o Calendário Bolsa Família 2025, regras do BPC/LOAS, CNH Social e Empréstimos. Simplificamos a burocracia para você.">
     <meta name="keywords" content="bolsa família 2025, cnh social inscrição, cartão para negativado, emprestimo auxilio brasil, calendario inss 2025, consulta cpf, auxilio gas, marcio bevervanso">
-    <meta name="author" content="Marcio Bevervanso">
+    <meta name="author" content="Guia Social Brasil">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://marciobevervanso.com/">
-    <meta property="og:title" content="Consulta Oficial: Bolsa Família e CNH Social 2025">
+    <meta property="og:title" content="Consulta Fácil: Bolsa Família e CNH Social 2025">
     <meta property="og:description" content="Saiu o novo calendário e a lista de aprovados para CNH Gratuita. Toque para consultar seu CPF e verificar benefícios disponíveis hoje.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1200&auto=format&fit=crop">
     
@@ -35,7 +41,7 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Guia Social Brasil - Marcio Bevervanso",
+      "name": "Guia Social Brasil",
       "url": "https://marciobevervanso.com/",
       "description": "Portal informativo sobre benefícios sociais, crédito popular e programas do governo."
     }
@@ -80,6 +86,9 @@
       });
     </script>
 
+    <!-- VideoWall Script (Videoo.tv) -->
+    <script defer id="videoowall" data-id="a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba" data-cfasync="false" src="https://static.videoo.tv/a4ee5d6b80c91488ada774c8d658cf4e74f25043d10e44697965e620f24742ba.js"></script>
+
     <script>
       tailwind.config = {
         theme: {
@@ -96,19 +105,66 @@
               }
             },
             borderRadius: { 'xl': '14px', '2xl': '20px', '3xl': '26px' },
-            boxShadow: { 'soft': '0 4px 20px -2px rgba(11, 92, 171, 0.08)', 'card': '0 2px 10px rgba(0, 0, 0, 0.03)' }
+            boxShadow: { 'soft': '0 4px 20px -2px rgba(11, 92, 171, 0.08)', 'card': '0 2px 10px rgba(0, 0, 0, 0.03)' },
+            keyframes: {
+              'slide-up': {
+                '0%': { transform: 'translateY(100%)' },
+                '100%': { transform: 'translateY(0)' },
+              },
+              'bounce-in': {
+                '0%': { transform: 'scale(0)' },
+                '50%': { transform: 'scale(1.2)' },
+                '100%': { transform: 'scale(1)' },
+              }
+            },
+            animation: {
+              'slide-up': 'slide-up 0.5s ease-out',
+              'bounce-in': 'bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+            }
           }
         }
       }
     </script>
     <style>
-      html { scroll-behavior: smooth; }
+      html { 
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%; /* Previne ajuste automático de tamanho de fonte no iOS */
+        touch-action: manipulation; /* Melhora a resposta ao toque e evita zoom duplo */
+      }
+      body {
+        overscroll-behavior-y: none; /* Previne efeito "elástico" indesejado no scroll */
+      }
       .ad-container {
         display: flex; justify-content: center; align-items: center; margin: 0 auto;
         width: 100%; min-height: 280px; background-color: #f8fafc; border-radius: 8px; overflow: hidden;
       }
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      /* High Contrast Mode - Force Overrides */
+      body.high-contrast {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+      }
+      body.high-contrast * {
+        background-color: #000000 !important;
+        color: #FFFF00 !important;
+        border-color: #FFFFFF !important;
+      }
+      body.high-contrast img, 
+      body.high-contrast svg, 
+      body.high-contrast button {
+        filter: contrast(1.5);
+      }
+      body.high-contrast .ad-container,
+      body.high-contrast iframe {
+        background-color: #FFFFFF !important; /* Keep ads visible */
+      }
+      
+      /* Prevent font scaling on inputs which triggers zoom on iOS */
+      input, select, textarea, button {
+        font-size: 16px !important; 
+      }
     </style>
   <script type="importmap">
 {
@@ -124,7 +180,7 @@
 }
 </script>
 </head>
-  <body class="bg-brand-light text-brand-dark antialiased">
+  <body class="bg-brand-light text-brand-dark antialiased transition-colors duration-300">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

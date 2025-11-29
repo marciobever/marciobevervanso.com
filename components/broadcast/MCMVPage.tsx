@@ -12,7 +12,29 @@ interface Props {
 
 export const MCMVPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "Minha Casa Minha Vida 2025: Isenção Bolsa Família e Documentos";
+    document.title = "Minha Casa Minha Vida 2025: Inscrição, Faixa 1 e Casa Grátis";
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const desc = "Saiba como funciona o Minha Casa Minha Vida 2025. Regras para casa grátis (Faixa 1), subsídios de até 95% e como se inscrever no programa habitacional.";
+    if (metaDesc) {
+      metaDesc.setAttribute('content', desc);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "description";
+      m.content = desc;
+      document.head.appendChild(m);
+    }
+
+    const metaKeys = document.querySelector('meta[name="keywords"]');
+    const keys = "minha casa minha vida 2025, inscrição mcmv, casa gratis bolsa familia, faixa 1, financiamento caixa, subsidio habitacao, cadastro habitacao";
+    if (metaKeys) {
+      metaKeys.setAttribute('content', keys);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "keywords";
+      m.content = keys;
+      document.head.appendChild(m);
+    }
   }, []);
 
   const schemaData = [

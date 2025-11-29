@@ -92,12 +92,14 @@ export type ViewState =
   | 'quizzes' 
   | 'news' 
   | 'chat' 
+  | 'tool-scam' 
+  | 'legal'     
   | 'guide-bolsa' 
   | 'guide-bpc' 
-  | 'guide-farmacia' // NEW
-  | 'guide-pis'      // NEW
-  | 'guide-antena'   // NEW
-  | 'guide-idjovem'  // NEW
+  | 'guide-farmacia' 
+  | 'guide-pis'      
+  | 'guide-antena'   
+  | 'guide-idjovem'  
   | 'calendar'      
   | 'calendarios'   
   | 'analytics'
@@ -117,6 +119,7 @@ export type ViewState =
   | 'landing-dentista'
   | 'landing-cnh'
   | 'landing-pe-de-meia'
+  | 'landing-tarifa' // NEW
   | 'landing-bpc-comparativo'
   | 'landing-bolsa-comparativo'
   | 'landing-general-rights'

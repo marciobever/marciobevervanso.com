@@ -1,9 +1,11 @@
+
 import React, { useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
 import { Wallet, CheckCircle2, AlertTriangle, Calendar, Baby, HeartPulse, HelpCircle, ArrowRight, List } from 'lucide-react';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 import { Breadcrumbs } from '../ui/Breadcrumbs';
 import { ViewState } from '../../types';
+import { WhatsAppInvite } from '../ui/WhatsAppInvite';
 
 // Mock navigation prop injection (in real implementation, pass via props)
 const BolsaFamiliaGuide: React.FC = () => {
@@ -196,29 +198,35 @@ const BolsaFamiliaGuide: React.FC = () => {
 
           {/* Sticky Sidebar */}
           <aside className="lg:col-span-4 space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
-               <h3 className="font-bold text-brand-dark mb-6 flex items-center gap-2 border-b border-gray-100 pb-4">
-                  <Calendar size={20} className="text-brand-blue" />
-                  Resumo Rápido
-               </h3>
-               <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center">
-                     <span className="text-gray-500 font-medium">Renda Limite</span>
-                     <span className="font-bold bg-gray-100 px-2 py-1 rounded">R$ 218,00 / pessoa</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                     <span className="text-gray-500 font-medium">Valor Mínimo</span>
-                     <span className="font-bold bg-blue-50 text-brand-blue px-2 py-1 rounded">R$ 600,00</span>
-                  </div>
-                  
-                  <div className="pt-4 mt-4 border-t border-gray-100">
-                    <button className="w-full bg-brand-blue text-white py-3.5 rounded-xl font-bold hover:bg-brand-hover transition-all shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2">
-                       Ver Calendário Completo <ArrowRight size={16}/>
-                    </button>
-                  </div>
-               </div>
-            </div>
-             <div className="sticky top-[400px]">
+            
+            <div className="sticky top-24 space-y-6">
+                
+                {/* WHATSAPP WIDGET (NEW) */}
+                <WhatsAppInvite />
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                   <h3 className="font-bold text-brand-dark mb-6 flex items-center gap-2 border-b border-gray-100 pb-4">
+                      <Calendar size={20} className="text-brand-blue" />
+                      Resumo Rápido
+                   </h3>
+                   <div className="space-y-4 text-sm">
+                      <div className="flex justify-between items-center">
+                         <span className="text-gray-500 font-medium">Renda Limite</span>
+                         <span className="font-bold bg-gray-100 px-2 py-1 rounded">R$ 218,00 / pessoa</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                         <span className="text-gray-500 font-medium">Valor Mínimo</span>
+                         <span className="font-bold bg-blue-50 text-brand-blue px-2 py-1 rounded">R$ 600,00</span>
+                      </div>
+                      
+                      <div className="pt-4 mt-4 border-t border-gray-100">
+                        <button className="w-full bg-brand-blue text-white py-3.5 rounded-xl font-bold hover:bg-brand-hover transition-all shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2">
+                           Ver Calendário Completo <ArrowRight size={16}/>
+                        </button>
+                      </div>
+                   </div>
+                </div>
+                
                 <AdSlot id="Content1" label="Oferta Especial" />
              </div>
           </aside>

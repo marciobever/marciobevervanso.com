@@ -12,7 +12,29 @@ interface Props {
 
 export const DentistaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "Dentista Gratuito SUS 2025: Implantes, Aparelhos e Próteses | Guia Oficial";
+    document.title = "Dentista Gratuito SUS 2025: Implante, Aparelho e Prótese | Brasil Sorridente";
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const desc = "Guia completo do Brasil Sorridente. Saiba como conseguir tratamento dentário gratuito pelo SUS, incluindo implantes, aparelhos ortodônticos e próteses.";
+    if (metaDesc) {
+      metaDesc.setAttribute('content', desc);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "description";
+      m.content = desc;
+      document.head.appendChild(m);
+    }
+
+    const metaKeys = document.querySelector('meta[name="keywords"]');
+    const keys = "brasil sorridente 2025, dentista gratuito sus, implante dentario gratuito, aparelho dentario sus, protese dentaria sus, saude bucal, dentista popular";
+    if (metaKeys) {
+      metaKeys.setAttribute('content', keys);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "keywords";
+      m.content = keys;
+      document.head.appendChild(m);
+    }
   }, []);
 
   const schemaData = [

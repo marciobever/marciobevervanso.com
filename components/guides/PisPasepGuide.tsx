@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
 import { Wallet, Calendar, AlertTriangle, Briefcase, Table2, HelpCircle } from 'lucide-react';
 import { ViewState } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -12,6 +13,51 @@ export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
     document.title = "Tabela PIS 2025: Valor por Meses Trabalhados e Consulta CPF";
   }, []);
 
+  const schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentService",
+      "name": "Abono Salarial PIS/PASEP",
+      "serviceType": "Financial Benefit",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Ministério do Trabalho e Emprego"
+      },
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Trabalhadores Formais"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "1509",
+        "priceCurrency": "BRL",
+        "description": "Valor máximo equivalente a um salário mínimo."
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quem tem direito ao PIS 2025?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Trabalhadores que exerceram atividade remunerada para pessoa jurídica por pelo menos 30 dias no ano-base 2023 e receberam até dois salários mínimos médios."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Empregada doméstica tem direito ao PIS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não. O Abono Salarial é destinado apenas a trabalhadores de empresas privadas (Pessoa Jurídica) ou servidores públicos. Empregados de pessoa física não têm direito."
+          }
+        }
+      ]
+    }
+  ];
+
   return (
     <BroadcastLayout
       title="Abono Salarial PIS/PASEP 2025: Tabela de Valores e Guia de Saque"
@@ -20,6 +66,7 @@ export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
       quizTriggerLabel="Consultar Carteira Digital"
       onTakeQuiz={() => window.open('https://www.gov.br/pt-br/servicos/sacar-o-abono-salarial', '_blank')}
     >
+      <SchemaMarkup data={schemaData} />
       <h2>O "Atraso" do Ano-Base: Entenda</h2>
       <p>
         Muitos trabalhadores ficam confusos sobre qual ano está sendo pago. Devido à pandemia, o calendário do PIS/PASEP sofreu um atraso de dois anos.

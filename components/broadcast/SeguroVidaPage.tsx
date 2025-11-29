@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
 import { Heart, Umbrella, Gift, DollarSign } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -14,6 +15,25 @@ export const SeguroVidaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizze
     document.title = "Seguro de Vida Popular: Planos a partir de R$ 5,00 | Auxílio Funeral";
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Seguro de Vida Popular",
+    "description": "Seguro de vida com auxílio funeral e sorteios mensais em dinheiro.",
+    "category": "Insurance",
+    "offers": {
+      "@type": "Offer",
+      "price": "5.00",
+      "priceCurrency": "BRL",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "5.00",
+        "priceCurrency": "BRL",
+        "unitText": "mês"
+      }
+    }
+  };
+
   return (
     <BroadcastLayout
       title="Auxílio Funeral e Seguro de Vida por R$ 5,00? Veja como contratar pelo celular"
@@ -23,6 +43,7 @@ export const SeguroVidaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizze
       onNavigate={onNavigate}
       quizTriggerLabel="Ver Planos Disponíveis"
     >
+      <SchemaMarkup data={schemaData} />
       <h2>Proteção não é coisa de rico</h2>
       <p>
         Antigamente, ter um seguro de vida era caro e burocrático. Hoje, graças às fintechs e parcerias com bancos digitais, qualquer brasileiro pode garantir a segurança da família pagando menos que um refrigerante por mês.

@@ -72,7 +72,29 @@ const STATE_PROGRAMS: StateProgram[] = [
 
 export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "CNH Social 2025: Passo a Passo e Editais Abertos | Detran";
+    document.title = "CNH Social 2025: Inscrições Abertas, Estados e Requisitos";
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const desc = "Tudo sobre a CNH Social 2025. Veja a lista de estados com inscrições abertas, requisitos para gratuidade e como tirar sua habilitação sem custo.";
+    if (metaDesc) {
+      metaDesc.setAttribute('content', desc);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "description";
+      m.content = desc;
+      document.head.appendChild(m);
+    }
+
+    const metaKeys = document.querySelector('meta[name="keywords"]');
+    const keys = "cnh social 2025, cnh gratuita, inscrição cnh social, detran cnh popular, carteira de motorista gratis, primeira habilitação, renovação cnh social";
+    if (metaKeys) {
+      metaKeys.setAttribute('content', keys);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "keywords";
+      m.content = keys;
+      document.head.appendChild(m);
+    }
   }, []);
 
   const schemaData = [

@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { BookOpen, CheckSquare, CreditCard, Banknote, ArrowRight, MousePointerClick, Calculator } from 'lucide-react';
+import { BookOpen, CheckSquare, CreditCard, Banknote, ArrowRight, MousePointerClick, Calculator, ShieldAlert } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface StartHereProps {
@@ -30,14 +31,14 @@ const StartHere: React.FC<StartHereProps> = ({ onNavigate, onOpenConsultation })
       onClick: () => onNavigate('calculator')
     },
     {
-      icon: Banknote,
-      title: 'Empréstimos',
-      subtitle: 'Dinheiro Rápido',
-      desc: 'Opções de crédito para negativados e antecipação FGTS.',
-      action: 'Simular Valor',
-      colorClass: 'bg-orange-100 text-orange-700',
-      borderClass: 'hover:border-orange-500',
-      onClick: () => onNavigate('loans')
+      icon: ShieldAlert,
+      title: 'Anti-Golpe',
+      subtitle: 'Ferramenta IA',
+      desc: 'Recebeu um SMS suspeito? Cole aqui e veja se é golpe.',
+      action: 'Verificar Mensagem',
+      colorClass: 'bg-red-100 text-red-600',
+      borderClass: 'hover:border-red-500',
+      onClick: () => onNavigate('tool-scam')
     },
     {
       icon: CreditCard,

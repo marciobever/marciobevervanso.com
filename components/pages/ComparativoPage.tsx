@@ -5,10 +5,10 @@ import { ArrowRightLeft, Check, X } from 'lucide-react';
 export const ComparativoPage: React.FC = () => {
   // SEO Optimization
   useEffect(() => {
-    document.title = "Bolsa Família vs BPC/LOAS: Qual o melhor benefício? | Comparativo";
+    document.title = "Bolsa Família ou BPC/LOAS? Compare Valores e Regras 2025";
     
     const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Entenda a diferença entre Bolsa Família e BPC. Compare valores, regras de acumulação, 13º salário e descubra qual benefício é ideal para você.";
+    const desc = "Dúvida entre Bolsa Família e BPC? Compare valores, 13º salário, regras de renda e descubra qual benefício social vale mais a pena para sua família.";
     if (metaDesc) {
       metaDesc.setAttribute('content', desc);
     } else {
@@ -19,7 +19,7 @@ export const ComparativoPage: React.FC = () => {
     }
 
     const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "diferença bpc e bolsa familia, acumular beneficios, loas ou bolsa familia, valor bpc vs bolsa familia, regras beneficios sociais";
+    const keys = "bolsa familia ou bpc, comparativo beneficios, loas vs bolsa familia, acumular beneficios, valor bpc 2025, regras inss, 13 salario bpc";
     if (metaKeys) {
       metaKeys.setAttribute('content', keys);
     } else {

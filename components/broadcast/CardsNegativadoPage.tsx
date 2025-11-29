@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
 import { CreditCard, CheckCircle2, ShieldCheck, XCircle } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -26,6 +27,24 @@ export const CardsNegativadoPage: React.FC<Props> = ({ onNavigate, onSimulate, q
     }
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Cartão de Crédito para Negativados",
+    "description": "Cartão de crédito com aprovação facilitada para pessoas com restrição no CPF.",
+    "category": "Credit Card",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Pessoas com Score Baixo ou Negativadas"
+    },
+    "feesAndCommissionsSpecification": {
+      "@type": "FeesAndCommissionsSpecification",
+      "name": "Anuidade",
+      "price": "0",
+      "priceCurrency": "BRL"
+    }
+  };
+
   return (
     <BroadcastLayout
       title="Banco Central: Novas regras facilitam cartão de crédito para quem tem Score Baixo"
@@ -35,6 +54,7 @@ export const CardsNegativadoPage: React.FC<Props> = ({ onNavigate, onSimulate, q
       onNavigate={onNavigate}
       quizTriggerLabel="Verificar Disponibilidade no CPF"
     >
+      <SchemaMarkup data={schemaData} />
       <h2>Fim da restrição total? Entenda a mudança.</h2>
       <p>
         Ter o nome sujo não é mais uma sentença definitiva de falta de crédito. Com o avanço do Open Finance e novas diretrizes de inclusão financeira, diversas instituições criaram linhas de crédito específicas para quem está com o "nome sujo" ou Score baixo.

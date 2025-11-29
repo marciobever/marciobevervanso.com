@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
 import { CreditCard, TrendingUp, Zap, Star } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -14,6 +15,18 @@ export const CardsLimitePage: React.FC<Props> = ({ onNavigate, onSimulate, quizz
     document.title = "Cartões com Limite Alto 2025: Ranking de Aprovação | Black e Platinum";
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Cartão de Crédito Limite Alto",
+    "description": "Cartões de crédito Black e Platinum com benefícios VIP e limites acima de R$ 5.000.",
+    "category": "Credit Card",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Renda Média/Alta"
+    }
+  };
+
   return (
     <BroadcastLayout
       title="Ranking Oficial: 5 Cartões com Limite Inicial acima de R$ 2.000 liberados hoje"
@@ -23,6 +36,7 @@ export const CardsLimitePage: React.FC<Props> = ({ onNavigate, onSimulate, quizz
       onNavigate={onNavigate}
       quizTriggerLabel="Consultar Cartão Ideal"
     >
+      <SchemaMarkup data={schemaData} />
       <h2>Por que os bancos estão liberando tanto limite?</h2>
       <p>
         A concorrência entre os bancos digitais explodiu em 2025. Para atrair clientes, instituições como Inter, C6 e Nubank estão oferecendo <strong>limites iniciais agressivos</strong>, cashback turbinado e isenção de anuidade vitalícia.

@@ -25,6 +25,44 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
 
   const activeQuiz = quizzes.find(q => q.id === activeQuizId);
 
+  // SEO Optimization for Standalone Quiz Mode
+  useEffect(() => {
+    if (!isEmbedded) {
+      const baseTitle = activeQuiz 
+        ? `${activeQuiz.title} - Simulação de Direito 2025` 
+        : "Simulador de Benefícios Sociais: Teste de Elegibilidade";
+      
+      document.title = baseTitle;
+
+      // Description
+      const descContent = activeQuiz 
+        ? `Faça o teste de elegibilidade para o ${activeQuiz.program}. Descubra se você cumpre os requisitos e como solicitar o benefício em 2025.`
+        : "Como saber se tenho direito ao Bolsa Família? Use nosso simulador de benefícios sociais gratuito e faça o teste de elegibilidade para programas do governo.";
+
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', descContent);
+      } else {
+        const m = document.createElement('meta');
+        m.name = "description";
+        m.content = descContent;
+        document.head.appendChild(m);
+      }
+
+      // Keywords
+      const keysContent = "simulador de benefícios sociais, teste de elegibilidade, como saber se tenho direito ao bolsa família, consulta cpf, quiz governo, auxilio brasil, cadastro único";
+      let metaKeys = document.querySelector('meta[name="keywords"]');
+      if (metaKeys) {
+        metaKeys.setAttribute('content', keysContent);
+      } else {
+        const m = document.createElement('meta');
+        m.name = "keywords";
+        m.content = keysContent;
+        document.head.appendChild(m);
+      }
+    }
+  }, [isEmbedded, activeQuiz]);
+
   // If embedded, we might want to skip the "Intro" card and go straight to questions if the user clicked "Simulate" in the article
   // But keeping intro is nice for confirmation. Let's keep intro but styled differently.
   useEffect(() => {

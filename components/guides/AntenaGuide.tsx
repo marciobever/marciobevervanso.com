@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
 import { Tv, CheckCircle2, Zap, Wifi, Phone, CalendarCheck } from 'lucide-react';
 import { ViewState } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -12,6 +13,31 @@ export const AntenaGuide: React.FC<Props> = ({ onNavigate }) => {
     document.title = "Kit Antena Digital Gratuito: Agendamento Siga Antenado e Instalação";
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentService",
+    "name": "Siga Antenado - Kit Antena Digital",
+    "serviceType": "Public Utility Service",
+    "provider": {
+      "@type": "Organization",
+      "name": "EAF - Entidade Administradora da Faixa"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "Brasil"
+    },
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Beneficiários de Programas Sociais com Antena Parabólica Tradicional"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL",
+      "description": "Kit gratuito com antena digital, receptor e instalação."
+    }
+  };
+
   return (
     <BroadcastLayout
       title="Kit Antena Digital 2025: Quem tem direito e como agendar a instalação grátis"
@@ -20,6 +46,7 @@ export const AntenaGuide: React.FC<Props> = ({ onNavigate }) => {
       quizTriggerLabel="Agendar no Siga Antenado"
       onTakeQuiz={() => window.open('https://sigaantenado.com.br/', '_blank')}
     >
+      <SchemaMarkup data={schemaData} />
       <h2>Por que a parabólica antiga vai parar de funcionar?</h2>
       <p>
         Com a chegada do <strong>5G</strong> (internet móvel de alta velocidade) no Brasil, foi necessário utilizar a mesma frequência de sinal que as antenas parabólicas tradicionais (Banda C) usavam.

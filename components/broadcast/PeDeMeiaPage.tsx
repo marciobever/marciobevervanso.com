@@ -12,7 +12,29 @@ interface Props {
 
 export const PeDeMeiaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "Pé-de-Meia 2025: Como desbloquear no Caixa Tem e Valores";
+    document.title = "Pé-de-Meia 2025: Cadastro, Calendário e Consulta no Caixa Tem";
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const desc = "Descubra como receber o Pé-de-Meia. Calendário de pagamentos, como desbloquear no Caixa Tem e regras para estudantes do ensino médio receberem até R$ 9.200.";
+    if (metaDesc) {
+      metaDesc.setAttribute('content', desc);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "description";
+      m.content = desc;
+      document.head.appendChild(m);
+    }
+
+    const metaKeys = document.querySelector('meta[name="keywords"]');
+    const keys = "pe de meia 2025, programa pe de meia, poupança ensino medio, consulta pe de meia, caixa tem estudante, auxilio estudante, calendario pe de meia";
+    if (metaKeys) {
+      metaKeys.setAttribute('content', keys);
+    } else {
+      const m = document.createElement('meta');
+      m.name = "keywords";
+      m.content = keys;
+      document.head.appendChild(m);
+    }
   }, []);
 
   const schemaData = [

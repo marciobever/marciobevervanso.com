@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
 import { ShieldCheck, HeartHandshake, AlertTriangle, FileText } from 'lucide-react';
 import { Quiz } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: any) => void;
@@ -14,6 +15,18 @@ export const SeguroDividaPage: React.FC<Props> = ({ onNavigate, onSimulate, quiz
     document.title = "Lei Protege Herdeiros: Seguro Quita Dívidas em caso de Falecimento";
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": "Seguro Prestamista",
+    "description": "Seguro que quita dívidas de empréstimos e financiamentos em caso de morte, invalidez ou desemprego.",
+    "category": "Insurance",
+    "provider": {
+      "@type": "Organization",
+      "name": "Seguradoras Parceiras"
+    }
+  };
+
   return (
     <BroadcastLayout
       title="Nova Lei protege herdeiros: Seguro quita financiamento e empréstimo em caso de falecimento"
@@ -23,6 +36,7 @@ export const SeguroDividaPage: React.FC<Props> = ({ onNavigate, onSimulate, quiz
       onNavigate={onNavigate}
       quizTriggerLabel="Simular Proteção Familiar"
     >
+      <SchemaMarkup data={schemaData} />
       <h2>O pesadelo da herança maldita</h2>
       <p>
         Você sabia que, por lei, as dívidas de uma pessoa falecida devem ser pagas com o patrimônio deixado? Isso significa que, se você falecer deixando um financiamento ou empréstimo, seus filhos podem ter que vender a casa ou o carro para pagar o banco.

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { IconHelper } from './IconHelper';
 import { ArrowUpRight } from 'lucide-react';
@@ -19,7 +20,7 @@ const BENEFIT_GRID: BenefitItem[] = [
   { id: 'bolsa', title: 'Bolsa Família', desc: 'Renda mensal para famílias.', icon: 'Wallet', route: 'guide-bolsa' },
   { id: 'bpc', title: 'BPC / LOAS', desc: 'Salário mínimo para idosos e PcD.', icon: 'Accessibility', route: 'guide-bpc' },
   { id: 'gas', title: 'Auxílio Gás', desc: 'Ajuda bimestral para cozinha.', icon: 'Flame', route: 'guide-bolsa' },
-  { id: 'energia', title: 'Tarifa Social', desc: 'Desconto na conta de luz.', icon: 'Zap', route: 'calculator' },
+  { id: 'energia', title: 'Tarifa Social', desc: 'Desconto na conta de luz.', icon: 'Zap', route: 'landing-tarifa' },
   { id: 'pe', title: 'Pé-de-Meia', desc: 'Incentivo para estudantes.', icon: 'GraduationCap', route: 'landing-pe-de-meia' },
   { id: 'cnh', title: 'CNH Social', desc: 'Habilitação Gratuita.', icon: 'Car', route: 'landing-cnh' },
 ];

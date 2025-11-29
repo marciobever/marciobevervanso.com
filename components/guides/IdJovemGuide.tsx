@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
 import { Bus, Ticket, Music, CheckCircle2, QrCode, AlertOctagon, FileText } from 'lucide-react';
 import { ViewState } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -12,6 +13,27 @@ export const IdJovemGuide: React.FC<Props> = ({ onNavigate }) => {
     document.title = "ID Jovem 2.0: Emitir Carteira Digital, Viagens Gratuitas e Cinema";
   }, []);
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentService",
+    "name": "Identidade Jovem (ID Jovem)",
+    "serviceType": "Youth Benefit",
+    "provider": {
+      "@type": "GovernmentOrganization",
+      "name": "Secretaria Nacional da Juventude"
+    },
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Jovens de Baixa Renda (15 a 29 anos)"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL",
+      "description": "Documento gratuito que garante meia-entrada e transporte interestadual gratuito."
+    }
+  };
+
   return (
     <BroadcastLayout
       title="ID Jovem 2025: Viaje de graça para outros estados e pague meia no cinema"
@@ -20,6 +42,7 @@ export const IdJovemGuide: React.FC<Props> = ({ onNavigate }) => {
       quizTriggerLabel="Gerar ID Jovem Agora"
       onTakeQuiz={() => window.open('https://idjovem.juventude.gov.br/', '_blank')}
     >
+      <SchemaMarkup data={schemaData} />
       <h2>O que é a Identidade Jovem?</h2>
       <p>
         A ID Jovem é um documento virtual, totalmente gratuito, que possibilita aos jovens de baixa renda o acesso aos benefícios de meia-entrada em eventos artísticos-culturais e esportivos, além de vagas gratuitas ou com desconto no sistema de transporte coletivo interestadual.

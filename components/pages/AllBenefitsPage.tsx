@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { BENEFITS_DATA } from '../../constants';
 import { IconHelper } from '../IconHelper';
@@ -48,7 +49,7 @@ export const AllBenefitsPage: React.FC<Props> = ({ onNavigate }) => {
           onNavigate('guide-idjovem');
           break;
         case 'tarifa-social':
-          onNavigate('calculator'); 
+          onNavigate('landing-tarifa'); 
           break;
         case 'kit-antena':
           onNavigate('guide-antena');

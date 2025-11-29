@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
 import { Pill, CheckCircle2, AlertTriangle, FileText, Smartphone, HelpCircle, Baby } from 'lucide-react';
 import { ViewState } from '../../types';
+import { SchemaMarkup } from '../seo/SchemaMarkup';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -12,6 +13,51 @@ export const FarmaciaGuide: React.FC<Props> = ({ onNavigate }) => {
     document.title = "Farmácia Popular 2025: Lista Completa, Fraldas e Absorventes Grátis";
   }, []);
 
+  const schemaData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentService",
+      "name": "Farmácia Popular do Brasil",
+      "serviceType": "Pharmacy Benefit",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Ministério da Saúde"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "description": "Medicamentos gratuitos para hipertensão, diabetes, asma, osteoporose e anticoncepcionais."
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quem tem direito à Farmácia Popular?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Todos os cidadãos brasileiros. Medicamentos para asma, hipertensão e diabetes são gratuitos para todos. Beneficiários do Bolsa Família têm gratuidade em todos os medicamentos do programa."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como pegar fralda geriátrica gratuita?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "É necessário ter idade igual ou superior a 60 anos ou ser pessoa com deficiência, e apresentar laudo médico comprovando a necessidade do uso de fraldas."
+          }
+        }
+      ]
+    }
+  ];
+
   return (
     <BroadcastLayout
       title="Farmácia Popular 2025: Guia Definitivo de Medicamentos e Fraldas Gratuitas"
@@ -20,6 +66,7 @@ export const FarmaciaGuide: React.FC<Props> = ({ onNavigate }) => {
       quizTriggerLabel="Verificar Farmácias Credenciadas"
       onTakeQuiz={() => window.open('https://www.gov.br/saude/pt-br/composicao/sectics/daf/farmacia-popular', '_blank')}
     >
+      <SchemaMarkup data={schemaData} />
       <h2>O que mudou no Farmácia Popular em 2025?</h2>
       <p>
         O Programa Farmácia Popular do Brasil foi relançado com novas regras. Agora, <strong>beneficiários do Bolsa Família têm acesso a todos os medicamentos do programa gratuitamente</strong> (antes, alguns tinham apenas 50% de desconto). Além disso, o programa Dignidade Menstrual foi integrado, fornecendo absorventes para mulheres em vulnerabilidade.

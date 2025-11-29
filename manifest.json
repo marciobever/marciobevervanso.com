@@ -1,0 +1,21 @@
+{
+  "name": "Guia Social Brasil",
+  "short_name": "Guia Social",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F8FC",
+  "theme_color": "#0B5CAB",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/9426/9426233.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/9426/9426233.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
