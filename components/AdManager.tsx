@@ -94,7 +94,7 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
       pubads.setTargeting('page_view', currentView);
 
       // Slots para atualizar
-      const slotsToRefresh = [];
+      const slotsToRefresh: any[] = []; // Fix: Explicitly type array as any[]
       if (anchorSlotRef.current) slotsToRefresh.push(anchorSlotRef.current);
       if (interstitialSlotRef.current) slotsToRefresh.push(interstitialSlotRef.current);
 
