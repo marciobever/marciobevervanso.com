@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { X, ShieldCheck, Search, Lock, CheckCircle2, AlertCircle, ArrowRight, CreditCard, Banknote, Star, Gauge } from 'lucide-react';
 import { ViewState } from '../types';
@@ -140,7 +141,7 @@ export const ConsultationModal: React.FC<Props> = ({ isOpen, onClose, onNavigate
                     value={cpf}
                     onChange={handleInput}
                     placeholder="000.000.000-00"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-brand-blue focus:ring-0 outline-none text-xl font-mono text-brand-dark tracking-wider transition-colors"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 bg-white focus:border-brand-blue focus:ring-0 outline-none text-xl font-mono text-brand-dark tracking-wider transition-colors placeholder-gray-300"
                     maxLength={14}
                   />
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">

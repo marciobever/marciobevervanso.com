@@ -22,8 +22,17 @@ export interface CreditCardProduct {
   benefits: string[];
   colorGradient: string; // CSS class for visual
   flag: 'Mastercard' | 'Visa' | 'Elo';
-  applyLink: string;
+  applyLink: string; // Internal or External link logic
+  officialLink: string; // Real link to bank
   tag?: string;
+  detailedInfo?: {
+    description: string;
+    pros: string[];
+    cons: string[];
+    reviewScore: number; // 0 to 5
+    interestRateRotativo: string;
+    incomeRequirement: string;
+  };
 }
 
 export interface LoanProduct {
@@ -107,7 +116,9 @@ export type ViewState =
   | 'analytics'
   | 'secret-menu'
   | 'cards'         
+  | 'card-details' // NEW: Individual card page
   | 'insurance'     
+  | 'insurance-quote' // NEW: Quote Page
   | 'comparativo'   
   | 'loans'         
   | 'calculator'

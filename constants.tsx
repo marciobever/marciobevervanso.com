@@ -1,3 +1,4 @@
+
 import { Benefit, NewsItem, FaqItem, CreditCardProduct, InsuranceProduct, LoanProduct, Quiz } from './types';
 
 export const STATIC_QUIZZES: Quiz[] = [
@@ -176,8 +177,17 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     benefits: ['Sem anuidade', 'Controle pelo App', 'Aumento de limite progressivo'],
     colorGradient: 'from-purple-700 to-purple-900',
     flag: 'Mastercard',
-    applyLink: '#',
-    tag: 'Fácil Aprovação'
+    applyLink: 'card-details',
+    officialLink: 'https://nubank.com.br/cartao/',
+    tag: 'Fácil Aprovação',
+    detailedInfo: {
+      reviewScore: 4.8,
+      description: 'O cartão mais querido do Brasil. Ideal para quem está começando a vida financeira ou quer se livrar das taxas abusivas dos grandes bancos. Oferece a função "Construir Limite" para quem tem score baixo.',
+      pros: ['Anuidade zero para sempre', 'App mais fácil de usar do mercado', 'Descontos se antecipar parcelas', 'Função débito e crédito'],
+      cons: ['Não acumula milhas no plano gratuito', 'Saque no Banco24Horas é tarifado', 'Limite inicial pode ser baixo (R$ 50)'],
+      interestRateRotativo: '2,75% a 14% a.m.',
+      incomeRequirement: 'Salário Mínimo (não exige comprovante formal)'
+    }
   },
   {
     id: 'caixa-sim',
@@ -189,8 +199,17 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     benefits: ['Taxas reduzidas', 'Aceita negativado (sob análise)', 'Programa de Pontos'],
     colorGradient: 'from-blue-500 to-blue-700',
     flag: 'Elo',
-    applyLink: '#',
-    tag: 'Governo'
+    applyLink: 'card-details',
+    officialLink: 'https://www.caixa.gov.br/voce/cartoes/credito/sim/Paginas/default.aspx',
+    tag: 'Governo',
+    detailedInfo: {
+      reviewScore: 4.5,
+      description: 'O Caixa Sim é a aposta do banco estatal para competir com as fintechs. Oferece as taxas de juros mais baixas do mercado para o rotativo, sendo uma opção segura para quem tem medo de dívidas.',
+      pros: ['Taxas de juros reduzidas (Cheque Especial e Rotativo)', 'Sem anuidade vitalícia', 'Benefícios da bandeira Elo Flex', 'Facilidade para correntistas Caixa'],
+      cons: ['App da Caixa pode ser instável', 'Aprovação pode exigir ida à agência', 'Não tem programa de cashback agressivo'],
+      interestRateRotativo: 'Até 8,99% a.m.',
+      incomeRequirement: 'Salário Mínimo'
+    }
   },
   {
     id: 'will',
@@ -202,8 +221,17 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     benefits: ['Cartão Virtual', 'Loja de Descontos', 'Aprovação Rápida'],
     colorGradient: 'from-yellow-400 to-yellow-300 text-black',
     flag: 'Mastercard',
-    applyLink: '#',
-    tag: 'Para Negativado'
+    applyLink: 'card-details',
+    officialLink: 'https://www.willbank.com.br/',
+    tag: 'Para Negativado',
+    detailedInfo: {
+      reviewScore: 4.6,
+      description: 'O amarelinho mais famoso do Brasil. O Will Bank (antigo pag!) é conhecido por sua análise de crédito flexível, aprovando muitos clientes que foram recusados em outros bancos.',
+      pros: ['Aprovação rápida (muitas vezes em minutos)', 'Cartão virtual disponível na hora', 'Loja Will com descontos e cashback', 'Atendimento descomplicado'],
+      cons: ['Limite inicial pode demorar para aumentar', 'Sem agências físicas (100% digital)', 'Não tem programa de milhas próprio'],
+      interestRateRotativo: 'Variável (consulte app)',
+      incomeRequirement: 'Não exige comprovação formal'
+    }
   },
   {
     id: 'inter',
@@ -215,7 +243,16 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     benefits: ['Cashback na fatura', 'Super App Completo', 'Investimentos'],
     colorGradient: 'from-orange-500 to-orange-600',
     flag: 'Mastercard',
-    applyLink: '#'
+    applyLink: 'card-details',
+    officialLink: 'https://www.bancointer.com.br/cartoes/',
+    detailedInfo: {
+      reviewScore: 4.9,
+      description: 'Mais que um cartão, um Super App. O Inter Gold oferece cashback real na fatura e acesso a uma plataforma completa de investimentos e shopping. Excelente para quem já tem um score mediano.',
+      pros: ['Cashback em todas as compras', 'Plataforma de investimentos integrada', 'Saques gratuitos no Banco24Horas', 'Seguros e Consórcios no app'],
+      cons: ['Exige abertura de conta digital', 'Análise de crédito mais rigorosa que Nubank', 'Upgrade para Black exige investimentos altos'],
+      interestRateRotativo: 'Variável',
+      incomeRequirement: 'R$ 1.500,00 (recomendado)'
+    }
   }
 ];
 

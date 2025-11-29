@@ -7,6 +7,7 @@ import BenefitList from './components/BenefitList';
 import CadUnicoSection from './components/CadUnicoSection';
 import FaqSection from './components/FaqSection';
 import Footer from './components/Footer';
+import FinancialSection from './components/FinancialSection'; // NEW IMPORT
 import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
@@ -18,7 +19,8 @@ import { CookieBanner } from './components/CookieBanner';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { AccessibilityBar } from './components/ui/AccessibilityBar';
 import { InstallPrompt } from './components/ui/InstallPrompt';
-import { STATIC_QUIZZES } from './constants';
+import { ErrorBoundary } from './components/ErrorBoundary'; // NEW
+import { STATIC_QUIZZES, CREDIT_CARDS } from './constants';
 
 // Lazy Load Components
 const Dashboard = lazy(() => import('./components/Dashboard'));
@@ -37,11 +39,13 @@ const FarmaciaGuide = lazy(() => import('./components/guides/FarmaciaGuide').the
 const PisPasepGuide = lazy(() => import('./components/guides/PisPasepGuide').then(m => ({ default: m.PisPasepGuide })));
 const AntenaGuide = lazy(() => import('./components/guides/AntenaGuide').then(m => ({ default: m.AntenaGuide })));
 const IdJovemGuide = lazy(() => import('./components/guides/IdJovemGuide').then(m => ({ default: m.IdJovemGuide })));
-const CadUnicoGuide = lazy(() => import('./components/guides/CadUnicoGuide').then(m => ({ default: m.CadUnicoGuide }))); // NEW
+const CadUnicoGuide = lazy(() => import('./components/guides/CadUnicoGuide').then(m => ({ default: m.CadUnicoGuide })));
 
 // Pages
-const CardsPage = lazy(() => import('./components/pages/CardsPage').then(m => ({ default: m.CardsPage })));
+const CardsPage = lazy(() => import('./components/pages/CardsPage')); 
+const CardDetailsPage = lazy(() => import('./components/pages/CardDetailsPage')); // NEW
 const InsurancePage = lazy(() => import('./components/pages/InsurancePage').then(m => ({ default: m.InsurancePage })));
+const InsuranceQuotePage = lazy(() => import('./components/pages/InsuranceQuotePage').then(m => ({ default: m.InsuranceQuotePage }))); // NEW
 const ComparativoPage = lazy(() => import('./components/pages/ComparativoPage').then(m => ({ default: m.ComparativoPage })));
 const LoansPage = lazy(() => import('./components/pages/LoansPage').then(m => ({ default: m.LoansPage })));
 const CalendariosPage = lazy(() => import('./components/pages/CalendariosPage').then(m => ({ default: m.CalendariosPage })));
@@ -86,7 +90,7 @@ const ROUTES: Record<string, ViewState> = {
   '/guia-pis-pasep-abono': 'guide-pis',
   '/guia-kit-antena-digital': 'guide-antena',
   '/guia-id-jovem-viagem': 'guide-idjovem',
-  '/guia-cadastro-unico': 'guide-cadunico', // NEW
+  '/guia-cadastro-unico': 'guide-cadunico',
   '/tarifa-social-energia': 'landing-tarifa',
   '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios': 'landing-mcmv',
   '/dentista-gratuito-sus-quiz-prioridade': 'landing-dentista',
@@ -118,6 +122,8 @@ function App() {
   const [currentView, setCurrentView] = useState<ViewState>(getInitialView);
   const [quizzes, setQuizzes] = useState<Quiz[]>(STATIC_QUIZZES);
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(null); // NEW
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
   useEffect(() => {
@@ -148,11 +154,27 @@ function App() {
     if (view !== 'quizzes') {
       setActiveQuizId(null);
     }
+    if (view !== 'card-details') {
+      setSelectedCardId(null);
+    }
+    if (view !== 'insurance-quote') {
+      setSelectedInsuranceId(null);
+    }
   };
 
   const handleStartQuiz = (id: string) => {
     setActiveQuizId(id);
     handleNavigate('quizzes');
+  };
+
+  const handleViewCard = (cardId: string) => {
+    setSelectedCardId(cardId);
+    handleNavigate('card-details');
+  };
+
+  const handleQuoteInsurance = (id: string) => {
+    setSelectedInsuranceId(id);
+    handleNavigate('insurance-quote');
   };
 
   const renderContent = () => {
@@ -164,6 +186,7 @@ function App() {
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
+            <FinancialSection onNavigate={handleNavigate} />
             <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
             <CadUnicoSection onNavigate={handleNavigate} />
             <FaqSection />
@@ -191,15 +214,21 @@ function App() {
       case 'guide-pis': return <PisPasepGuide onNavigate={handleNavigate} />;
       case 'guide-antena': return <AntenaGuide onNavigate={handleNavigate} />;
       case 'guide-idjovem': return <IdJovemGuide onNavigate={handleNavigate} />;
-      case 'guide-cadunico': return <CadUnicoGuide onNavigate={handleNavigate} />; // NEW
+      case 'guide-cadunico': return <CadUnicoGuide onNavigate={handleNavigate} />;
       case 'calendar': 
       case 'calendarios': return <CalendariosPage />;
       case 'analytics': return <AnalyticsDashboard />;
       case 'secret-menu': return <SecretMenu onNavigate={handleNavigate} />;
       case 'admin-social': return <SocialPostGenerator onNavigate={handleNavigate} />;
       case 'admin-seo': return <SeoTools onNavigate={handleNavigate} />;
-      case 'cards': return <CardsPage />;
-      case 'insurance': return <InsurancePage />;
+      case 'cards': return <CardsPage onViewDetails={handleViewCard} />;
+      case 'card-details': {
+        const card = CREDIT_CARDS.find(c => c.id === selectedCardId);
+        if (!card) return <CardsPage onViewDetails={handleViewCard} />;
+        return <CardDetailsPage card={card} onNavigate={handleNavigate} onBack={() => handleNavigate('cards')} />;
+      }
+      case 'insurance': return <InsurancePage onQuote={handleQuoteInsurance} />;
+      case 'insurance-quote': return <InsuranceQuotePage insuranceId={selectedInsuranceId} onNavigate={handleNavigate} />;
       case 'comparativo': return <ComparativoPage />;
       case 'loans': return <LoansPage />;
       case 'all-benefits': return <AllBenefitsPage onNavigate={handleNavigate} />;
@@ -233,9 +262,11 @@ function App() {
       <NotificationBar onNavigate={handleNavigate} />
       <Header onNavigate={handleNavigate} />
       <main className="flex-grow">
-        <Suspense fallback={<LoadingScreen />}>
-          {renderContent()}
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingScreen />}>
+            {renderContent()}
+          </Suspense>
+        </ErrorBoundary>
       </main>
       <Footer onNavigate={handleNavigate} />
       <AccessibilityBar />

@@ -1,11 +1,17 @@
+
 import React, { useEffect } from 'react';
 import { CREDIT_CARDS } from '../../constants';
 import { CreditCardVisual } from '../CreditCardVisual';
 import { AdSlot } from '../AdSlot';
-import { Check, Star } from 'lucide-react';
+import { Check, Star, Info } from 'lucide-react';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
+import { ViewState } from '../../types';
 
-export const CardsPage: React.FC = () => {
+interface Props {
+  onViewDetails?: (cardId: string) => void;
+}
+
+const CardsPage: React.FC<Props> = ({ onViewDetails }) => {
   
   // SEO Optimization for Cards Page
   useEffect(() => {
@@ -75,10 +81,10 @@ export const CardsPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
            {CREDIT_CARDS.map((card) => (
-              <div key={card.id} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:border-purple-300 transition-colors duration-300">
+              <div key={card.id} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col hover:border-purple-300 transition-colors duration-300 group">
                  
                  {/* Card Visual */}
-                 <div className="mb-6 -mt-12 mx-2">
+                 <div className="mb-6 -mt-12 mx-2 transform transition-transform duration-300 group-hover:scale-105">
                     <CreditCardVisual card={card} />
                  </div>
 
@@ -118,8 +124,11 @@ export const CardsPage: React.FC = () => {
                     ))}
                  </ul>
 
-                 <button className="w-full bg-brand-blue hover:bg-brand-hover text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2 group transform active:scale-95">
-                    Solicitar Cartão <Star size={16} fill="currentColor" className="group-hover:text-yellow-300 transition-colors" />
+                 <button 
+                   onClick={() => onViewDetails && onViewDetails(card.id)}
+                   className="w-full bg-brand-blue hover:bg-brand-hover text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-2 group/btn transform active:scale-95"
+                 >
+                    Ver Detalhes e Solicitar <Info size={18} />
                  </button>
                  
                  <p className="text-center text-[10px] text-gray-400 mt-3">
@@ -150,3 +159,5 @@ export const CardsPage: React.FC = () => {
     </div>
   );
 };
+
+export default CardsPage;
