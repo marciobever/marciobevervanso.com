@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { IconHelper } from './IconHelper';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Star } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface BenefitItem {
@@ -10,6 +10,7 @@ interface BenefitItem {
   desc: string;
   icon: string;
   route: ViewState;
+  highlight?: boolean;
 }
 
 interface Props {
@@ -17,10 +18,10 @@ interface Props {
 }
 
 const BENEFIT_GRID: BenefitItem[] = [
-  { id: 'bolsa', title: 'Bolsa Família', desc: 'Renda mensal para famílias.', icon: 'Wallet', route: 'guide-bolsa' },
+  { id: 'bolsa', title: 'Bolsa Família', desc: 'Renda mensal para famílias.', icon: 'Wallet', route: 'guide-bolsa', highlight: true },
   { id: 'bpc', title: 'BPC / LOAS', desc: 'Salário mínimo para idosos e PcD.', icon: 'Accessibility', route: 'guide-bpc' },
   { id: 'gas', title: 'Auxílio Gás', desc: 'Ajuda bimestral para cozinha.', icon: 'Flame', route: 'guide-bolsa' },
-  { id: 'energia', title: 'Tarifa Social', desc: 'Desconto na conta de luz.', icon: 'Zap', route: 'landing-tarifa' },
+  { id: 'energia', title: 'Tarifa Social', desc: 'Desconto na conta de luz.', icon: 'Zap', route: 'landing-tarifa', highlight: true },
   { id: 'pe', title: 'Pé-de-Meia', desc: 'Incentivo para estudantes.', icon: 'GraduationCap', route: 'landing-pe-de-meia' },
   { id: 'cnh', title: 'CNH Social', desc: 'Habilitação Gratuita.', icon: 'Car', route: 'landing-cnh' },
 ];
@@ -65,20 +66,36 @@ const BenefitList: React.FC<Props> = ({ onNavigate }) => {
               onClick={(e) => handleCardClick(e, item.route)}
               role="button"
               tabIndex={0}
-              className="group bg-brand-light rounded-2xl p-6 border border-gray-100 hover:border-brand-blue/30 hover:shadow-soft transition-all duration-300 relative overflow-hidden cursor-pointer"
+              className={`group rounded-2xl p-6 border transition-all duration-300 relative overflow-hidden cursor-pointer ${
+                item.highlight 
+                  ? 'bg-white border-brand-blue shadow-lg shadow-brand-blue/10 ring-1 ring-brand-blue/20 hover:-translate-y-1' 
+                  : 'bg-brand-light border-gray-100 hover:border-brand-blue/30 hover:shadow-soft hover:-translate-y-1'
+              }`}
             >
+              {item.highlight && (
+                <div className="absolute top-0 right-0 bg-brand-blue text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider z-10 flex items-center gap-1">
+                   <Star size={10} fill="currentColor" /> Destaque
+                </div>
+              )}
+
               <div className="absolute top-4 right-4 text-gray-300 group-hover:text-brand-blue transition-colors">
-                <ArrowUpRight size={20} />
+                {!item.highlight && <ArrowUpRight size={20} />}
               </div>
               
-              <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-brand-blue mb-4">
+              <div className={`w-12 h-12 rounded-xl shadow-sm flex items-center justify-center mb-4 ${
+                item.highlight ? 'bg-blue-50 text-brand-blue' : 'bg-white text-brand-blue'
+              }`}>
                 <IconHelper name={item.icon} className="w-6 h-6" />
               </div>
               
               <h3 className="text-xl font-bold text-brand-dark mb-2 group-hover:text-brand-blue transition-colors">{item.title}</h3>
               <p className="text-brand-medium text-sm mb-4">{item.desc}</p>
               
-              <div className="inline-block bg-white text-brand-dark text-xs font-bold px-3 py-1.5 rounded-lg border border-gray-200 group-hover:border-brand-blue group-hover:text-brand-blue transition-colors">
+              <div className={`inline-block text-xs font-bold px-3 py-1.5 rounded-lg border transition-colors ${
+                item.highlight 
+                  ? 'bg-brand-blue text-white border-brand-blue'
+                  : 'bg-white text-brand-dark border-gray-200 group-hover:border-brand-blue group-hover:text-brand-blue'
+              }`}>
                 Acessar Guia
               </div>
             </div>

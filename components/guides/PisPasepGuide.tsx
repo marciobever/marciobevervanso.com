@@ -1,6 +1,7 @@
+
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
-import { Wallet, Calendar, AlertTriangle, Briefcase, Table2, HelpCircle } from 'lucide-react';
+import { Wallet, Calendar, AlertTriangle, Briefcase, Table2, HelpCircle, Calculator, ExternalLink } from 'lucide-react';
 import { ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -31,7 +32,7 @@ export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
         "@type": "Offer",
         "price": "1509",
         "priceCurrency": "BRL",
-        "description": "Valor máximo equivalente a um salário mínimo."
+        "description": "Valor proporcional aos meses trabalhados, variando de R$ 126,00 a R$ 1.509,00."
       }
     },
     {
@@ -95,11 +96,25 @@ export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
          </div>
       </div>
 
-      <h3>Tabela de Valores 2025 (Estimada)</h3>
-      <p>
-         O valor do abono é proporcional ao número de meses trabalhados. O teto é o salário mínimo vigente na data do pagamento (Estimado em R$ 1.509,00 para 2025).
-      </p>
+      <h3>Como é calculado o valor?</h3>
+      <div className="flex items-start gap-4 mb-6 not-prose bg-gray-50 p-4 rounded-xl border border-gray-200">
+         <div className="bg-white p-2 rounded-lg text-brand-blue shadow-sm shrink-0">
+            <Calculator />
+         </div>
+         <div>
+            <p className="text-sm text-slate-700 leading-relaxed">
+               O cálculo é simples: o valor total do salário mínimo vigente na data de pagamento (estimado em R$ 1.509,00) é dividido por 12 meses.
+            </p>
+            <p className="text-sm text-slate-700 mt-2 font-bold">
+               Cada mês trabalhado equivale a 1/12 do salário (aprox. R$ 126,00). 
+            </p>
+            <p className="text-xs text-slate-500 mt-2">
+               *Períodos iguais ou superiores a 15 dias contam como mês integral.
+            </p>
+         </div>
+      </div>
 
+      <h3>Tabela de Valores 2025 (Estimada)</h3>
       <div className="overflow-x-auto not-prose mb-8">
          <table className="w-full text-left border-collapse bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
             <thead className="bg-slate-100 text-slate-700">
@@ -122,27 +137,39 @@ export const PisPasepGuide: React.FC<Props> = ({ onNavigate }) => {
          <p className="text-xs text-gray-400 mt-2 text-center">*Valores baseados na estimativa do Salário Mínimo de R$ 1.509,00.</p>
       </div>
 
-      <h3>Como consultar se vou receber?</h3>
+      <h3>Canais Oficiais de Consulta</h3>
       <p>
-         A maneira mais confiável não é ir ao banco, mas sim consultar o aplicativo oficial do governo.
+         A maneira mais confiável é através do aplicativo <strong>Carteira de Trabalho Digital</strong> (Gov.br). Mas você também pode consultar diretamente no banco pagador:
       </p>
-      <ol className="list-decimal pl-5 space-y-3">
-         <li>Baixe o aplicativo <strong>Carteira de Trabalho Digital</strong> (Gov.br).</li>
-         <li>Faça login com seu CPF e senha.</li>
-         <li>No menu inferior, clique em "Benefícios".</li>
-         <li>Selecione "Abono Salarial".</li>
-         <li>Filtre pelo Ano-Base 2023. O app mostrará se está "Habilitado" e o valor.</li>
-      </ol>
-
-      <h3>Diferença entre PIS e PASEP</h3>
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6 not-prose">
-         <div className="bg-white p-4 border border-blue-200 rounded-xl shadow-sm">
-            <h4 className="font-bold text-blue-700 mb-2">PIS (Caixa)</h4>
-            <p className="text-sm text-slate-600">Destinado a funcionários de <strong>empresas privadas</strong>. O saque é feito via Cartão Cidadão, App Caixa Tem ou agências da Caixa.</p>
+         <div className="bg-white p-6 border border-blue-200 rounded-xl shadow-sm hover:border-blue-400 hover:shadow-md transition-all">
+            <h4 className="font-bold text-blue-700 mb-2 flex items-center gap-2">
+               <Wallet size={20}/> PIS (Setor Privado)
+            </h4>
+            <p className="text-sm text-slate-600 mb-4">Pago pela <strong>Caixa Econômica</strong>. Saque via Cartão Cidadão ou App Caixa Tem.</p>
+            <a 
+               href="https://www.caixa.gov.br/beneficios-trabalhador/abono-salarial/" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               className="inline-flex items-center gap-1 text-xs font-bold text-white bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+               Site da Caixa <ExternalLink size={12} />
+            </a>
          </div>
-         <div className="bg-white p-4 border border-yellow-200 rounded-xl shadow-sm">
-            <h4 className="font-bold text-yellow-700 mb-2">PASEP (Banco do Brasil)</h4>
-            <p className="text-sm text-slate-600">Destinado a <strong>servidores públicos</strong>. O crédito cai direto na conta do BB ou pode ser sacado via TED para não correntistas.</p>
+         <div className="bg-white p-6 border border-yellow-200 rounded-xl shadow-sm hover:border-yellow-400 hover:shadow-md transition-all">
+            <h4 className="font-bold text-yellow-700 mb-2 flex items-center gap-2">
+               <Briefcase size={20}/> PASEP (Setor Público)
+            </h4>
+            <p className="text-sm text-slate-600 mb-4">Pago pelo <strong>Banco do Brasil</strong>. Crédito em conta ou guichê de caixa.</p>
+            <a 
+               href="https://www.bb.com.br/site/setor-publico/beneficios-sociais/pasep/" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               className="inline-flex items-center gap-1 text-xs font-bold text-white bg-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+               Site do BB <ExternalLink size={12} />
+            </a>
          </div>
       </div>
 

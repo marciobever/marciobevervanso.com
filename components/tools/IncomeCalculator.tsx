@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Calculator, Users, DollarSign, CheckCircle2, XCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Calculator, Users, DollarSign, CheckCircle2, XCircle, AlertCircle, ArrowRight, Minus, Plus, HelpCircle, TrendingUp } from 'lucide-react';
 import { AdSlot } from '../AdSlot';
 import { ViewState } from '../../types';
 
@@ -8,194 +9,256 @@ interface Props {
 }
 
 export const IncomeCalculator: React.FC<Props> = ({ onNavigate }) => {
-  const [totalIncome, setTotalIncome] = useState<string>('');
-  const [members, setMembers] = useState<string>('');
-  const [perCapita, setPerCapita] = useState<number | null>(null);
+  const [incomeRaw, setIncomeRaw] = useState<string>('');
+  const [members, setMembers] = useState<number>(1);
+  const [perCapita, setPerCapita] = useState<number>(0);
+  const [showResult, setShowResult] = useState(false);
 
   // Constants 2025
-  const SALARIO_MINIMO = 1412; // Base 2024/25 ref
+  const SALARIO_MINIMO = 1509; // Estimativa 2025
   const LIMIT_BOLSA_FAMILIA = 218;
-  const LIMIT_BPC = Math.floor(SALARIO_MINIMO / 4); // ~353
-  const LIMIT_LOW_INCOME = Math.floor(SALARIO_MINIMO / 2); // ~706
-  const LIMIT_MCMV_FAIXA1 = 2640; // Renda Bruta Familiar (não per capita)
+  const LIMIT_BPC = parseFloat((SALARIO_MINIMO / 4).toFixed(2)); // ~377
+  const LIMIT_TARIFA = parseFloat((SALARIO_MINIMO / 2).toFixed(2)); // ~754
 
-  const calculate = () => {
-    const income = parseFloat(totalIncome.replace(/\./g, '').replace(',', '.')) || 0;
-    const numMembers = parseInt(members) || 1;
-    
-    setPerCapita(income / numMembers);
+  // Formata moeda enquanto digita
+  const handleIncomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const numberValue = parseInt(value) / 100;
+    if (isNaN(numberValue)) {
+      setIncomeRaw('');
+    } else {
+      setIncomeRaw(numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+    }
   };
 
+  const calculate = () => {
+    const incomeValue = parseFloat(incomeRaw.replace(/\./g, '').replace(',', '.')) || 0;
+    const result = incomeValue / (members || 1);
+    setPerCapita(result);
+    setShowResult(true);
+  };
+
+  // Auto-calculate quando inputs mudam
   useEffect(() => {
-    calculate();
-  }, [totalIncome, members]);
+    if (incomeRaw && members > 0) {
+      calculate();
+    } else {
+      setShowResult(false);
+    }
+  }, [incomeRaw, members]);
 
   // SEO
   useEffect(() => {
-    document.title = "Calculadora de Renda Per Capita: Tenho direito ao Bolsa Família?";
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Faça o cálculo exato da renda per capita da sua família. Descubra se você tem direito ao Bolsa Família, BPC/LOAS e Tarifa Social de Energia.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "description";
-      m.content = desc;
-      document.head.appendChild(m);
-    }
-
-    const metaKeys = document.querySelector('meta[name="keywords"]');
-    const keys = "calcular renda per capita, renda familiar, calculo bolsa familia, quem tem direito bolsa familia, simulador renda";
-    if (metaKeys) {
-      metaKeys.setAttribute('content', keys);
-    } else {
-      const m = document.createElement('meta');
-      m.name = "keywords";
-      m.content = keys;
-      document.head.appendChild(m);
-    }
+    document.title = "Calculadora Bolsa Família 2025: Renda Per Capita e Elegibilidade";
   }, []);
 
+  const getStatusColor = (limit: number) => {
+    if (!showResult) return 'gray';
+    return perCapita <= limit ? 'green' : 'red';
+  };
+
   return (
-    <div className="bg-brand-light min-h-screen py-10">
-      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+    <div className="bg-slate-50 min-h-screen py-8 md:py-12 font-sans">
+      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
         
+        {/* Header */}
         <div className="text-center mb-10">
-           <h1 className="text-3xl md:text-5xl font-extrabold text-brand-dark mb-4 flex items-center justify-center gap-3">
-             <Calculator className="text-brand-blue" size={40} />
-             Calculadora de Renda
+           <div className="inline-flex items-center justify-center p-3 bg-white rounded-2xl shadow-sm mb-4 text-brand-blue border border-blue-50">
+             <Calculator size={32} />
+           </div>
+           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">
+             Calculadora de Renda 2025
            </h1>
-           <p className="text-lg text-brand-medium max-w-2xl mx-auto">
-             Descubra exatamente qual é a sua renda per capita e em quais programas sociais sua família se encaixa.
+           <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+             Descubra se sua família tem direito ao <strong>Bolsa Família</strong>, <strong>BPC</strong> e descontos na conta de luz com base nas novas regras de renda per capita.
            </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* INPUT CARD */}
-          <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 h-fit">
-            <h3 className="font-bold text-xl text-slate-800 mb-6">Seus Dados</h3>
-            
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-500 uppercase mb-2">Renda Total da Família (R$)</label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                    <DollarSign size={20} />
+          {/* LEFT COLUMN: INPUTS */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue to-cyan-400"></div>
+              
+              <h3 className="font-bold text-xl text-slate-800 mb-6 flex items-center gap-2">
+                <span className="bg-brand-blue text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span> 
+                Dados da Família
+              </h3>
+              
+              <div className="space-y-8">
+                {/* Income Input */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    Renda Mensal Total
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors">
+                      <span className="font-bold text-lg">R$</span>
+                    </div>
+                    <input 
+                      type="text" 
+                      value={incomeRaw}
+                      onChange={handleIncomeChange}
+                      placeholder="0,00"
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 outline-none text-2xl font-bold text-slate-900 transition-all placeholder:text-gray-300"
+                      inputMode="numeric"
+                    />
                   </div>
-                  <input 
-                    type="number" 
-                    value={totalIncome}
-                    onChange={(e) => setTotalIncome(e.target.value)}
-                    placeholder="Ex: 1412,00"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-brand-blue focus:ring-0 outline-none text-xl font-mono text-brand-dark transition-colors"
-                  />
-                  <p className="text-xs text-gray-400 mt-2">Some salários, pensões e bicos de todos.</p>
+                  <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                    <HelpCircle size={12} /> Some salários, bicos e pensões. Não inclua Bolsa Família.
+                  </p>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-bold text-gray-500 uppercase mb-2">Pessoas na Casa</label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Users size={20} />
+                {/* Members Input */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    Pessoas na mesma casa
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => setMembers(Math.max(1, members - 1))}
+                      className="w-14 h-14 rounded-2xl border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-brand-blue hover:text-brand-blue hover:bg-blue-50 transition-all active:scale-95"
+                    >
+                      <Minus size={24} />
+                    </button>
+                    
+                    <div className="flex-grow h-14 flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-gray-200 font-bold text-2xl text-slate-900">
+                      {members}
+                    </div>
+
+                    <button 
+                      onClick={() => setMembers(members + 1)}
+                      className="w-14 h-14 rounded-2xl border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-brand-blue hover:text-brand-blue hover:bg-blue-50 transition-all active:scale-95"
+                    >
+                      <Plus size={24} />
+                    </button>
                   </div>
-                  <input 
-                    type="number" 
-                    value={members}
-                    onChange={(e) => setMembers(e.target.value)}
-                    placeholder="Ex: 4"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-brand-blue focus:ring-0 outline-none text-xl font-mono text-brand-dark transition-colors"
-                  />
-                  <p className="text-xs text-gray-400 mt-2">Conte adultos e crianças.</p>
+                  <p className="text-xs text-gray-400 mt-2">Conte adultos, idosos e crianças.</p>
                 </div>
               </div>
             </div>
+
+            <AdSlot id="Content1" label="Oferta Exclusiva" />
           </div>
 
-          {/* RESULT CARD */}
-          <div className="space-y-6">
-             {/* Main Result */}
-             <div className="bg-brand-dark text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
-                
-                <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-2">Sua Renda Per Capita</p>
-                <div className="text-5xl font-extrabold mb-2 font-mono">
-                   {perCapita !== null && !isNaN(perCapita) 
-                     ? perCapita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) 
-                     : 'R$ 0,00'}
+          {/* RIGHT COLUMN: RESULTS */}
+          <div className="lg:col-span-7 space-y-6">
+             {/* Main Result Card */}
+             <div className={`rounded-3xl p-1 transition-all duration-500 ${showResult ? 'bg-gradient-to-br from-brand-blue to-cyan-500 shadow-xl' : 'bg-gray-200'}`}>
+                <div className="bg-white rounded-[22px] p-6 md:p-8 h-full">
+                   
+                   <h3 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-1">Resultado da Análise</h3>
+                   <div className="flex items-end gap-2 mb-6">
+                      <span className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                         {perCapita.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </span>
+                      <span className="text-sm font-medium text-slate-500 mb-2">por pessoa</span>
+                   </div>
+
+                   {/* Visual Bar (Thermometer) */}
+                   <div className="relative h-4 bg-gray-100 rounded-full mb-8 overflow-hidden">
+                      {/* Markers */}
+                      <div className="absolute top-0 bottom-0 w-0.5 bg-white z-10" style={{ left: '20%' }} title="Limite Bolsa Família"></div>
+                      <div className="absolute top-0 bottom-0 w-0.5 bg-white z-10" style={{ left: '50%' }} title="Limite Baixa Renda"></div>
+                      
+                      {/* Gradient Fill */}
+                      <div 
+                        className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ${
+                           perCapita <= LIMIT_BOLSA_FAMILIA ? 'bg-green-500' : 
+                           perCapita <= LIMIT_TARIFA ? 'bg-yellow-400' : 'bg-red-400'
+                        }`}
+                        style={{ width: showResult ? `${Math.min((perCapita / 800) * 100, 100)}%` : '0%' }}
+                      ></div>
+                   </div>
+
+                   {/* Benefits Status Grid */}
+                   <div className="grid gap-3">
+                      
+                      {/* Bolsa Família */}
+                      <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-colors ${
+                         getStatusColor(LIMIT_BOLSA_FAMILIA) === 'green' ? 'bg-green-50 border-green-500' : 'bg-gray-50 border-gray-300 opacity-70'
+                      }`}>
+                         <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-full ${getStatusColor(LIMIT_BOLSA_FAMILIA) === 'green' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                               {getStatusColor(LIMIT_BOLSA_FAMILIA) === 'green' ? <CheckCircle2 size={20}/> : <XCircle size={20}/>}
+                            </div>
+                            <div>
+                               <h4 className="font-bold text-slate-900">Bolsa Família</h4>
+                               <p className="text-xs text-slate-500">Renda até R$ 218,00</p>
+                            </div>
+                         </div>
+                         {getStatusColor(LIMIT_BOLSA_FAMILIA) === 'green' && (
+                            <span className="text-green-700 font-bold text-sm bg-white px-3 py-1 rounded-full shadow-sm">Aprovado</span>
+                         )}
+                      </div>
+
+                      {/* Tarifa Social */}
+                      <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-colors ${
+                         getStatusColor(LIMIT_TARIFA) === 'green' ? 'bg-blue-50 border-blue-500' : 'bg-gray-50 border-gray-300 opacity-70'
+                      }`}>
+                         <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-full ${getStatusColor(LIMIT_TARIFA) === 'green' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-500'}`}>
+                               {getStatusColor(LIMIT_TARIFA) === 'green' ? <CheckCircle2 size={20}/> : <XCircle size={20}/>}
+                            </div>
+                            <div>
+                               <h4 className="font-bold text-slate-900">Tarifa Social (Luz)</h4>
+                               <p className="text-xs text-slate-500">Renda até R$ {LIMIT_TARIFA.toFixed(0)},00</p>
+                            </div>
+                         </div>
+                         {getStatusColor(LIMIT_TARIFA) === 'green' && (
+                            <span className="text-blue-700 font-bold text-sm bg-white px-3 py-1 rounded-full shadow-sm">Até 65% OFF</span>
+                         )}
+                      </div>
+
+                      {/* BPC */}
+                      <div className={`flex items-center justify-between p-4 rounded-xl border-l-4 transition-colors ${
+                         getStatusColor(LIMIT_BPC) === 'green' ? 'bg-purple-50 border-purple-500' : 'bg-gray-50 border-gray-300 opacity-70'
+                      }`}>
+                         <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-full ${getStatusColor(LIMIT_BPC) === 'green' ? 'bg-purple-100 text-purple-700' : 'bg-gray-200 text-gray-500'}`}>
+                               {getStatusColor(LIMIT_BPC) === 'green' ? <CheckCircle2 size={20}/> : <XCircle size={20}/>}
+                            </div>
+                            <div>
+                               <h4 className="font-bold text-slate-900">BPC / LOAS</h4>
+                               <p className="text-xs text-slate-500">Para Idosos (65+) ou PcD</p>
+                            </div>
+                         </div>
+                         {getStatusColor(LIMIT_BPC) === 'green' && (
+                            <span className="text-purple-700 font-bold text-sm bg-white px-3 py-1 rounded-full shadow-sm">1 Salário Mínimo</span>
+                         )}
+                      </div>
+
+                   </div>
+
+                   {showResult && perCapita <= LIMIT_BOLSA_FAMILIA && (
+                      <div className="mt-6 pt-6 border-t border-gray-100">
+                         <div className="bg-green-600 rounded-xl p-4 text-white flex items-center justify-between shadow-lg shadow-green-600/20 cursor-pointer hover:bg-green-500 transition-colors" onClick={() => onNavigate('guide-bolsa')}>
+                            <div>
+                               <p className="text-xs font-bold text-green-200 uppercase mb-1">Próximo Passo</p>
+                               <p className="font-bold text-lg">Como se cadastrar</p>
+                            </div>
+                            <div className="bg-white/20 p-2 rounded-lg">
+                               <ArrowRight size={24} />
+                            </div>
+                         </div>
+                      </div>
+                   )}
                 </div>
-                <p className="text-gray-400 text-xs">Resultado da divisão da renda pelo nº de pessoas.</p>
              </div>
 
-             {/* Eligibility List */}
-             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-                <h4 className="font-bold text-slate-800 mb-4">Análise de Benefícios</h4>
-                
-                <div className="space-y-3">
-                   {/* Bolsa Família */}
-                   <div className={`flex items-center justify-between p-3 rounded-xl border ${perCapita !== null && perCapita <= LIMIT_BOLSA_FAMILIA ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100 opacity-60'}`}>
-                      <div className="flex items-center gap-3">
-                         {perCapita !== null && perCapita <= LIMIT_BOLSA_FAMILIA ? <CheckCircle2 className="text-green-600"/> : <XCircle className="text-gray-400"/>}
-                         <div>
-                            <p className="font-bold text-sm text-slate-900">Bolsa Família</p>
-                            <p className="text-xs text-slate-500">Limite: R$ 218,00</p>
-                         </div>
-                      </div>
-                      {perCapita !== null && perCapita <= LIMIT_BOLSA_FAMILIA && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">Elegível</span>}
-                   </div>
-
-                   {/* BPC */}
-                   <div className={`flex items-center justify-between p-3 rounded-xl border ${perCapita !== null && perCapita <= LIMIT_BPC ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100 opacity-60'}`}>
-                      <div className="flex items-center gap-3">
-                         {perCapita !== null && perCapita <= LIMIT_BPC ? <CheckCircle2 className="text-green-600"/> : <XCircle className="text-gray-400"/>}
-                         <div>
-                            <p className="font-bold text-sm text-slate-900">BPC / LOAS</p>
-                            <p className="text-xs text-slate-500">Limite: R$ {LIMIT_BPC},00</p>
-                         </div>
-                      </div>
-                      {perCapita !== null && perCapita <= LIMIT_BPC && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">Elegível</span>}
-                   </div>
-
-                   {/* Tarifa Social */}
-                   <div className={`flex items-center justify-between p-3 rounded-xl border ${perCapita !== null && perCapita <= LIMIT_LOW_INCOME ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-100 opacity-60'}`}>
-                      <div className="flex items-center gap-3">
-                         {perCapita !== null && perCapita <= LIMIT_LOW_INCOME ? <CheckCircle2 className="text-green-600"/> : <XCircle className="text-gray-400"/>}
-                         <div>
-                            <p className="font-bold text-sm text-slate-900">Tarifa Social (Luz)</p>
-                            <p className="text-xs text-slate-500">Limite: R$ {LIMIT_LOW_INCOME},00</p>
-                         </div>
-                      </div>
-                      {perCapita !== null && perCapita <= LIMIT_LOW_INCOME && <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">Elegível</span>}
-                   </div>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                   <button 
-                     onClick={() => onNavigate('quizzes')}
-                     className="w-full bg-brand-blue hover:bg-brand-hover text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
-                   >
-                     Fazer Simulação Completa <ArrowRight size={18} />
-                   </button>
-                </div>
+             <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 flex gap-3 items-start">
+                <AlertCircle className="text-yellow-600 shrink-0 mt-0.5" size={20} />
+                <p className="text-sm text-yellow-800 leading-relaxed">
+                   <strong>Nota:</strong> O cálculo oficial do governo é feito no CRAS e pode considerar descontos (como gastos com remédios para BPC) ou outras fontes de renda. Esta ferramenta é uma estimativa.
+                </p>
              </div>
           </div>
 
         </div>
 
-        <div className="mt-12 bg-yellow-50 border border-yellow-100 rounded-2xl p-6 flex gap-4 items-start">
-           <AlertTriangle className="text-yellow-600 shrink-0 mt-1" />
-           <div>
-              <h4 className="font-bold text-yellow-800 mb-1">Nota Importante</h4>
-              <p className="text-sm text-yellow-700 leading-relaxed">
-                 Esta calculadora é uma ferramenta de estimativa. O cálculo oficial do governo pode excluir certas despesas ou considerar outras rendas. A aprovação final depende sempre da análise do CRAS e do Ministério da Cidadania.
-              </p>
-           </div>
-        </div>
-
-        <div className="mt-10">
-           <AdSlot id="Content2" label="Publicidade" />
+        <div className="mt-12">
+           <AdSlot id="Content2" label="Publicidade Rodapé" />
         </div>
 
       </div>
