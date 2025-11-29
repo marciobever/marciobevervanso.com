@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -84,7 +83,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      // Configuração com send_page_view: false para suportar SPA (Single Page Application)
       gtag('config', 'G-SE2RJB817M', { send_page_view: false });
     </script>
 
@@ -93,23 +91,48 @@
 
     <script>
       window.googletag = window.googletag || {cmd: []};
+      
       googletag.cmd.push(function() {
+        // Targeting Logic (Replicated from WordPress script)
+        // Since we don't have WP ID in React, we skip id_post_wp or can mock it if needed
+        // But we DO implement UTM targeting which is critical for optimization
+        if(window.location.search){
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var utm_source = urlParams.get('utm_source');
+            var utm_medium = urlParams.get('utm_medium');
+            var utm_campaign = urlParams.get('utm_campaign');
+
+            if(utm_source) googletag.pubads().setTargeting('utm_source', [utm_source]);
+            if(utm_medium) googletag.pubads().setTargeting('utm_medium', [utm_medium]);
+            if(utm_campaign) googletag.pubads().setTargeting('utm_campaign', [utm_campaign]);
+        }
+
+        // Interstitial
         var interstitialSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial', googletag.enums.OutOfPageFormat.INTERSTITIAL);
         if (interstitialSlot) interstitialSlot.addService(googletag.pubads());
 
-        var anchorSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor', googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR);
+        // Anchor (Prefer TOP as per original script, but BOTTOM is safer for web apps. Keeping generic anchor logic)
+        // Note: The script provided uses TOP_ANCHOR. We will try to respect that configuration logic.
+        var anchorSlot = googletag.defineOutOfPageSlot('/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor', googletag.enums.OutOfPageFormat.TOP_ANCHOR);
         if (anchorSlot) anchorSlot.addService(googletag.pubads());
 
+        // Standard Content Slots (1 to 9)
         var mapping = googletag.sizeMapping().addSize([0, 0], ['fluid',[250, 250],[300, 250],[336, 280]]).build();
 
-        for (var i = 1; i <= 5; i++) {
+        for (var i = 1; i <= 9; i++) {
             googletag.defineSlot("/23287346478/marciobevervanso.com/marciobevervanso.com_Content" + i, [[250, 250],[300, 250],[336, 280]], "Content" + i)
                 .defineSizeMapping(mapping)
                 .setCollapseEmptyDiv(true)
                 .addService(googletag.pubads());
         }
 
-        googletag.pubads().enableLazyLoad({ fetchMarginPercent: 20, renderMarginPercent: 10, mobileScaling: 2.0 });
+        // Global Settings
+        googletag.pubads().enableLazyLoad({ 
+            fetchMarginPercent: 20, 
+            renderMarginPercent: 10, 
+            mobileScaling: 2.0 
+        });
         googletag.enableServices();
       });
     </script>
@@ -156,20 +179,20 @@
     <style>
       html { 
         scroll-behavior: smooth;
-        -webkit-text-size-adjust: 100%; /* Previne ajuste automático de tamanho de fonte no iOS */
-        touch-action: manipulation; /* Melhora a resposta ao toque e evita zoom duplo */
+        -webkit-text-size-adjust: 100%;
+        touch-action: manipulation;
       }
       body {
-        overscroll-behavior-y: none; /* Previne efeito "elástico" indesejado no scroll */
+        overscroll-behavior-y: none;
       }
+      /* Ensure ads container has height to prevent CLS */
       .ad-container {
         display: flex; justify-content: center; align-items: center; margin: 0 auto;
-        width: 100%; min-height: 280px; background-color: #f8fafc; border-radius: 8px; overflow: hidden;
+        width: 100%; min-height: 250px; background-color: #f8fafc; border-radius: 8px; overflow: hidden;
       }
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       
-      /* High Contrast Mode - Force Overrides */
       body.high-contrast {
         background-color: #000000 !important;
         color: #FFFFFF !important;
@@ -186,10 +209,9 @@
       }
       body.high-contrast .ad-container,
       body.high-contrast iframe {
-        background-color: #FFFFFF !important; /* Keep ads visible */
+        background-color: #FFFFFF !important; 
       }
       
-      /* Prevent font scaling on inputs which triggers zoom on iOS */
       input, select, textarea, button {
         font-size: 16px !important; 
       }
