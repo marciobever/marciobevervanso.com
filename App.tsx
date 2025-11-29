@@ -33,6 +33,12 @@ import { SeguroVidaPage } from './components/broadcast/SeguroVidaPage';
 import { SocialPostGenerator } from './components/admin/SocialPostGenerator';
 import { SeoTools } from './components/admin/SeoTools';
 
+// Import New Guides
+import { FarmaciaGuide } from './components/guides/FarmaciaGuide';
+import { PisPasepGuide } from './components/guides/PisPasepGuide';
+import { AntenaGuide } from './components/guides/AntenaGuide';
+import { IdJovemGuide } from './components/guides/IdJovemGuide';
+
 import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
@@ -59,6 +65,10 @@ const ROUTES: Record<string, ViewState> = {
   // Guias
   '/guia-bolsa-familia': 'guide-bolsa',
   '/guia-bpc': 'guide-bpc',
+  '/guia-farmacia-popular': 'guide-farmacia',
+  '/guia-pis-pasep-abono': 'guide-pis',
+  '/guia-kit-antena-digital': 'guide-antena',
+  '/guia-id-jovem-viagem': 'guide-idjovem',
   // Broadcasts (LPs Governamentais)
   '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios': 'landing-mcmv',
   '/dentista-gratuito-sus-quiz-prioridade': 'landing-dentista',
@@ -77,25 +87,15 @@ const ROUTES: Record<string, ViewState> = {
 };
 
 function App() {
-  // Função para determinar a view inicial baseada na URL
   const getInitialView = (): ViewState => {
     try {
-      // Safety check for non-standard environments (like blob URLs in previews)
       if (typeof window === 'undefined' || window.location.protocol === 'blob:') return 'home';
-
       const path = window.location.pathname;
-      // Remove trailing slash if exists (exceto se for apenas /)
       const normalizedPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
-      
-      // Verifica se existe rota exata
       if (ROUTES[normalizedPath]) {
         return ROUTES[normalizedPath];
       }
-    } catch (e) {
-      // Ignora erros de parsing de URL
-    }
-    
-    // Fallback para home se não encontrar
+    } catch (e) { }
     return 'home';
   };
 
@@ -104,7 +104,6 @@ function App() {
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
-  // Escuta o botão "Voltar" do navegador
   useEffect(() => {
     const handlePopState = () => {
       setCurrentView(getInitialView());
@@ -113,31 +112,22 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Tracking de Mudança de View
   useEffect(() => {
     Analytics.trackPageView(currentView);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView]);
 
   const handleNavigate = (view: ViewState) => {
-    // Se a view não for válida ou indefinida, força home
     if (!view) {
       setCurrentView('home');
       return;
     }
-
-    // Encontra a URL correspondente à View para atualizar a barra de endereços
     const path = Object.keys(ROUTES).find(key => ROUTES[key] === view) || '/';
-    
-    // Atualiza a URL sem recarregar a página com tratamento de erro para sandbox
     try {
       if (window.history && typeof window.history.pushState === 'function') {
          window.history.pushState({}, '', path);
       }
-    } catch (error) {
-      // Silently ignore navigation errors in sandbox/blob environments
-    }
-    
+    } catch (error) {}
     setCurrentView(view);
     if (view !== 'quizzes') {
       setActiveQuizId(null);
@@ -177,8 +167,16 @@ function App() {
         );
       case 'news': return <NewsPage />;
       case 'chat': return <ChatPage />;
+      
+      // Existing Guides
       case 'guide-bolsa': return <BolsaFamiliaGuide />;
       case 'guide-bpc': return <BPCGuide />;
+      // NEW Guides
+      case 'guide-farmacia': return <FarmaciaGuide onNavigate={handleNavigate} />;
+      case 'guide-pis': return <PisPasepGuide onNavigate={handleNavigate} />;
+      case 'guide-antena': return <AntenaGuide onNavigate={handleNavigate} />;
+      case 'guide-idjovem': return <IdJovemGuide onNavigate={handleNavigate} />;
+
       case 'calendar': 
       case 'calendarios': return <CalendariosPage />;
       case 'analytics': return <AnalyticsDashboard />;
@@ -202,7 +200,7 @@ function App() {
       case 'landing-cnh': return <CNHPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-pe-de-meia': return <PeDeMeiaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       
-      // Fallbacks for generic landings to avoid broken links
+      // Fallbacks
       case 'landing-bpc-comparativo':
       case 'landing-bolsa-comparativo':
       case 'landing-general-rights': return <ComparativoPage />;
@@ -214,7 +212,6 @@ function App() {
       case 'landing-seguro-vida': return <SeguroVidaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
         
       default:
-        // Fallback robusto para 'home' caso a view não exista
         return (
           <>
             <Hero onNavigate={handleNavigate} />
@@ -230,14 +227,11 @@ function App() {
     <div className="min-h-screen bg-brand-light font-sans text-brand-dark flex flex-col">
       <NotificationBar onNavigate={handleNavigate} />
       <Header onNavigate={handleNavigate} />
-      
       <main className="flex-grow">
         {renderContent()}
       </main>
-
       <Footer onNavigate={handleNavigate} />
       <FloatingShare />
-
       <ConsultationModal 
         isOpen={isConsultationOpen}
         onClose={() => setIsConsultationOpen(false)}

@@ -42,15 +42,23 @@ export const AllBenefitsPage: React.FC<Props> = ({ onNavigate }) => {
           onNavigate('landing-cnh');
           break;
         case 'pe-de-meia': 
-        case 'id-jovem':
           onNavigate('landing-pe-de-meia');
+          break;
+        case 'id-jovem':
+          onNavigate('guide-idjovem');
           break;
         case 'tarifa-social':
           onNavigate('calculator'); 
           break;
         case 'kit-antena':
+          onNavigate('guide-antena');
+          break;
         case 'pis-pasep':
+          onNavigate('guide-pis');
+          break;
         case 'farmacia-popular':
+          onNavigate('guide-farmacia');
+          break;
         default:
           // Se não houver guia específico, leva para a verificação de elegibilidade
           onNavigate('quizzes');

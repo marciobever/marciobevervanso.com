@@ -94,8 +94,12 @@ export type ViewState =
   | 'chat' 
   | 'guide-bolsa' 
   | 'guide-bpc' 
-  | 'calendar'      // Legacy view, can be kept or redirected
-  | 'calendarios'   // New centralized view
+  | 'guide-farmacia' // NEW
+  | 'guide-pis'      // NEW
+  | 'guide-antena'   // NEW
+  | 'guide-idjovem'  // NEW
+  | 'calendar'      
+  | 'calendarios'   
   | 'analytics'
   | 'secret-menu'
   | 'cards'         
