@@ -1,7 +1,9 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { Send, User, Bot, Loader2, Search, Info } from 'lucide-react';
-import { AdSlot } from './AdSlot';
+// AdSlot import removed to clean up UI as requested
+// import { AdSlot } from './AdSlot'; 
 
 // Declaração para satisfazer o TypeScript sem depender de @types/node
 declare const process: {
@@ -101,7 +103,7 @@ const ChatPage: React.FC = () => {
 
       <div className="flex-grow overflow-y-auto p-4 md:p-6 pb-24">
         <div className="max-w-3xl mx-auto space-y-6">
-          <AdSlot id="ad-chat-top" className="mb-4 h-16 md:h-20" label="Publicidade Chat" />
+          {/* Ad removed from here per user request to improve visibility */}
           
           {messages.map((msg) => (
             <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>

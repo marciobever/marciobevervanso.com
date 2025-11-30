@@ -1,12 +1,28 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { ViewState } from '../types';
-import { ShieldAlert, ExternalLink, BarChart3, LayoutDashboard, FileText, ArrowLeft, CreditCard, Shield, Instagram, Globe } from 'lucide-react';
+import { ShieldAlert, ExternalLink, BarChart3, LayoutDashboard, FileText, ArrowLeft, CreditCard, Shield, Instagram, Globe, Lock, Key } from 'lucide-react';
 
 interface SecretMenuProps {
   onNavigate: (view: ViewState) => void;
 }
 
 const SecretMenu: React.FC<SecretMenuProps> = ({ onNavigate }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === 'marciobever' && password === '102030') {
+      setIsAuthenticated(true);
+      setError('');
+    } else {
+      setError('Credenciais inválidas.');
+    }
+  };
+
   const broadcasts = [
     { label: 'Minha Casa Minha Vida (LP)', view: 'landing-mcmv', url: '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios' },
     { label: 'Dentista / Brasil Sorridente (LP)', view: 'landing-dentista', url: '/dentista-gratuito-sus-quiz-prioridade' },
@@ -28,18 +44,85 @@ const SecretMenu: React.FC<SecretMenuProps> = ({ onNavigate }) => {
     { label: 'Criador de Quiz (IA)', view: 'dashboard', icon: LayoutDashboard, color: 'text-green-400' },
   ];
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="inline-flex p-4 bg-slate-700 rounded-full mb-4 text-blue-400">
+              <Lock size={32} />
+            </div>
+            <h1 className="text-2xl font-bold text-white">Acesso Restrito</h1>
+            <p className="text-slate-400 text-sm mt-2">Área administrativa do portal.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Usuário</label>
+              <div className="relative">
+                <input 
+                  type="text" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-600 rounded-xl py-3 pl-10 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                  placeholder="Seu usuário"
+                />
+                <ShieldAlert className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Senha</label>
+              <div className="relative">
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-600 rounded-xl py-3 pl-10 pr-4 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                  placeholder="••••••"
+                />
+                <Key className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+              </div>
+            </div>
+
+            {error && (
+              <div className="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-2 rounded-lg text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <button 
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-900/20"
+            >
+              Entrar no Painel
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => onNavigate('home')}
+              className="w-full text-slate-500 hover:text-white text-sm py-2 transition-colors"
+            >
+              Voltar ao Site
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 md:p-12 font-sans">
       <div className="max-w-4xl mx-auto">
         
         <div className="flex items-center justify-between mb-12 border-b border-slate-700 pb-6">
           <div className="flex items-center gap-4">
-            <div className="bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-              <ShieldAlert className="text-red-500" size={32} />
+            <div className="bg-green-500/10 p-3 rounded-xl border border-green-500/20">
+              <ShieldAlert className="text-green-500" size={32} />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Menu Secreto (Admin)</h1>
-              <p className="text-slate-400 text-sm">Acesso restrito a páginas ocultas e ferramentas.</p>
+              <p className="text-slate-400 text-sm">Bem-vindo, {username}.</p>
             </div>
           </div>
           <button 
@@ -132,13 +215,6 @@ const SecretMenu: React.FC<SecretMenuProps> = ({ onNavigate }) => {
                   </div>
                 </button>
               ))}
-            </div>
-
-            <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-               <h3 className="text-slate-300 font-bold mb-2 text-sm">Dica de Uso</h3>
-               <p className="text-slate-500 text-sm leading-relaxed">
-                 Para acessar este menu novamente a qualquer momento, clique <strong>5 vezes</strong> consecutivas na logo "Marcio Bevervanso" no topo do site.
-               </p>
             </div>
           </div>
 
