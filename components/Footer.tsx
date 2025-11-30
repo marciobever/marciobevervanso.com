@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Logo } from './Logo';
 import { ViewState } from '../types';
@@ -65,10 +66,26 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             <h4 className="text-brand-dark font-bold mb-6">Legal & Contato</h4>
             <ul className="space-y-3 text-sm text-brand-medium">
-              <li><a href="#" className="hover:text-brand-blue hover:underline transition-colors">Política de Privacidade</a></li>
-              <li><a href="#" className="hover:text-brand-blue hover:underline transition-colors">Termos de Uso</a></li>
-              <li><a href="#" className="hover:text-brand-blue hover:underline transition-colors">Sobre Nós</a></li>
-              <li><button onClick={(e) => handleLinkClick(e, 'chat')} className="hover:text-brand-blue hover:underline transition-colors">Fale Conosco (IA)</button></li>
+              <li>
+                <button onClick={(e) => handleLinkClick(e, 'legal')} className="hover:text-brand-blue hover:underline transition-colors text-left">
+                  Política de Privacidade
+                </button>
+              </li>
+              <li>
+                <button onClick={(e) => handleLinkClick(e, 'legal')} className="hover:text-brand-blue hover:underline transition-colors text-left">
+                  Termos de Uso
+                </button>
+              </li>
+              <li>
+                <button onClick={(e) => handleLinkClick(e, 'legal')} className="hover:text-brand-blue hover:underline transition-colors text-left">
+                  Sobre Nós
+                </button>
+              </li>
+              <li>
+                <button onClick={(e) => handleLinkClick(e, 'chat')} className="hover:text-brand-blue hover:underline transition-colors text-left">
+                  Fale Conosco (IA)
+                </button>
+              </li>
             </ul>
           </div>
         </div>
