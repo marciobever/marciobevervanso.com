@@ -168,18 +168,62 @@ export const STATIC_QUIZZES: Quiz[] = [
 
 export const CREDIT_CARDS: CreditCardProduct[] = [
   {
+    id: 'will',
+    name: 'Will Bank',
+    issuer: 'Will',
+    type: 'Credit',
+    minScore: 350,
+    annualFee: 'Grátis',
+    benefits: ['Cartão Virtual', 'Loja de Descontos', 'Aprovação Rápida'],
+    colorGradient: 'from-yellow-400 to-yellow-300 text-black',
+    flag: 'Mastercard',
+    applyLink: 'card-details',
+    officialLink: 'https://www.willbank.com.br/',
+    tag: 'Aprova Negativado',
+    detailedInfo: {
+      reviewScore: 4.6,
+      description: 'O amarelinho mais famoso do Brasil. O Will Bank (antigo pag!) é conhecido por sua análise de crédito flexível, aprovando muitos clientes que foram recusados em outros bancos.',
+      pros: ['Aprovação rápida (muitas vezes em minutos)', 'Cartão virtual disponível na hora', 'Loja Will com descontos e cashback', 'Atendimento descomplicado'],
+      cons: ['Limite inicial pode demorar para aumentar', 'Sem agências físicas (100% digital)', 'Não tem programa de milhas próprio'],
+      interestRateRotativo: 'Variável (consulte app)',
+      incomeRequirement: 'Não exige comprovação formal'
+    }
+  },
+  {
+    id: 'carrefour',
+    name: 'Cartão Carrefour',
+    issuer: 'Carrefour Soluções',
+    type: 'Credit',
+    minScore: 400,
+    annualFee: 'Grátis*',
+    benefits: ['Descontos em Alimentos', 'Parcela em 24x', 'Farmácia com Desconto'],
+    colorGradient: 'from-blue-600 to-red-600',
+    flag: 'Mastercard',
+    applyLink: 'card-details',
+    officialLink: 'https://www.carrefoursolucoes.com.br/',
+    tag: 'Fácil Aprovação',
+    detailedInfo: {
+      reviewScore: 4.7,
+      description: 'O cartão ideal para quem quer economizar no supermercado. Oferece descontos exclusivos em milhares de produtos nas lojas Carrefour e Atacadão, além de prazo estendido para pagar.',
+      pros: ['Anuidade zero (basta usar 1x por mês na loja)', 'Parcelamento de eletrodomésticos em até 24x', 'Descontos diários em alimentos e farmácia', 'Aceito em qualquer lugar (Mastercard)'],
+      cons: ['Juros rotativos podem ser altos', 'Exige comprovação mínima de renda', 'App pode apresentar lentidão'],
+      interestRateRotativo: 'Variável',
+      incomeRequirement: 'Salário Mínimo'
+    }
+  },
+  {
     id: 'roxinho',
     name: 'Roxinho Gold',
     issuer: 'Nubank',
     type: 'Credit',
     minScore: 300,
     annualFee: 'Grátis',
-    benefits: ['Sem anuidade', 'Controle pelo App', 'Aumento de limite progressivo'],
+    benefits: ['Sem anuidade', 'Controle pelo App', 'Função Construir Limite'],
     colorGradient: 'from-purple-700 to-purple-900',
     flag: 'Mastercard',
     applyLink: 'card-details',
     officialLink: 'https://nubank.com.br/cartao/',
-    tag: 'Fácil Aprovação',
+    tag: 'Iniciantes',
     detailedInfo: {
       reviewScore: 4.8,
       description: 'O cartão mais querido do Brasil. Ideal para quem está começando a vida financeira ou quer se livrar das taxas abusivas dos grandes bancos. Oferece a função "Construir Limite" para quem tem score baixo.',
@@ -194,14 +238,14 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     name: 'Caixa Sim',
     issuer: 'Caixa',
     type: 'Credit',
-    minScore: 400,
+    minScore: 450,
     annualFee: 'Grátis',
     benefits: ['Taxas reduzidas', 'Aceita negativado (sob análise)', 'Programa de Pontos'],
     colorGradient: 'from-blue-500 to-blue-700',
     flag: 'Elo',
     applyLink: 'card-details',
     officialLink: 'https://www.caixa.gov.br/voce/cartoes/credito/sim/Paginas/default.aspx',
-    tag: 'Governo',
+    tag: 'Juros Baixos',
     detailedInfo: {
       reviewScore: 4.5,
       description: 'O Caixa Sim é a aposta do banco estatal para competir com as fintechs. Oferece as taxas de juros mais baixas do mercado para o rotativo, sendo uma opção segura para quem tem medo de dívidas.',
@@ -210,88 +254,45 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
       interestRateRotativo: 'Até 8,99% a.m.',
       incomeRequirement: 'Salário Mínimo'
     }
-  },
-  {
-    id: 'will',
-    name: 'Will Bank',
-    issuer: 'Will',
-    type: 'Credit',
-    minScore: 350,
-    annualFee: 'Grátis',
-    benefits: ['Cartão Virtual', 'Loja de Descontos', 'Aprovação Rápida'],
-    colorGradient: 'from-yellow-400 to-yellow-300 text-black',
-    flag: 'Mastercard',
-    applyLink: 'card-details',
-    officialLink: 'https://www.willbank.com.br/',
-    tag: 'Para Negativado',
-    detailedInfo: {
-      reviewScore: 4.6,
-      description: 'O amarelinho mais famoso do Brasil. O Will Bank (antigo pag!) é conhecido por sua análise de crédito flexível, aprovando muitos clientes que foram recusados em outros bancos.',
-      pros: ['Aprovação rápida (muitas vezes em minutos)', 'Cartão virtual disponível na hora', 'Loja Will com descontos e cashback', 'Atendimento descomplicado'],
-      cons: ['Limite inicial pode demorar para aumentar', 'Sem agências físicas (100% digital)', 'Não tem programa de milhas próprio'],
-      interestRateRotativo: 'Variável (consulte app)',
-      incomeRequirement: 'Não exige comprovação formal'
-    }
-  },
-  {
-    id: 'inter',
-    name: 'Inter Gold',
-    issuer: 'Inter',
-    type: 'Credit',
-    minScore: 500,
-    annualFee: 'Grátis',
-    benefits: ['Cashback na fatura', 'Super App Completo', 'Investimentos'],
-    colorGradient: 'from-orange-500 to-orange-600',
-    flag: 'Mastercard',
-    applyLink: 'card-details',
-    officialLink: 'https://www.bancointer.com.br/cartoes/',
-    detailedInfo: {
-      reviewScore: 4.9,
-      description: 'Mais que um cartão, um Super App. O Inter Gold oferece cashback real na fatura e acesso a uma plataforma completa de investimentos e shopping. Excelente para quem já tem um score mediano.',
-      pros: ['Cashback em todas as compras', 'Plataforma de investimentos integrada', 'Saques gratuitos no Banco24Horas', 'Seguros e Consórcios no app'],
-      cons: ['Exige abertura de conta digital', 'Análise de crédito mais rigorosa que Nubank', 'Upgrade para Black exige investimentos altos'],
-      interestRateRotativo: 'Variável',
-      incomeRequirement: 'R$ 1.500,00 (recomendado)'
-    }
   }
 ];
 
 export const LOAN_OFFERS: LoanProduct[] = [
   {
-    id: 'fgts-antecipacao',
+    id: 'supersim',
+    name: 'Empréstimo para Negativado',
+    provider: 'SuperSim',
+    rate: 'A partir de 12,5% a.m.',
+    minAmount: 'R$ 500,00',
+    maxAmount: 'R$ 2.500,00',
+    term: 'Até 12x',
+    type: 'Pessoal',
+    tags: ['Aprova Negativado', 'Dinheiro em 30min'],
+    color: 'bg-red-100 text-red-800'
+  },
+  {
+    id: 'credspot',
     name: 'Antecipação Saque-Aniversário',
-    provider: 'Banco Pan / Safra',
+    provider: 'Credspot (Multibancos)',
     rate: '1,49% a.m.',
-    minAmount: 'R$ 300,00',
+    minAmount: 'R$ 50,00',
     maxAmount: 'Saldo FGTS',
-    term: 'Até 10 anos',
+    term: 'Antecipa 10 anos',
     type: 'FGTS',
-    tags: ['Sem Consulta SPC', 'Dinheiro em 2h'],
+    tags: ['Sem Consulta SPC', 'Aprovação Garantida'],
     color: 'bg-green-100 text-green-800'
   },
   {
-    id: 'emprestimo-pessoal',
-    name: 'Crédito Pessoal Online',
-    provider: 'Simplic / Jeitto',
-    rate: 'A partir de 2,9% a.m.',
-    minAmount: 'R$ 500,00',
-    maxAmount: 'R$ 3.500,00',
-    term: '3 a 12 meses',
+    id: 'bompra',
+    name: 'Comparador de Crédito',
+    provider: 'Bom Pra Crédito',
+    rate: 'Variável',
+    minAmount: 'R$ 2.000,00',
+    maxAmount: 'R$ 50.000,00',
+    term: 'Até 36x',
     type: 'Pessoal',
-    tags: ['Aprovação Rápida', 'Tudo pelo Celular'],
+    tags: ['1 Cadastro = 30 Bancos', 'Maior chance de aprovação'],
     color: 'bg-blue-100 text-blue-800'
-  },
-  {
-    id: 'consignado-inss',
-    name: 'Consignado INSS/BPC',
-    provider: 'C6 Bank',
-    rate: '1,66% a.m. (Teto INSS)',
-    minAmount: 'R$ 1.000,00',
-    maxAmount: 'Margem Disp.',
-    term: 'Até 84x',
-    type: 'Consignado',
-    tags: ['Menor Taxa', 'Sem Consulta'],
-    color: 'bg-orange-100 text-orange-800'
   }
 ];
 

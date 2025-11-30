@@ -21,6 +21,8 @@ import { LoadingScreen } from './components/ui/LoadingScreen';
 import { AccessibilityBar } from './components/ui/AccessibilityBar';
 import { InstallPrompt } from './components/ui/InstallPrompt';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { MetaHead } from './components/seo/MetaHead'; // Import SEO
+import { StoriesGallery } from './components/web-stories/StoriesGallery'; // Import Stories
 import { STATIC_QUIZZES, CREDIT_CARDS } from './constants';
 
 // Lazy Load Components
@@ -222,6 +224,11 @@ function App() {
       case 'home':
         return (
           <>
+            <MetaHead 
+              title="Guia Social Brasil 2025: Consulta de Benefícios e Cidadania" 
+              description="Portal informativo independente. Consulte o Calendário Bolsa Família 2025, regras do BPC/LOAS, CNH Social e Empréstimos." 
+            />
+            
             <Hero onNavigate={handleNavigate} />
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
@@ -229,6 +236,12 @@ function App() {
             <FinancialSection onNavigate={handleNavigate} />
             <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
             <CadUnicoSection onNavigate={handleNavigate} />
+            
+            {/* Stories moved here */}
+            <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
+               <StoriesGallery onNavigate={handleNavigate} />
+            </div>
+
             <FaqSection />
             <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
           </>
@@ -238,13 +251,19 @@ function App() {
       case 'legal': return <LegalPage />;
       case 'quizzes':
         return (
-          <QuizPage 
-            quizzes={quizzes} 
-            activeQuizId={activeQuizId} 
-            onCloseQuiz={() => { window.location.href = '/quiz'; }} 
-            onSelectQuiz={handleStartQuiz}
-            onNavigate={handleNavigate}
-          />
+          <>
+            <MetaHead 
+              title="Simulador de Elegibilidade: Teste Oficial"
+              description="Responda ao quiz e descubra na hora se você tem direito aos principais benefícios do governo."
+            />
+            <QuizPage 
+              quizzes={quizzes} 
+              activeQuizId={activeQuizId} 
+              onCloseQuiz={() => { window.location.href = '/quiz'; }} 
+              onSelectQuiz={handleStartQuiz}
+              onNavigate={handleNavigate}
+            />
+          </>
         );
       case 'news': return <NewsPage />;
       case 'chat': return <ChatPage />;
