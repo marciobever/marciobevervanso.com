@@ -1,88 +1,100 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { CreditCard, Banknote, ShieldCheck, ChevronRight } from 'lucide-react';
+import { CreditCard, Banknote, ShieldCheck, ChevronRight, Zap, Star, MousePointerClick } from 'lucide-react';
 
 interface AdSlotProps {
   id: string; // Ex: "Content1"
   className?: string;
   label?: string;
   refreshKey?: string | number;
+  forceAffiliate?: boolean; // Nova prop: Se true, ignora AdSense e mostra banner de afiliado direto
 }
 
-// Native Ads Fallback - Content Integration Style
-const NATIVE_ADS = {
+// BANNERS DE AFILIADOS (CSS PURO - Carregam rápido e parecem imagens profissionais)
+const AFFILIATE_BANNERS = {
   loans: {
-    gradient: 'from-green-50 to-emerald-100',
-    border: 'border-green-200',
+    theme: 'green',
+    gradient: 'from-emerald-600 to-green-500',
+    accent: 'bg-green-400',
     icon: Banknote,
-    iconColor: 'text-green-700',
-    iconBg: 'bg-green-200',
-    title: 'Antecipe seu FGTS',
-    subtitle: 'Dinheiro na conta em até 2 horas. Sem consulta ao SPC/Serasa.',
-    cta: 'Simular Agora',
-    ctaColor: 'text-green-800',
-    link: '/emprestimos'
+    title: 'Dinheiro na mão em 30 minutos?',
+    subtitle: 'Simule seu empréstimo pessoal ou antecipação do FGTS agora. Sem consulta ao SPC.',
+    cta: 'Simular Valor',
+    link: '/emprestimos', // Link interno que leva para a oferta
+    badge: 'Aprovação Rápida'
   },
   cards: {
-    gradient: 'from-purple-50 to-indigo-100',
-    border: 'border-purple-200',
+    theme: 'purple',
+    gradient: 'from-purple-800 to-indigo-600',
+    accent: 'bg-yellow-400',
     icon: CreditCard,
-    iconColor: 'text-purple-700',
-    iconBg: 'bg-purple-200',
-    title: 'Cartão com Limite Alto',
-    subtitle: 'Aprovação facilitada mesmo com score baixo. Anuidade Grátis.',
+    title: 'Cartão de Crédito com Limite Alto',
+    subtitle: 'Acabaram de liberar novos lotes de cartões Black e Platinum sem anuidade.',
     cta: 'Ver Cartões',
-    ctaColor: 'text-purple-800',
-    link: '/cartoes'
+    link: '/cartoes',
+    badge: 'Score Baixo'
+  },
+  insurance: {
+    theme: 'blue',
+    gradient: 'from-blue-700 to-cyan-600',
+    accent: 'bg-white',
+    icon: ShieldCheck,
+    title: 'Proteção Familiar por R$ 5,00',
+    subtitle: 'Seguro de vida com auxílio funeral completo e sorteios mensais em dinheiro.',
+    cta: 'Cotar Agora',
+    link: '/seguros',
+    badge: 'Sorteio de 10k'
   },
   general: {
-    gradient: 'from-blue-50 to-blue-100',
-    border: 'border-blue-200',
-    icon: ShieldCheck,
-    iconColor: 'text-blue-700',
-    iconBg: 'bg-blue-200',
-    title: 'Revisão de Benefícios',
-    subtitle: 'Veja se você tem direito a valores retroativos e novos auxílios.',
+    theme: 'dark',
+    gradient: 'from-slate-800 to-slate-900',
+    accent: 'bg-brand-blue',
+    icon: Zap,
+    title: 'Revisão de Benefícios 2025',
+    subtitle: 'Descubra se você tem direito a valores retroativos e novos auxílios do governo.',
     cta: 'Consultar CPF',
-    ctaColor: 'text-blue-800',
-    link: '/quiz'
+    link: '/quiz',
+    badge: 'Governo Federal'
   }
 };
 
-export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey }) => {
+export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey, forceAffiliate = false }) => {
   const adRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<any>(null);
-  const [showNative, setShowNative] = useState(true); // Começa true, se o ad carregar vira false
+  const [showAffiliate, setShowAffiliate] = useState(forceAffiliate); 
 
-  const getAdContent = () => {
+  // Decide qual banner mostrar baseado no contexto (label)
+  const getBannerContent = () => {
     const l = label.toLowerCase();
-    if (l.includes('crédito') || l.includes('empréstimo') || l.includes('dinheiro')) return NATIVE_ADS.loans;
-    if (l.includes('cartão') || l.includes('card')) return NATIVE_ADS.cards;
-    return NATIVE_ADS.general;
+    if (l.includes('crédito') || l.includes('empréstimo') || l.includes('dinheiro') || l.includes('fgts')) return AFFILIATE_BANNERS.loans;
+    if (l.includes('cartão') || l.includes('card') || l.includes('score')) return AFFILIATE_BANNERS.cards;
+    if (l.includes('seguro') || l.includes('proteção') || l.includes('família')) return AFFILIATE_BANNERS.insurance;
+    return AFFILIATE_BANNERS.general;
   };
-  const adContent = getAdContent();
+  
+  const content = getBannerContent();
 
   useEffect(() => {
+    if (forceAffiliate) return; // Se forçar afiliado, nem tenta carregar AdSense
+
     const element = adRef.current;
     if (!element) return;
 
-    // Função de carregamento do slot
     const loadAd = () => {
       if (window.googletag && window.googletag.cmd) {
         window.googletag.cmd.push(() => {
-          // Limpeza preventiva
+          // Limpeza
           if (slotRef.current) {
             window.googletag.destroySlots([slotRef.current]);
           }
 
+          // Define o Slot do AdSense/Ad Manager
           const slotPath = `/23287346478/marciobevervanso.com/marciobevervanso.com_${id}`;
-          
-          // Tamanhos responsivos refinados
-          const slotSizes = [[250, 250], [300, 250], [336, 280], [300, 600]];
+          const slotSizes = [[250, 250], [300, 250], [336, 280], [300, 600], 'fluid'];
           
           const mapping = window.googletag.sizeMapping()
-            .addSize([0, 0], ['fluid', [250, 250], [300, 250], [336, 280]]) 
-            .addSize([768, 0], ['fluid', [336, 280], [728, 90], [300, 600]]) 
+            .addSize([0, 0], ['fluid', [300, 250], [336, 280]]) 
+            .addSize([768, 0], ['fluid', [336, 280], [728, 90], [970, 90]]) 
             .build();
 
           const slot = window.googletag.defineSlot(slotPath, slotSizes, id);
@@ -92,26 +104,27 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
             slot.addService(window.googletag.pubads());
             slotRef.current = slot;
 
-            // Listener para saber se o anúncio carregou ou veio vazio
+            // LISTENER DE COLAPSO: Se o AdSense não tiver anúncio, mostra o Afiliado
             window.googletag.pubads().addEventListener('slotRenderEnded', (event: any) => {
               if (event.slot === slot) {
-                if (!event.isEmpty) {
-                  setShowNative(false); // Veio anúncio, esconde o nativo
+                if (event.isEmpty) {
+                  setShowAffiliate(true); // AdSense falhou -> Mostra Afiliado
                 } else {
-                  setShowNative(true); // Veio vazio, mostra o nativo
+                  setShowAffiliate(false); // AdSense carregou -> Esconde Afiliado
                 }
               }
             });
 
-            // Exibe e força o refresh (importante mesmo com SRA para lazy loaded ads)
             window.googletag.display(id);
             window.googletag.pubads().refresh([slot]);
           }
         });
+      } else {
+        // Se o script do Google não existir (AdBlock), mostra afiliado
+        setShowAffiliate(true);
       }
     };
 
-    // Observer para carregar apenas quando visível (Lazy Load nativo do React + GAM)
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         loadAd();
@@ -130,56 +143,75 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
         });
       }
     };
-  }, [id, refreshKey]);
+  }, [id, refreshKey, forceAffiliate]);
 
-  const handleNativeClick = () => {
-     window.location.href = adContent.link;
+  const handleBannerClick = () => {
+     window.location.href = content.link;
   };
 
   return (
     <div className={`w-full mx-auto my-8 ${className}`}>
       <div className="flex flex-col items-center justify-center">
         
-        <div className="w-full relative min-h-[280px] flex justify-center">
+        <div className="w-full relative min-h-[280px] flex justify-center items-center">
           
-          {/* Label Container */}
-          <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white px-2">
-             <span className="text-[10px] text-gray-300 font-semibold tracking-[0.2em] uppercase">
-               {label}
-             </span>
-          </div>
+          {/* Label de Publicidade */}
+          {!showAffiliate && (
+            <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white px-2">
+               <span className="text-[10px] text-gray-300 font-semibold tracking-[0.2em] uppercase">
+                 {label}
+               </span>
+            </div>
+          )}
 
-          {/* Container do Google Ad Manager */}
-          <div 
-            id={id} 
-            ref={adRef}
-            className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showNative ? 'h-0 opacity-0 overflow-hidden absolute' : 'min-h-[250px] opacity-100 relative'}`}
-          ></div>
-
-          {/* Anúncio Nativo (Fallback) */}
-          {showNative && (
+          {/* Container do Google AdSense (Fica oculto se showAffiliate for true) */}
+          {!forceAffiliate && (
             <div 
-                onClick={handleNativeClick}
-                className={`w-full max-w-2xl rounded-2xl p-6 border ${adContent.border} cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md bg-gradient-to-br ${adContent.gradient} group flex items-center gap-4 relative overflow-hidden`}
-            >
-                <div className={`w-14 h-14 ${adContent.iconBg} ${adContent.iconColor} rounded-xl flex items-center justify-center shrink-0 shadow-sm`}>
-                    <adContent.icon size={28} />
-                </div>
-                
-                <div className="flex-grow">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="bg-white/80 backdrop-blur text-gray-600 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wide border border-gray-100">
-                            Recomendado
-                        </span>
-                    </div>
-                    <h3 className="text-lg font-bold text-slate-900 leading-tight mb-1">{adContent.title}</h3>
-                    <p className="text-slate-600 text-xs font-medium leading-snug">
-                        {adContent.subtitle}
-                    </p>
-                </div>
+              id={id} 
+              ref={adRef}
+              className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showAffiliate ? 'h-0 opacity-0 overflow-hidden absolute' : 'min-h-[250px] opacity-100 relative'}`}
+            ></div>
+          )}
 
-                <div className={`hidden sm:flex items-center gap-1 font-bold text-sm ${adContent.ctaColor} bg-white/50 px-3 py-1.5 rounded-lg`}>
-                    {adContent.cta} <ChevronRight size={16} />
+          {/* BANNER DO AFILIADO (Fallback ou Forçado) */}
+          {showAffiliate && (
+            <div 
+                onClick={handleBannerClick}
+                className={`w-full max-w-4xl relative overflow-hidden rounded-2xl shadow-xl cursor-pointer group bg-gradient-to-r ${content.gradient} transition-transform hover:scale-[1.01] hover:shadow-2xl`}
+            >
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:bg-white/20 transition-colors"></div>
+
+                <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    
+                    {/* Left Content */}
+                    <div className="flex items-start gap-5 text-left flex-1">
+                        <div className="hidden sm:flex bg-white/20 p-4 rounded-2xl backdrop-blur-sm shadow-inner shrink-0">
+                            <content.icon size={36} className="text-white" />
+                        </div>
+                        <div>
+                            <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2 shadow-sm ${content.theme === 'dark' ? 'bg-white text-slate-900' : 'bg-white text-brand-dark'}`}>
+                                {content.badge}
+                            </span>
+                            <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-2 drop-shadow-md">
+                                {content.title}
+                            </h3>
+                            <p className="text-white/90 text-sm md:text-base font-medium leading-relaxed max-w-lg">
+                                {content.subtitle}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Right CTA */}
+                    <div className="shrink-0 w-full md:w-auto">
+                        <button className="w-full md:w-auto bg-white text-brand-dark hover:bg-gray-50 font-bold py-3.5 px-8 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all transform group-hover:translate-x-1">
+                            {content.cta} <MousePointerClick size={18} className="text-brand-blue" />
+                        </button>
+                        <p className="text-white/60 text-[10px] text-center mt-2 font-medium">
+                           Clique para ver detalhes
+                        </p>
+                    </div>
                 </div>
             </div>
           )}

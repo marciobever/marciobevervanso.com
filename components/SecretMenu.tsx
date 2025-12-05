@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ViewState } from '../types';
-import { ShieldAlert, ExternalLink, BarChart3, LayoutDashboard, FileText, ArrowLeft, CreditCard, Shield, Instagram, Globe, Lock, Key } from 'lucide-react';
+import { ShieldAlert, ExternalLink, BarChart3, LayoutDashboard, FileText, ArrowLeft, CreditCard, Shield, Instagram, Globe, Lock, Key, Image as ImageIcon } from 'lucide-react';
 
 interface SecretMenuProps {
   onNavigate: (view: ViewState) => void;
@@ -38,7 +38,7 @@ const SecretMenu: React.FC<SecretMenuProps> = ({ onNavigate }) => {
   ];
 
   const adminTools = [
-    { label: 'Social Post Maker', view: 'admin-social', icon: Instagram, color: 'text-pink-500' },
+    { label: 'Kit Social (Face/Insta)', view: 'admin-social', icon: ImageIcon, color: 'text-pink-500' },
     { label: 'SEO Tools (Sitemap)', view: 'admin-seo', icon: Globe, color: 'text-blue-400' },
     { label: 'Analytics Dashboard', view: 'analytics', icon: BarChart3, color: 'text-orange-400' },
     { label: 'Criador de Quiz (IA)', view: 'dashboard', icon: LayoutDashboard, color: 'text-green-400' },

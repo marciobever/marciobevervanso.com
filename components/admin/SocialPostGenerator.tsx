@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Download, Instagram, Monitor, Calendar, CheckCircle2, AlertTriangle, ArrowLeft, Image as ImageIcon, Search, Layout, Globe, MousePointerClick, Link as LinkIcon, Smartphone } from 'lucide-react';
+import { Download, Instagram, Monitor, Calendar, CheckCircle2, AlertTriangle, ArrowLeft, Image as ImageIcon, Search, Layout, Globe, MousePointerClick, Link as LinkIcon, Facebook, UserCircle, Smartphone, QrCode } from 'lucide-react';
 import { Logo } from '../Logo';
 import { ViewState } from '../../types';
 
@@ -25,10 +25,15 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
   const [selectedPageId, setSelectedPageId] = useState<string>('');
   
   const [template, setTemplate] = useState<'calendar' | 'breaking' | 'approved' | 'tip' | 'overlay' | 'link-card'>('breaking');
-  const [format, setFormat] = useState<'square' | 'story'>('square');
+  const [format, setFormat] = useState<'square' | 'story' | 'cover' | 'profile'>('square');
   const [headline, setHeadline] = useState('Bolsa Família: Calendário Liberado');
   const [subtext, setSubtext] = useState('Consulte agora o pagamento pelo final do seu NIS.');
-  const [displayUrl, setDisplayUrl] = useState('www.marciobevervanso.com');
+  
+  // Conversion Fields
+  const [displayUrl, setDisplayUrl] = useState('www.marciobevervanso.com'); // Link curto para leitura
+  const [affiliateLink, setAffiliateLink] = useState(''); // Link longo para QR Code
+  const [showQrCode, setShowQrCode] = useState(false);
+
   const [accentColor, setAccentColor] = useState<'blue' | 'green' | 'red' | 'yellow' | 'purple'>('blue');
   const [bgImage, setBgImage] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,6 +56,8 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
         setHeadline(page.title);
         setSubtext(page.desc);
         setDisplayUrl(page.url);
+        // Em um cenário real, você buscaria o link de afiliado do banco de dados aqui
+        setAffiliateLink(`https://${page.url}?ref=admin`); 
       }
     }
   }, [selectedPageId, sourceMode]);
@@ -67,17 +74,52 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
 
   // Logic to render the content inside the "Image"
   const renderContent = () => {
+    const isProfile = format === 'profile';
+    const isCover = format === 'cover';
+
+    if (isProfile) {
+       return (
+          <div className="flex flex-col items-center justify-center text-center h-full w-full">
+             <div className="bg-white p-4 rounded-full shadow-lg mb-4">
+                <Logo variant="color" showText={false} className="scale-150" />
+             </div>
+             <div className={`px-4 py-1 ${currentTheme.bg} text-white text-xs font-bold rounded-full shadow-md uppercase tracking-wider`}>
+                Portal Oficial
+             </div>
+          </div>
+       );
+    }
+
+    // QR Code Component Overlay
+    const QrCodeOverlay = () => {
+      if (!showQrCode || !affiliateLink) return null;
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(affiliateLink)}`;
+      
+      return (
+        <div className="absolute bottom-6 right-6 bg-white p-2 rounded-xl shadow-2xl flex flex-col items-center gap-1 z-50 animate-fade-in-up">
+           <img src={qrApiUrl} alt="QR Code" className="w-20 h-20" />
+           <span className="text-[8px] font-bold uppercase tracking-wider text-slate-900">Escaneie</span>
+        </div>
+      );
+    };
+
     switch (template) {
       case 'calendar':
         return (
-          <div className="text-center w-full relative z-10">
-             <div className="inline-flex items-center justify-center p-4 bg-white/20 backdrop-blur-md rounded-2xl mb-4 border border-white/30 shadow-lg">
-                <Calendar size={format === 'story' ? 64 : 48} className="text-white drop-shadow-md" />
+          <div className={`text-center w-full relative z-10 ${isCover ? 'flex items-center justify-center gap-8 px-12' : ''}`}>
+             <QrCodeOverlay />
+             {!isCover && (
+                <div className="inline-flex items-center justify-center p-4 bg-white/20 backdrop-blur-md rounded-2xl mb-4 border border-white/30 shadow-lg">
+                   <Calendar size={format === 'story' ? 64 : 48} className="text-white drop-shadow-md" />
+                </div>
+             )}
+             <div className={isCover ? 'text-left' : ''}>
+                <h2 className={`font-extrabold text-white mb-2 drop-shadow-md leading-tight ${isCover ? 'text-4xl' : 'text-3xl md:text-4xl'}`}>
+                  {headline}
+                </h2>
+                {isCover && <p className="text-white/80 font-medium text-lg">{subtext}</p>}
              </div>
-             <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2 drop-shadow-md leading-tight">
-               {headline}
-             </h2>
-             <div className="bg-white rounded-xl p-4 mt-4 shadow-xl text-slate-900 text-left w-full max-w-sm mx-auto">
+             <div className={`bg-white rounded-xl p-4 shadow-xl text-slate-900 text-left w-full ${isCover ? 'max-w-xs' : 'max-w-sm mx-auto mt-4'}`}>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-2 mb-2">
                    <span className="font-bold text-gray-500">NIS Final 1</span>
                    <span className={`font-extrabold ${currentTheme.text}`}>18/Jan</span>
@@ -96,6 +138,7 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
       case 'approved':
         return (
           <div className="text-center w-full relative z-10">
+             <QrCodeOverlay />
              <div className="w-24 h-24 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border-4 border-white/20 animate-bounce">
                 <CheckCircle2 size={48} />
              </div>
@@ -110,10 +153,11 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
       case 'tip':
         return (
           <div className="text-left w-full relative z-10 px-4">
+             <QrCodeOverlay />
              <div className={`inline-block px-4 py-1 rounded-full bg-white text-slate-900 font-bold text-xs uppercase tracking-wider mb-4 shadow-md`}>
                 Dica do Dia
              </div>
-             <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-md mb-6">
+             <h2 className={`font-extrabold text-white leading-tight drop-shadow-md mb-6 ${isCover ? 'text-4xl max-w-2xl' : 'text-3xl md:text-5xl'}`}>
                {headline}
              </h2>
              <div className="flex items-start gap-4 bg-white/10 backdrop-blur-md p-6 rounded-2xl border-l-4 border-white">
@@ -125,44 +169,52 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
         );
       case 'link-card':
         return (
-          <div className="text-center w-full relative z-10 px-6">
-             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform rotate-2">
-                <div className="bg-gray-100 px-4 py-3 flex items-center gap-2 border-b border-gray-200">
-                   <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                   <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                   <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                   <div className="ml-4 bg-white px-3 py-1 rounded-md text-[10px] text-gray-400 flex-grow text-left truncate">
-                      https://{displayUrl}
+          <div className={`text-center w-full relative z-10 px-6 ${isCover ? 'flex justify-center' : ''}`}>
+             <QrCodeOverlay />
+             <div className={`bg-white rounded-3xl shadow-2xl overflow-hidden transform ${isCover ? 'rotate-0 flex w-full max-w-2xl' : 'rotate-2'}`}>
+                {!isCover && (
+                   <div className="bg-gray-100 px-4 py-3 flex items-center gap-2 border-b border-gray-200">
+                      <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                      <div className="ml-4 bg-white px-3 py-1 rounded-md text-[10px] text-gray-400 flex-grow text-left truncate">
+                         https://{displayUrl}
+                      </div>
                    </div>
-                </div>
-                <div className="p-8">
-                   <div className="w-16 h-16 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center mx-auto mb-4">
+                )}
+                <div className={`p-8 ${isCover ? 'flex items-center gap-6 text-left w-full' : ''}`}>
+                   <div className={`w-16 h-16 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center ${isCover ? 'shrink-0' : 'mx-auto mb-4'}`}>
                       <Globe size={32} />
                    </div>
-                   <h2 className="text-2xl font-bold text-slate-900 mb-2 leading-tight">
-                     {headline}
-                   </h2>
-                   <p className="text-slate-500 text-sm mb-6">
-                      {subtext}
-                   </p>
-                   <div className={`w-full py-3 rounded-xl font-bold text-white text-sm ${currentTheme.bg}`}>
-                      Acessar Agora
+                   <div>
+                      <h2 className="text-2xl font-bold text-slate-900 mb-2 leading-tight">
+                        {headline}
+                      </h2>
+                      <p className="text-slate-500 text-sm mb-6">
+                         {subtext}
+                      </p>
+                      <div className={`w-full py-3 px-6 rounded-xl font-bold text-white text-sm text-center ${currentTheme.bg}`}>
+                         Acessar Agora
+                      </div>
                    </div>
                 </div>
              </div>
-             <div className="mt-8 bg-black/40 backdrop-blur-sm inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-bold">
-                <LinkIcon size={16} /> Link na Bio
-             </div>
+             {!isCover && (
+                <div className="mt-8 bg-black/40 backdrop-blur-sm inline-flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-bold">
+                   <LinkIcon size={16} /> Link na Bio
+                </div>
+             )}
           </div>
         );
       case 'overlay':
         return (
-          <div className="text-center w-full h-full flex flex-col justify-end pb-12 relative z-10">
+          <div className={`text-center w-full h-full flex flex-col justify-end pb-12 relative z-10 ${isCover ? 'justify-center pb-0' : ''}`}>
+             <QrCodeOverlay />
              <div className="bg-gradient-to-t from-black via-black/80 to-transparent absolute inset-0 -z-10"></div>
-             <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight drop-shadow-xl mb-4 px-4">
+             <h2 className={`font-extrabold text-white leading-tight drop-shadow-xl mb-4 px-4 ${isCover ? 'text-5xl' : 'text-3xl md:text-4xl'}`}>
                {headline}
              </h2>
-             <p className="text-white/90 text-lg px-4 font-medium drop-shadow-md">
+             <p className="text-white/90 text-lg px-4 font-medium drop-shadow-md max-w-3xl mx-auto">
                 {subtext}
              </p>
              
@@ -177,10 +229,11 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
       default:
         return (
           <div className="text-center w-full relative z-10">
+             <QrCodeOverlay />
              <div className={`inline-flex items-center gap-2 ${currentTheme.bg} text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm mb-6 shadow-lg border-2 border-white/20`}>
                 <AlertTriangle size={16} /> Urgente
              </div>
-             <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-lg">
+             <h2 className={`font-extrabold text-white leading-tight drop-shadow-lg ${isCover ? 'text-5xl max-w-4xl mx-auto' : 'text-3xl md:text-5xl'}`}>
                {headline}
              </h2>
              <div className="mt-8 bg-white/90 backdrop-blur text-slate-800 p-6 rounded-2xl font-medium shadow-2xl max-w-sm mx-auto border-b-4 border-slate-300">
@@ -191,6 +244,16 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
     }
   };
 
+  const getPreviewDimensions = () => {
+     switch(format) {
+        case 'story': return 'w-[360px] h-[640px]';
+        case 'cover': return 'w-[600px] h-[228px]'; // Aprox Facebook Cover Ratio
+        case 'profile': return 'w-[400px] h-[400px]';
+        case 'square': 
+        default: return 'w-[500px] h-[500px]';
+     }
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -199,7 +262,7 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
               <ArrowLeft />
            </button>
            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Instagram className="text-pink-500" /> Criador de Posts
+              <ImageIcon className="text-pink-500" /> Kit Social (Face/Insta)
            </h1>
         </div>
 
@@ -214,17 +277,17 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
                    onClick={() => setSourceMode('manual')}
                    className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${sourceMode === 'manual' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
                  >
-                    Edição Manual
+                    Manual
                  </button>
                  <button 
                    onClick={() => setSourceMode('page')}
                    className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${sourceMode === 'page' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
                  >
-                    Página do Site
+                    Automático
                  </button>
               </div>
 
-              {/* Page Selector (Only visible in page mode) */}
+              {/* Page Selector */}
               {sourceMode === 'page' && (
                  <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 animate-fade-in">
                     <label className="block text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
@@ -240,16 +303,100 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
                           <option key={page.id} value={page.id}>{page.title}</option>
                        ))}
                     </select>
-                    <p className="text-[10px] text-slate-500 mt-2">
-                       O título e descrição serão preenchidos automaticamente.
-                    </p>
                  </div>
+              )}
+
+              {/* Formato */}
+              <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+                 <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Formato de Saída</label>
+                 <div className="grid grid-cols-2 gap-2 mb-4">
+                    <button onClick={() => setFormat('square')} className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 ${format === 'square' ? 'bg-white text-black' : 'bg-slate-700 text-gray-400'}`}>
+                       <Instagram size={14} /> Post (1:1)
+                    </button>
+                    <button onClick={() => setFormat('story')} className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 ${format === 'story' ? 'bg-white text-black' : 'bg-slate-700 text-gray-400'}`}>
+                       <Smartphone size={14} /> Story (9:16)
+                    </button>
+                    <button onClick={() => setFormat('cover')} className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 ${format === 'cover' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-gray-400'}`}>
+                       <Facebook size={14} /> Capa FB
+                    </button>
+                    <button onClick={() => setFormat('profile')} className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 ${format === 'profile' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-gray-400'}`}>
+                       <UserCircle size={14} /> Perfil
+                    </button>
+                 </div>
+              </div>
+
+              {format !== 'profile' && (
+                 <>
+                    <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+                       <label className="block text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2"><Layout size={14}/> Modelo</label>
+                       <div className="grid grid-cols-2 gap-2">
+                          <button onClick={() => setTemplate('breaking')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'breaking' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🚨 Urgente</button>
+                          <button onClick={() => setTemplate('calendar')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'calendar' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>📅 Calendário</button>
+                          <button onClick={() => setTemplate('approved')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'approved' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>✅ Aprovado</button>
+                          <button onClick={() => setTemplate('tip')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'tip' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>💡 Dica</button>
+                          <button onClick={() => setTemplate('link-card')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'link-card' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🔗 Link Card</button>
+                          <button onClick={() => setTemplate('overlay')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'overlay' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🖼️ Fundo</button>
+                       </div>
+                    </div>
+
+                    <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+                       <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Texto</label>
+                       <input 
+                          type="text" 
+                          value={headline} 
+                          onChange={(e) => setHeadline(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white mb-3 focus:border-blue-500 outline-none font-bold"
+                          placeholder="Título Principal"
+                       />
+                       <textarea 
+                          value={subtext} 
+                          onChange={(e) => setSubtext(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white focus:border-blue-500 outline-none h-20 resize-none text-sm mb-3"
+                          placeholder="Subtítulo ou descrição"
+                       />
+                    </div>
+
+                    {/* CONVERSION SECTION */}
+                    <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 border-l-4 border-l-green-500">
+                       <label className="block text-xs font-bold text-green-400 uppercase mb-3 flex items-center gap-2">
+                          <LinkIcon size={14}/> Links de Conversão
+                       </label>
+                       
+                       <div className="mb-3">
+                          <span className="text-[10px] text-slate-400 uppercase font-bold">1. Texto Visível (Curto)</span>
+                          <input 
+                             type="text" 
+                             value={displayUrl} 
+                             onChange={(e) => setDisplayUrl(e.target.value)}
+                             className="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white text-xs focus:border-green-500 outline-none font-mono mt-1"
+                             placeholder="ex: marciobevervanso.com"
+                          />
+                       </div>
+
+                       <div>
+                          <span className="text-[10px] text-slate-400 uppercase font-bold">2. Link Destino (QR Code)</span>
+                          <input 
+                             type="text" 
+                             value={affiliateLink} 
+                             onChange={(e) => setAffiliateLink(e.target.value)}
+                             className="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white text-xs focus:border-green-500 outline-none font-mono mt-1 mb-2"
+                             placeholder="ex: https://hotmart.com/..."
+                          />
+                          <button 
+                             onClick={() => setShowQrCode(!showQrCode)}
+                             className={`w-full py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${showQrCode ? 'bg-green-600 text-white' : 'bg-slate-700 text-gray-400'}`}
+                          >
+                             <QrCode size={14} /> {showQrCode ? 'QR Code Ativado' : 'Gerar QR Code na Imagem'}
+                          </button>
+                       </div>
+                    </div>
+                 </>
               )}
 
               {/* Image Search */}
               <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
                  <label className="block text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
-                    <ImageIcon size={14}/> Imagem de Fundo (AI/Busca)
+                    <ImageIcon size={14}/> Fundo (AI Generator)
                  </label>
                  <div className="flex gap-2 mb-2">
                     <input 
@@ -270,47 +417,7 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
               </div>
 
               <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                 <label className="block text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2"><Layout size={14}/> Modelo</label>
-                 <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => setTemplate('breaking')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'breaking' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🚨 Urgente</button>
-                    <button onClick={() => setTemplate('calendar')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'calendar' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>📅 Calendário</button>
-                    <button onClick={() => setTemplate('approved')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'approved' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>✅ Aprovado</button>
-                    <button onClick={() => setTemplate('tip')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'tip' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>💡 Dica</button>
-                    <button onClick={() => setTemplate('link-card')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'link-card' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🔗 Link Card</button>
-                    <button onClick={() => setTemplate('overlay')} className={`text-left px-3 py-2 rounded-lg text-xs font-bold ${template === 'overlay' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}>🖼️ Fundo</button>
-                 </div>
-              </div>
-
-              <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                 <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Texto</label>
-                 <input 
-                    type="text" 
-                    value={headline} 
-                    onChange={(e) => setHeadline(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white mb-3 focus:border-blue-500 outline-none font-bold"
-                    placeholder="Título Principal"
-                 />
-                 <textarea 
-                    value={subtext} 
-                    onChange={(e) => setSubtext(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white focus:border-blue-500 outline-none h-20 resize-none text-sm mb-3"
-                    placeholder="Subtítulo ou descrição"
-                 />
-                 <input 
-                    type="text" 
-                    value={displayUrl} 
-                    onChange={(e) => setDisplayUrl(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-600 rounded-lg p-3 text-white text-xs focus:border-blue-500 outline-none font-mono"
-                    placeholder="URL Visual (ex: marciobevervanso.com)"
-                 />
-              </div>
-
-              <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                 <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Estilo</label>
-                 <div className="flex gap-3 mb-4">
-                    <button onClick={() => setFormat('square')} className={`flex-1 py-1.5 rounded text-xs font-bold ${format === 'square' ? 'bg-white text-black' : 'bg-slate-700 text-gray-400'}`}>Quadrado</button>
-                    <button onClick={() => setFormat('story')} className={`flex-1 py-1.5 rounded text-xs font-bold ${format === 'story' ? 'bg-white text-black' : 'bg-slate-700 text-gray-400'}`}>Story</button>
-                 </div>
+                 <label className="block text-xs font-bold text-slate-400 uppercase mb-3">Cor do Tema</label>
                  <div className="flex gap-3 justify-center">
                     {Object.keys(themes).map((color) => (
                        <button 
@@ -330,7 +437,7 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
            </div>
 
            {/* Preview Area */}
-           <div className="lg:col-span-8 flex flex-col items-center justify-center bg-black/50 rounded-3xl p-8 border border-slate-800">
+           <div className="lg:col-span-8 flex flex-col items-center justify-center bg-black/50 rounded-3xl p-8 border border-slate-800 relative">
               
               <div className="mb-4 text-slate-400 text-sm flex items-center gap-2">
                  <Monitor size={14} /> Preview (Tire um print da área abaixo)
@@ -339,7 +446,7 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
               {/* THE IMAGE CANVAS */}
               <div 
                 id="social-preview"
-                className={`relative overflow-hidden shadow-2xl transition-all duration-500 flex flex-col ${format === 'square' ? 'w-[500px] h-[500px]' : 'w-[360px] h-[640px]'}`}
+                className={`relative overflow-hidden shadow-2xl transition-all duration-500 flex flex-col ${getPreviewDimensions()}`}
               >
                  {/* Dynamic Background */}
                  {bgImage ? (
@@ -354,15 +461,22 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
                     </>
                  )}
 
+                 {/* Profile Mode Overlay (Circular Mask) */}
+                 {format === 'profile' && (
+                    <div className="absolute inset-0 pointer-events-none z-50 border-[50px] border-slate-900/50 rounded-full"></div>
+                 )}
+
                  {/* Content Container */}
                  <div className="relative z-10 flex flex-col h-full p-8">
                     
-                    {/* Header Logo */}
-                    <div className="flex justify-center mb-auto pt-4">
-                       <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                          <Logo variant="white" showText={true} className="scale-75 origin-center" />
+                    {/* Header Logo (Hidden on Cover/Profile to allow full customization) */}
+                    {format !== 'cover' && format !== 'profile' && (
+                       <div className="flex justify-center mb-auto pt-4">
+                          <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                             <Logo variant="white" showText={true} className="scale-75 origin-center" />
+                          </div>
                        </div>
-                    </div>
+                    )}
 
                     {/* Main Dynamic Content */}
                     <div className="my-auto flex items-center justify-center w-full">
@@ -370,18 +484,20 @@ export const SocialPostGenerator: React.FC<Props> = ({ onNavigate }) => {
                     </div>
 
                     {/* Footer */}
-                    <div className="mt-auto text-center pt-8">
-                       <div className="inline-block bg-white text-brand-dark font-bold px-4 py-2 rounded-lg text-sm shadow-lg">
-                          {displayUrl || 'www.marciobevervanso.com'}
+                    {format !== 'cover' && format !== 'profile' && (
+                       <div className="mt-auto text-center pt-8">
+                          <div className="inline-block bg-white text-brand-dark font-bold px-4 py-2 rounded-lg text-sm shadow-lg">
+                             {displayUrl || 'www.marciobevervanso.com'}
+                          </div>
                        </div>
-                    </div>
+                    )}
 
                  </div>
               </div>
 
               <div className="mt-8">
                  <p className="text-xs text-gray-500 text-center">
-                    Use a ferramenta de captura de tela do seu dispositivo para salvar a imagem.
+                    Dica: Use a ferramenta de captura de tela do seu PC/Celular para salvar a imagem.
                  </p>
               </div>
 
