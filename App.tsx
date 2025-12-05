@@ -12,7 +12,6 @@ import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
-import { AffiliateBanner } from './components/AffiliateBanner'; // Importado
 import { AdManager } from './components/AdManager';
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
@@ -22,8 +21,8 @@ import { LoadingScreen } from './components/ui/LoadingScreen';
 import { AccessibilityBar } from './components/ui/AccessibilityBar';
 import { InstallPrompt } from './components/ui/InstallPrompt';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { MetaHead } from './components/seo/MetaHead'; 
-import { StoriesGallery } from './components/web-stories/StoriesGallery'; 
+import { MetaHead } from './components/seo/MetaHead'; // Import SEO
+import { StoriesGallery } from './components/web-stories/StoriesGallery'; // Import Stories
 import { STATIC_QUIZZES, CREDIT_CARDS } from './constants';
 
 // Lazy Load Components
@@ -232,32 +231,18 @@ function App() {
             
             <Hero onNavigate={handleNavigate} />
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
-            
-            {/* Topo: GAM (Obrigatório) */}
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
-            
             <BenefitList onNavigate={handleNavigate} />
             <FinancialSection onNavigate={handleNavigate} />
-            
-            {/* Meio: Affiliate Banner (Credspot - Contexto Financeiro/FGTS) */}
-            <div className="container mx-auto px-4">
-               <AffiliateBanner type="credspot" className="my-12 md:my-16" />
-            </div>
-            
+            <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
             <CadUnicoSection onNavigate={handleNavigate} />
             
+            {/* Stories moved here */}
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
                <StoriesGallery onNavigate={handleNavigate} />
             </div>
 
-            {/* Pré-FAQ: Affiliate Banner (SuperSim - Empréstimo Rápido) */}
-            <div className="container mx-auto px-4">
-               <AffiliateBanner type="supersim" className="my-12" />
-            </div>
-
             <FaqSection />
-            
-            {/* Rodapé: GAM (Receita Híbrida) */}
             <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
           </>
         );

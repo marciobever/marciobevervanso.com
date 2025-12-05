@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
-import { AffiliateBanner } from '../AffiliateBanner'; // Importado
 import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
@@ -111,7 +110,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
            <span className="font-bold text-slate-700">{viewers} pessoas</span> estão lendo esta notícia agora.
         </div>
 
-        {/* TOPO: MANTÉM GAM/ADSENSE */}
         <div className="bg-slate-50/95 pt-2 pb-6 border-b border-gray-200 mb-6">
            <AdSlot id="Content1" label="Recomendado para Você" />
         </div>
@@ -132,9 +130,10 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
           
           {children}
 
-          {/* MEIO: BANNER FIXO AFILIADO (Credspot - Contexto Financeiro Geral) */}
           <div className="my-8 not-prose">
-             <AffiliateBanner type="credspot" />
+             <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl p-1">
+                <AdSlot id="Content2" label="Publicidade" />
+             </div>
           </div>
 
           <div className="my-10">
@@ -184,9 +183,8 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
             )}
           </div>
 
-          {/* RODAPÉ DO ARTIGO: BANNER FIXO AFILIADO (SuperSim - Empréstimo Rápido) */}
-          <div className="mt-8 pt-8 border-t border-gray-100 not-prose">
-            <AffiliateBanner type="supersim" />
+          <div className="mt-8 pt-8 border-t border-gray-100">
+            <AdSlot id="Content5" label="Publicidade Rodapé Conteúdo" />
           </div>
 
         </article>
