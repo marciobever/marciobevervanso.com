@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
-import { PartnerWidget } from '../PartnerWidget';
 import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
@@ -111,7 +110,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
            <span className="font-bold text-slate-700">{viewers} pessoas</span> estão lendo esta notícia agora.
         </div>
 
-        {/* TOPO: MANTÉM GAM/ADSENSE (Obrigatório para eCPM alto) */}
         <div className="bg-slate-50/95 pt-2 pb-6 border-b border-gray-200 mb-6">
            <AdSlot id="Content1" label="Recomendado para Você" />
         </div>
@@ -132,9 +130,10 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
           
           {children}
 
-          {/* MEIO: WIDGET NATIVO (Não é Banner, é "Ferramenta") */}
-          <div className="my-10 not-prose">
-             <PartnerWidget type="fgts" />
+          <div className="my-8 not-prose">
+             <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl p-1">
+                <AdSlot id="Content2" label="Publicidade" />
+             </div>
           </div>
 
           <div className="my-10">
@@ -184,9 +183,8 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
             )}
           </div>
 
-          {/* RODAPÉ: MANTÉM GAM (Melhor pagar saída com AdSense) */}
-          <div className="mt-8 pt-8 border-t border-gray-100 not-prose">
-            <AdSlot id="Content5" label="Publicidade" />
+          <div className="mt-8 pt-8 border-t border-gray-100">
+            <AdSlot id="Content5" label="Publicidade Rodapé Conteúdo" />
           </div>
 
         </article>
