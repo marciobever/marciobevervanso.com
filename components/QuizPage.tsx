@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Quiz, ViewState } from '../types';
-import { CheckCircle2, XCircle, ArrowRight, RotateCcw, ChevronLeft, Loader2, Sparkles, Lock, FileText, Banknote, BookOpen, CalendarClock, ExternalLink, ShieldCheck, Users, Target } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, RotateCcw, ChevronLeft, Loader2, Sparkles, Lock, FileText, Banknote, BookOpen, CalendarClock, ExternalLink, ShieldCheck, Users, Target, Wallet, Car, GraduationCap, Home } from 'lucide-react';
 import { AdSlot } from './AdSlot';
 import { Analytics } from '../lib/analytics';
 
@@ -152,37 +153,70 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
      if (!activeQuiz) return null;
      const p = activeQuiz.program.toLowerCase();
 
-     let primaryAction = { label: 'Ver Últimas Notícias', view: 'news' as ViewState, icon: BookOpen };
-     let secondaryAction = null;
-
+     // Contextual Logic
+     let contextAction = { label: 'Ver Últimas Notícias', view: 'news' as ViewState, icon: BookOpen, desc: 'Fique por dentro das novidades.' };
+     
      if (p.includes('bolsa')) {
-        primaryAction = { label: 'Ler Guia Bolsa Família', view: 'guide-bolsa' as ViewState, icon: FileText };
-        secondaryAction = { label: 'Calendário 2025', view: 'calendar' as ViewState, icon: CalendarClock };
+        contextAction = { label: 'Guia Bolsa Família', view: 'guide-bolsa', icon: Wallet, desc: 'Consulte calendário e valores.' };
      } else if (p.includes('bpc') || p.includes('loas')) {
-        primaryAction = { label: 'Entender Regras do BPC', view: 'guide-bpc' as ViewState, icon: FileText };
+        contextAction = { label: 'Guia BPC/LOAS', view: 'guide-bpc', icon: FileText, desc: 'Regras e como solicitar.' };
+     } else if (p.includes('cnh')) {
+        contextAction = { label: 'CNH Social: Estados', view: 'landing-cnh', icon: Car, desc: 'Veja onde as inscrições estão abertas.' };
      }
 
      return (
-        <div className="w-full bg-slate-50 rounded-2xl p-5 border border-gray-100 mt-6 text-left">
-           <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide">
-              <Sparkles size={16} className="text-yellow-500" fill="currentColor" /> Próximos Passos
+        <div className="w-full mt-8 animate-fade-in-up">
+           <h4 className="font-bold text-slate-800 mb-4 flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
+              <Sparkles size={16} className="text-yellow-500" fill="currentColor" /> Oportunidades para Você
            </h4>
            
-           <div className="space-y-3">
+           <div className="grid grid-cols-1 gap-3">
+              
+              {/* Contextual Card */}
               <button 
-                onClick={() => onNavigate(primaryAction.view)}
-                className="w-full bg-white hover:bg-blue-50 border border-gray-200 hover:border-brand-blue p-4 rounded-xl flex items-center justify-between group transition-all"
+                onClick={() => onNavigate(contextAction.view)}
+                className="w-full bg-white hover:bg-blue-50 border border-gray-200 hover:border-brand-blue p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
               >
-                 <div className="flex items-center gap-3">
-                    <div className="bg-blue-100 text-brand-blue p-2 rounded-lg group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                       <primaryAction.icon size={20} />
-                    </div>
-                    <div className="text-left">
-                       <span className="block font-bold text-brand-dark text-sm">{primaryAction.label}</span>
-                    </div>
+                 <div className="bg-blue-100 text-brand-blue p-3 rounded-full group-hover:bg-brand-blue group-hover:text-white transition-colors shrink-0">
+                    <contextAction.icon size={24} />
                  </div>
-                 <ArrowRight size={18} className="text-gray-300 group-hover:text-brand-blue" />
+                 <div className="flex-grow">
+                    <span className="block font-bold text-brand-dark text-sm">{contextAction.label}</span>
+                    <span className="text-xs text-gray-500">{contextAction.desc}</span>
+                 </div>
+                 <ArrowRight size={20} className="text-gray-300 group-hover:text-brand-blue" />
               </button>
+
+              {/* Pé-de-Meia Card */}
+              <button 
+                onClick={() => onNavigate('landing-pe-de-meia')}
+                className="w-full bg-white hover:bg-green-50 border border-gray-200 hover:border-green-500 p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
+              >
+                 <div className="bg-green-100 text-green-600 p-3 rounded-full group-hover:bg-green-600 group-hover:text-white transition-colors shrink-0">
+                    <GraduationCap size={24} />
+                 </div>
+                 <div className="flex-grow">
+                    <span className="block font-bold text-brand-dark text-sm">Pé-de-Meia (Estudantes)</span>
+                    <span className="text-xs text-gray-500">Receba até R$ 9.200 no Ensino Médio.</span>
+                 </div>
+                 <ArrowRight size={20} className="text-gray-300 group-hover:text-green-600" />
+              </button>
+
+              {/* MCMV Card */}
+              <button 
+                onClick={() => onNavigate('landing-mcmv')}
+                className="w-full bg-white hover:bg-orange-50 border border-gray-200 hover:border-orange-500 p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
+              >
+                 <div className="bg-orange-100 text-orange-600 p-3 rounded-full group-hover:bg-orange-600 group-hover:text-white transition-colors shrink-0">
+                    <Home size={24} />
+                 </div>
+                 <div className="flex-grow">
+                    <span className="block font-bold text-brand-dark text-sm">Minha Casa Minha Vida</span>
+                    <span className="text-xs text-gray-500">Subsídio de 95% ou Imóvel Grátis.</span>
+                 </div>
+                 <ArrowRight size={20} className="text-gray-300 group-hover:text-orange-600" />
+              </button>
+
            </div>
         </div>
      );

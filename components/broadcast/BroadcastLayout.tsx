@@ -174,10 +174,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
             </div>
           )}
 
-          <div className="mt-8 pt-8 border-t border-gray-100">
-            <AdSlot id="Content5" label="Publicidade Rodapé Conteúdo" />
-          </div>
-
         </article>
 
         {/* COMMENTS SECTION */}
