@@ -109,9 +109,14 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
              {subtitle}
            </p>
 
-           {/* AD PLACEMENT: RIGHT BELOW TITLE - EAGER LOAD ENABLED */}
+           {/* AD PLACEMENT: RIGHT BELOW TITLE - EAGER LOAD + DISABLE FALLBACK */}
            <div className="mt-6 mb-2">
-              <AdSlot id="Content1" label="Publicidade" eagerLoad={true} />
+              <AdSlot 
+                id="Content1" 
+                label="Publicidade" 
+                eagerLoad={true} 
+                disableFallback={true} // FORÇA O SLOT REAL, SEM BANNER FALSO
+              />
            </div>
         </header>
 

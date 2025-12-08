@@ -7,8 +7,9 @@ interface AdSlotProps {
   className?: string;
   label?: string;
   refreshKey?: string | number;
-  forceAffiliate?: boolean; // Nova prop: Se true, ignora AdSense e mostra banner de afiliado direto
-  eagerLoad?: boolean; // Nova prop: Se true, carrega imediatamente sem esperar scroll
+  forceAffiliate?: boolean; // Se true, ignora AdSense e mostra banner de afiliado direto
+  eagerLoad?: boolean; // Se true, carrega imediatamente sem esperar scroll
+  disableFallback?: boolean; // Se true, nunca mostra o banner de afiliado (mesmo se o AdSense falhar)
 }
 
 // BANNERS DE AFILIADOS (CSS PURO - Carregam rápido e parecem imagens profissionais)
@@ -59,7 +60,15 @@ const AFFILIATE_BANNERS = {
   }
 };
 
-export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey, forceAffiliate = false, eagerLoad = false }) => {
+export const AdSlot: React.FC<AdSlotProps> = ({ 
+  id, 
+  className = "", 
+  label = "Publicidade", 
+  refreshKey, 
+  forceAffiliate = false, 
+  eagerLoad = false,
+  disableFallback = false
+}) => {
   const adRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<any>(null);
   const [showAffiliate, setShowAffiliate] = useState(forceAffiliate); 
@@ -76,7 +85,14 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
   const content = getBannerContent();
 
   useEffect(() => {
-    if (forceAffiliate) return; // Se forçar afiliado, nem tenta carregar AdSense
+    // Se fallback estiver desativado e não for forçado, garante que affiliate está off
+    if (disableFallback && !forceAffiliate) {
+      setShowAffiliate(false);
+    }
+  }, [disableFallback, forceAffiliate]);
+
+  useEffect(() => {
+    if (forceAffiliate) return; 
 
     const element = adRef.current;
     if (!element) return;
@@ -107,13 +123,16 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
             slot.addService(window.googletag.pubads());
             slotRef.current = slot;
 
-            // LISTENER DE COLAPSO: Se o AdSense não tiver anúncio, mostra o Afiliado
+            // LISTENER DE COLAPSO
             window.googletag.pubads().addEventListener('slotRenderEnded', (event: any) => {
               if (event.slot === slot) {
                 if (event.isEmpty) {
-                  setShowAffiliate(true); // AdSense falhou -> Mostra Afiliado
+                  // Só mostra afiliado se fallback NÃO estiver desativado
+                  if (!disableFallback) {
+                    setShowAffiliate(true);
+                  }
                 } else {
-                  setShowAffiliate(false); // AdSense carregou -> Esconde Afiliado
+                  setShowAffiliate(false);
                 }
               }
             });
@@ -123,16 +142,16 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
           }
         });
       } else {
-        // Se o script do Google não existir (AdBlock), mostra afiliado
-        setShowAffiliate(true);
+        // Se o script do Google não existir (AdBlock), mostra afiliado se permitido
+        if (!disableFallback) {
+          setShowAffiliate(true);
+        }
       }
     };
 
     if (eagerLoad) {
-      // Carrega imediatamente se for marcado como eagerLoad (ex: topo da página)
       loadAd();
     } else {
-      // Comportamento padrão: Lazy Load com IntersectionObserver
       observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           loadAd();
@@ -152,7 +171,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
         });
       }
     };
-  }, [id, refreshKey, forceAffiliate, eagerLoad]);
+  }, [id, refreshKey, forceAffiliate, eagerLoad, disableFallback]);
 
   const handleBannerClick = () => {
      window.location.href = content.link;
