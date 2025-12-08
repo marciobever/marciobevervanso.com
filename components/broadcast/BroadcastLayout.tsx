@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
-import { CheckCircle2, ArrowRight, FileText, Users, Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight } from 'lucide-react';
+import { Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight, CheckCircle2, ArrowRight, FileText } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
 
@@ -41,7 +41,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
   onTakeQuiz, 
   updatedDate = new Date().toLocaleDateString('pt-BR')
 }) => {
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [viewers, setViewers] = useState(120);
   const [showSticky, setShowSticky] = useState(false);
 
@@ -54,7 +53,7 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
     }, 4000);
 
     const handleScroll = () => {
-      if (window.scrollY > 400) {
+      if (window.scrollY > 600) {
         setShowSticky(true);
       } else {
         setShowSticky(false);
@@ -68,19 +67,8 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
     };
   }, []);
 
-  const handleSimulateClick = () => {
-    const targetQuiz = quizzes?.find(q => q.id === quizId);
-    
-    if (quizId && quizzes && targetQuiz) {
-      setIsQuizOpen(true);
-      setTimeout(() => {
-        document.getElementById('embedded-quiz-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    } else if (onTakeQuiz) {
-      onTakeQuiz();
-    } else {
-       if(onNavigate) onNavigate('quizzes');
-    }
+  const scrollToQuiz = () => {
+    document.getElementById('embedded-quiz-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   return (
@@ -96,8 +84,8 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
       <div className="container mx-auto px-4 md:px-6 py-6 max-w-4xl">
         
-        {/* Simple Breadcrumb for Landing Pages */}
-        <nav className="flex items-center text-xs text-gray-500 mb-6">
+        {/* Simple Breadcrumb */}
+        <nav className="flex items-center text-xs text-gray-500 mb-4">
            <button onClick={() => onNavigate && onNavigate('home')} className="hover:text-brand-blue"><Home size={14}/></button>
            <ChevronRight size={12} className="mx-1"/>
            <span className="text-gray-400">Notícias</span>
@@ -105,16 +93,12 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
            <span className="text-brand-blue font-bold truncate max-w-[150px] md:max-w-none">{title.split(':')[0]}</span>
         </nav>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500 mb-4 bg-white w-fit px-3 py-1 rounded-full shadow-sm border border-slate-100 mx-auto md:mx-0">
+        <div className="flex items-center gap-2 text-xs text-slate-500 mb-6 bg-white w-fit px-3 py-1 rounded-full shadow-sm border border-slate-100">
            <Eye size={14} className="text-red-500" />
-           <span className="font-bold text-slate-700">{viewers} pessoas</span> estão lendo esta notícia agora.
+           <span className="font-bold text-slate-700">{viewers} pessoas</span> estão lendo agora.
         </div>
 
-        <div className="bg-slate-50/95 pt-2 pb-6 border-b border-gray-200 mb-6">
-           <AdSlot id="Content1" label="Recomendado para Você" />
-        </div>
-
-        <header className="mb-8 text-center md:text-left">
+        <header className="mb-6 text-center md:text-left">
            <span className="inline-flex items-center gap-1 py-1 px-3 rounded-md bg-blue-100/50 text-brand-blue text-xs font-bold uppercase tracking-widest mb-3 border border-blue-200">
              <Zap size={12} fill="currentColor" /> Atualizado em {updatedDate}
            </span>
@@ -124,64 +108,71 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
            <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto md:mx-0">
              {subtitle}
            </p>
+
+           {/* AD PLACEMENT: RIGHT BELOW TITLE */}
+           <div className="mt-6 mb-2">
+              <AdSlot id="Content1" label="Publicidade" />
+           </div>
         </header>
 
-        <article className="prose prose-lg prose-slate max-w-none bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
-          
-          {children}
-
-          <div className="my-8 not-prose">
-             <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl p-1">
-                <AdSlot id="Content2" label="Publicidade" />
-             </div>
-          </div>
-
-          <div className="my-10">
-            {isQuizOpen && quizId && quizzes ? (
-               <div id="embedded-quiz-container" className="animate-fade-in-up">
+        {/* QUIZ SECTION - MOVED TO TOP (FIRST FOLD) */}
+        <div id="embedded-quiz-anchor" className="mb-10 scroll-mt-24">
+            {quizId && quizzes ? (
+               <div className="transform transition-all hover:scale-[1.01] duration-300">
+                  <div className="flex items-center gap-2 mb-2 px-1">
+                     <span className="relative flex h-3 w-3">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                     </span>
+                     <span className="text-xs font-bold text-green-700 uppercase tracking-wide">Ferramenta Oficial Liberada</span>
+                  </div>
                   <QuizPage 
                     quizzes={quizzes}
                     activeQuizId={quizId}
-                    onCloseQuiz={() => setIsQuizOpen(false)}
+                    onCloseQuiz={() => {}} // Embedded mode doesn't close
                     onSelectQuiz={() => {}}
                     onNavigate={onNavigate || (() => {})}
                     isEmbedded={true}
                   />
                </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div 
-                  className="bg-brand-light border-2 border-brand-blue rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-xl shadow-brand-blue/10 transform hover:scale-[1.01] transition-transform cursor-pointer relative overflow-hidden group" 
-                  onClick={handleSimulateClick}
-                >
-                  <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider z-10">
-                     Gratuito
+            ) : onTakeQuiz ? (
+               // Fallback for custom actions (like external links) styled as Quiz
+               <div 
+                  className="bg-white border-l-4 border-brand-blue rounded-xl p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all group"
+                  onClick={onTakeQuiz}
+               >
+                  <div className="flex items-center gap-4">
+                     <div className="bg-blue-50 p-3 rounded-full text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                        <CheckCircle2 size={32} />
+                     </div>
+                     <div className="flex-grow">
+                        <h3 className="text-xl font-bold text-slate-900 mb-1">{quizTriggerLabel}</h3>
+                        <p className="text-slate-500 text-sm">Acesse o sistema oficial para verificar seu cadastro.</p>
+                     </div>
+                     <div className="bg-brand-blue text-white p-2 rounded-lg">
+                        <ArrowRight size={24} />
+                     </div>
                   </div>
-                  
-                  <div className="w-16 h-16 bg-brand-blue text-white rounded-full flex items-center justify-center shrink-0 animate-pulse ring-4 ring-blue-100">
-                      <CheckCircle2 size={32} />
-                  </div>
-                  <div className="flex-grow text-center md:text-left z-10">
-                      <h3 className="text-xl font-bold text-brand-dark mb-1 m-0">Consultar Disponibilidade</h3>
-                      <p className="text-brand-medium m-0 text-sm md:text-base leading-snug">Faça a simulação oficial e veja se seu CPF está apto.</p>
-                  </div>
-                  <button className="bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-xl flex items-center gap-2 shadow-lg shadow-green-600/20 whitespace-nowrap z-10 group-hover:bg-green-500 transition-all">
-                      {quizTriggerLabel} <ArrowRight size={20} />
-                  </button>
-                </div>
+               </div>
+            ) : null}
+        </div>
 
-                {relatedArticle && (
-                  <button 
-                    onClick={relatedArticle.onClick}
-                    className="flex items-center justify-center gap-2 w-full md:w-auto px-6 py-3 rounded-xl bg-white border-2 border-blue-50 text-brand-blue font-bold hover:bg-blue-50 hover:border-brand-blue transition-all shadow-sm group"
-                  >
-                    <FileText size={18} className="group-hover:scale-110 transition-transform shrink-0"/> 
-                    <span className="text-sm">Leia também: {relatedArticle.title}</span>
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+        {/* ARTICLE CONTENT */}
+        <article className="prose prose-lg prose-slate max-w-none bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
+          
+          {children}
+
+          {relatedArticle && (
+            <div className="my-8 not-prose">
+               <button 
+                 onClick={relatedArticle.onClick}
+                 className="flex items-center justify-center gap-2 w-full p-4 rounded-xl bg-blue-50 border-2 border-blue-100 text-brand-blue font-bold hover:bg-white hover:border-brand-blue transition-all shadow-sm group"
+               >
+                 <FileText size={20} className="group-hover:scale-110 transition-transform shrink-0"/> 
+                 <span className="text-base">Leia também: {relatedArticle.title}</span>
+               </button>
+            </div>
+          )}
 
           <div className="mt-8 pt-8 border-t border-gray-100">
             <AdSlot id="Content5" label="Publicidade Rodapé Conteúdo" />
@@ -189,6 +180,7 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
         </article>
 
+        {/* COMMENTS SECTION */}
         <div className="mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 max-w-4xl mx-auto">
            <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
               <MessageCircle size={20} className="text-brand-blue" /> 
@@ -232,17 +224,18 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
 
       </div>
 
-      <div className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-40 transition-transform duration-300 md:hidden ${showSticky && !isQuizOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+      {/* Sticky Footer for Mobile - Scrolls back to Top Quiz */}
+      <div className={`fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] z-40 transition-transform duration-300 md:hidden ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
          <div className="flex items-center gap-3">
             <div className="flex-grow">
                <p className="text-xs text-gray-500 font-bold uppercase mb-0.5">Não perca o prazo</p>
                <p className="text-sm font-bold text-brand-dark truncate">{title}</p>
             </div>
             <button 
-               onClick={handleSimulateClick}
+               onClick={scrollToQuiz}
                className="bg-green-600 text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 animate-pulse"
             >
-               Simular <ArrowRight size={16} />
+               Fazer Teste <ArrowRight size={16} />
             </button>
          </div>
       </div>
