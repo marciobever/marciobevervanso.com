@@ -8,6 +8,7 @@ interface AdSlotProps {
   label?: string;
   refreshKey?: string | number;
   forceAffiliate?: boolean; // Nova prop: Se true, ignora AdSense e mostra banner de afiliado direto
+  eagerLoad?: boolean; // Nova prop: Se true, carrega imediatamente sem esperar scroll
 }
 
 // BANNERS DE AFILIADOS (CSS PURO - Carregam rápido e parecem imagens profissionais)
@@ -58,7 +59,7 @@ const AFFILIATE_BANNERS = {
   }
 };
 
-export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey, forceAffiliate = false }) => {
+export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Publicidade", refreshKey, forceAffiliate = false, eagerLoad = false }) => {
   const adRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<any>(null);
   const [showAffiliate, setShowAffiliate] = useState(forceAffiliate); 
@@ -79,6 +80,8 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
 
     const element = adRef.current;
     if (!element) return;
+
+    let observer: IntersectionObserver | null = null;
 
     const loadAd = () => {
       if (window.googletag && window.googletag.cmd) {
@@ -125,17 +128,23 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
       }
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        loadAd();
-        observer.disconnect();
-      }
-    }, { rootMargin: '200px' });
-
-    observer.observe(element);
+    if (eagerLoad) {
+      // Carrega imediatamente se for marcado como eagerLoad (ex: topo da página)
+      loadAd();
+    } else {
+      // Comportamento padrão: Lazy Load com IntersectionObserver
+      observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          loadAd();
+          if (observer) observer.disconnect();
+        }
+      }, { rootMargin: '200px' });
+      
+      observer.observe(element);
+    }
 
     return () => {
-      observer.disconnect();
+      if (observer) observer.disconnect();
       if (window.googletag && window.googletag.cmd && slotRef.current) {
         window.googletag.cmd.push(() => {
           window.googletag.destroySlots([slotRef.current]);
@@ -143,7 +152,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({ id, className = "", label = "Pub
         });
       }
     };
-  }, [id, refreshKey, forceAffiliate]);
+  }, [id, refreshKey, forceAffiliate, eagerLoad]);
 
   const handleBannerClick = () => {
      window.location.href = content.link;

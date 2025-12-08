@@ -109,9 +109,9 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
              {subtitle}
            </p>
 
-           {/* AD PLACEMENT: RIGHT BELOW TITLE */}
+           {/* AD PLACEMENT: RIGHT BELOW TITLE - EAGER LOAD ENABLED */}
            <div className="mt-6 mb-2">
-              <AdSlot id="Content1" label="Publicidade" />
+              <AdSlot id="Content1" label="Publicidade" eagerLoad={true} />
            </div>
         </header>
 
