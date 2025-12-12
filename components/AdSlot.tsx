@@ -181,12 +181,13 @@ export const AdSlot: React.FC<AdSlotProps> = ({
     <div className={`w-full mx-auto my-8 ${className}`}>
       <div className="flex flex-col items-center justify-center">
         
-        <div className="w-full relative min-h-[280px] flex justify-center items-center">
+        {/* Ad Wrapper */}
+        <div className="w-full relative flex justify-center items-center min-h-[50px]">
           
           {/* Label de Publicidade */}
           {!showAffiliate && (
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white px-2">
-               <span className="text-[10px] text-gray-300 font-semibold tracking-[0.2em] uppercase">
+            <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-2 rounded-full border border-gray-100">
+               <span className="text-[9px] text-gray-400 font-semibold tracking-[0.2em] uppercase">
                  {label}
                </span>
             </div>
@@ -197,7 +198,9 @@ export const AdSlot: React.FC<AdSlotProps> = ({
             <div 
               id={id} 
               ref={adRef}
-              className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showAffiliate ? 'h-0 opacity-0 overflow-hidden absolute' : 'min-h-[250px] opacity-100 relative'}`}
+              // Removed explicit min-height here to allow container to shrink if empty, or grow if huge.
+              // Removed overflow-hidden from active state.
+              className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showAffiliate ? 'h-0 opacity-0 overflow-hidden absolute' : 'opacity-100 relative min-h-[250px]'}`}
             ></div>
           )}
 
