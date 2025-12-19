@@ -10,14 +10,14 @@ interface State {
   error?: Error;
 }
 
-// Fixed inheritance: Using Component directly and declaring state/props to resolve potential inheritance issues in strict environments.
-export class ErrorBoundary extends Component<Props, State> {
-  // Fixed: Explicitly declare the state property on the class to resolve "Property 'state' does not exist" errors
-  public override state: State = {
+// Fixed: Explicitly using React.Component to ensure TypeScript correctly recognizes the inheritance.
+export class ErrorBoundary extends React.Component<Props, State> {
+  // Fixed: Removed 'override' modifier which was causing issues because inheritance was not being properly detected in this environment.
+  public state: State = {
     hasError: false
   };
 
-  // Fixed: Explicit constructor that correctly calls super to initialize inherited properties
+  // Fixed: Initializing props via constructor correctly calls super for class components.
   constructor(props: Props) {
     super(props);
   }
@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public render() {
-    // Fixed: Standard access to this.state which is now explicitly declared and inherited
+    // Fixed: 'this.state' is now correctly recognized as an inherited member.
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 text-center">
@@ -70,7 +70,7 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    // Fixed: Correctly accessing inherited props property from Component
+    // Fixed: 'this.props' is now correctly recognized as an inherited member.
     return this.props.children;
   }
 }

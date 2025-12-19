@@ -1,7 +1,6 @@
-
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { MapPin, ExternalLink, Calendar, AlertCircle, CheckCircle2, SteeringWheel, Briefcase, Award, HelpCircle, FileText, Info } from 'lucide-react';
+import { MapPin, ExternalLink, Calendar, AlertCircle, CheckCircle2, CircleDashed, Briefcase, Award, HelpCircle, FileText, Info } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -184,7 +183,7 @@ export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) =>
                Se eu reprovar na prova, perco o benefício? <HelpCircle size={18} className="text-brand-blue" />
             </summary>
             <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
-               Geralmente o programa permite uma reprovação gratuita. Caso o aluno reprove mais vezes, ele poderá ter que arcar com a taxa de reteste por conta própria para continuar no programa.
+               Geralmente o programa permite uma reprovação gratuita. Como o aluno reprove mais vezes, ele poderá ter que arcar com a taxa de reteste por conta própria para continuar no programa.
             </p>
          </details>
          <details className="group bg-white p-5 rounded-2xl border border-gray-100 cursor-pointer">
