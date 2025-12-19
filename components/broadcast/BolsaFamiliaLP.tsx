@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Wallet, Calendar, CheckCircle2, AlertTriangle, Baby, HeartPulse, GraduationCap, Info, Search, ArrowRight, Download, Users, Landmark, ShieldAlert, History, UserCheck, Calculator, Landmark as Bank, CreditCard } from 'lucide-react';
+import { Wallet, Calendar, CheckCircle2, AlertTriangle, Baby, HeartPulse, GraduationCap, Info, Search, ArrowRight, Download, Users, Landmark, ShieldAlert, History, UserCheck, Calculator, CreditCard } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -13,27 +14,27 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   const [selectedNis, setSelectedNis] = useState<string>('1');
 
   useEffect(() => {
-    document.title = "Consultar Bolsa Família 2025: Calendário NIS, CPF e Valor Estimado";
+    document.title = "Consulta Bolsa Família 2025: Calendário, Valores e Regras do Pente-Fino";
     window.scrollTo(0, 0);
   }, []);
 
   const calendar2025: Record<string, string[]> = {
-    '1': ['18/Jan', '16/Fev', '18/Mar', '17/Abr'],
-    '2': ['19/Jan', '17/Fev', '19/Mar', '18/Abr'],
-    '3': ['22/Jan', '20/Fev', '20/Mar', '22/Abr'],
-    '4': ['23/Jan', '21/Fev', '21/Mar', '23/Abr'],
-    '5': ['24/Jan', '22/Fev', '24/Mar', '24/Abr'],
-    '6': ['25/Jan', '23/Fev', '25/Mar', '25/Abr'],
-    '7': ['26/Jan', '24/Fev', '26/Mar', '26/Abr'],
-    '8': ['29/Jan', '27/Fev', '27/Mar', '29/Abr'],
-    '9': ['30/Jan', '28/Fev', '28/Mar', '30/Abr'],
-    '0': ['31/Jan', '29/Fev', '31/Mar', '30/Abr'],
+    '1': ['18/Jan', '16/Fev', '18/Mar', '17/Abr', '18/Mai'],
+    '2': ['19/Jan', '17/Fev', '19/Mar', '18/Abr', '19/Mai'],
+    '3': ['22/Jan', '20/Fev', '20/Mar', '22/Abr', '22/Mai'],
+    '4': ['23/Jan', '21/Fev', '21/Mar', '23/Abr', '23/Mai'],
+    '5': ['24/Jan', '22/Fev', '24/Mar', '24/Abr', '24/Mai'],
+    '6': ['25/Jan', '23/Fev', '25/Mar', '25/Abr', '25/Mai'],
+    '7': ['26/Jan', '24/Fev', '26/Mar', '26/Abr', '26/Mai'],
+    '8': ['29/Jan', '27/Fev', '27/Mar', '29/Abr', '29/Mai'],
+    '9': ['30/Jan', '28/Fev', '28/Mar', '30/Abr', '30/Mai'],
+    '0': ['31/Jan', '29/Fev', '31/Mar', '30/Abr', '31/Mai'],
   };
 
   return (
     <BroadcastLayout
-      title="Bolsa Família 2025: Novo Calendário e Simulador de Valor Oficial"
-      subtitle="O Governo Federal atualizou as regras de pagamento e iniciou o pente-fino do CadÚnico. Use nosso simulador abaixo para estimar seu benefício e ver as datas do seu NIS."
+      title="Bolsa Família 2025: Guia de Consulta, Novos Valores e Calendário NIS"
+      subtitle="O Governo iniciou o cruzamento de dados para o pente-fino. Use nosso simulador oficial abaixo para ver se você corre risco de bloqueio e qual o seu valor de 2025."
       onNavigate={onNavigate}
       quizId="2"
       quizzes={quizzes}
@@ -42,15 +43,15 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
       <SchemaMarkup data={{
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": "Bolsa Família 2025: Guia de Valores, Consulta CPF e Calendário",
-        "description": "Simule o valor do seu Bolsa Família com os adicionais de R$ 150 e R$ 50 e consulte o calendário oficial de 2025 pelo NIS.",
+        "headline": "Bolsa Família 2025: Guia de Valores e Consulta pelo CPF",
+        "description": "Simule o valor do seu Bolsa Família com os bônus de R$ 150 e R$ 50 e veja o calendário de 2025.",
         "author": { "@type": "Organization", "name": "Guia Social Brasil" }
       }} />
 
-      {/* CONTEÚDO SEO ENCORPADO */}
-      <h2 className="mt-12">Quanto minha família vai receber no Bolsa Família 2025?</h2>
+      {/* SEÇÃO 1: TABELA DE VALORES */}
+      <h2 className="mt-10">Qual o valor do Bolsa Família em 2025?</h2>
       <p>
-        Muitas pessoas buscam por <strong>"Bolsa Família valor 2025"</strong> ou <strong>"Consultar Bolsa Família pelo CPF"</strong>. É importante entender que o programa atual não é mais um valor fixo único, mas uma cesta de benefícios. O valor base garantido é de <strong>R$ 600,00</strong>, mas o total pode ultrapassar os R$ 1.000,00 dependendo da quantidade de filhos, gestantes e nutrizes na residência.
+        O <strong>Bolsa Família 2025</strong> não paga mais um valor fixo por família. Agora, o cálculo é feito somando benefícios individuais. O piso nacional é de <strong>R$ 600,00</strong>, mas muitas famílias recebem mais de R$ 1.000,00 devido aos bônus extras.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-8">
@@ -60,7 +61,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
                <h4 className="font-bold text-slate-800">Renda de Cidadania</h4>
             </div>
             <p className="text-2xl font-black text-brand-blue">R$ 142,00</p>
-            <p className="text-xs text-slate-500">Valor individual pago para cada membro da família.</p>
+            <p className="text-xs text-slate-500">Valor pago individualmente por cada membro da família.</p>
          </div>
 
          <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-green-500 transition-colors">
@@ -69,7 +70,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
                <h4 className="font-bold text-slate-800">Primeira Infância</h4>
             </div>
             <p className="text-2xl font-black text-green-600">+ R$ 150,00</p>
-            <p className="text-xs text-slate-500">Adicional para crianças de 0 a 6 anos completos.</p>
+            <p className="text-xs text-slate-500">Adicional para cada criança da casa de 0 a 6 anos completos.</p>
          </div>
 
          <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-orange-500 transition-colors">
@@ -78,7 +79,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
                <h4 className="font-bold text-slate-800">Variável Familiar</h4>
             </div>
             <p className="text-2xl font-black text-orange-600">+ R$ 50,00</p>
-            <p className="text-xs text-slate-500">Para gestantes, nutrizes e jovens de 7 a 18 anos.</p>
+            <p className="text-xs text-slate-500">Para gestantes, nutrizes e jovens de 7 a 18 anos incompletos.</p>
          </div>
 
          <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-purple-500 transition-colors">
@@ -87,32 +88,32 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
                <h4 className="font-bold text-slate-800">Complementar</h4>
             </div>
             <p className="text-2xl font-black text-purple-600">Piso R$ 600</p>
-            <p className="text-xs text-slate-500">Garante o valor mínimo caso a soma per capita seja inferior.</p>
+            <p className="text-xs text-slate-500">Garante que o valor final nunca seja menor que R$ 600,00.</p>
          </div>
       </div>
 
-      {/* GATILHO DE ATENÇÃO: PENTE-FINO DATAPREV */}
+      {/* ALERTA DE PENTE-FINO - ELEMENTO DE ALTA ATENÇÃO */}
       <div className="bg-red-50 border-2 border-red-200 p-6 rounded-3xl my-10 not-prose flex flex-col md:flex-row gap-6 items-center">
          <div className="bg-red-500 text-white p-4 rounded-2xl shadow-lg animate-pulse shrink-0">
             <ShieldAlert size={32} />
          </div>
          <div>
-            <h3 className="text-red-900 font-black text-xl mb-1 uppercase tracking-tight">Pente-Fino CadÚnico 2025</h3>
+            <h3 className="text-red-900 font-black text-xl mb-1 uppercase tracking-tight">Alerta de Pente-Fino Dataprev</h3>
             <p className="text-red-800 text-sm leading-relaxed">
-               O Ministério do Desenvolvimento Social (MDS) está realizando o cruzamento de dados via <strong>Dataprev</strong>. Famílias com cadastros desatualizados há mais de 24 meses ou divergências na renda informada podem ter o benefício bloqueado ou cancelado. Mantenha seus dados em dia no CRAS.
+               O Ministério do Desenvolvimento Social está bloqueando famílias que moram sozinhas (unipessoais) e cadastros sem atualização há mais de 2 anos. Se você recebeu aviso no <strong>Caixa Tem</strong>, procure o CRAS imediatamente.
             </p>
          </div>
       </div>
 
-      {/* SEÇÃO CALENDÁRIO INTERATIVO */}
+      {/* CALENDÁRIO INTERATIVO */}
       <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white my-12 relative overflow-hidden not-prose">
          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue rounded-full blur-[100px] opacity-20 -translate-y-1/2 translate-x-1/2"></div>
          
          <div className="relative z-10">
             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
-               <Calendar className="text-blue-400" /> Datas de Pagamento pelo NIS
+               <Calendar className="text-blue-400" /> Datas de Pagamento 2025
             </h3>
-            <p className="text-blue-100 text-sm mb-6">Escolha o final do seu NIS para ver as datas de 2025:</p>
+            <p className="text-blue-100 text-sm mb-6">Selecione o final do seu NIS para ver as datas exatas:</p>
             
             <div className="flex flex-wrap gap-2 mb-8 justify-center md:justify-start">
                {[1,2,3,4,5,6,7,8,9,0].map(n => (
@@ -147,23 +148,23 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
          </div>
       </div>
 
-      <h2>Inscrição Bolsa Família 2025: Como garantir sua vaga?</h2>
+      <h2>Quem tem direito ao Bolsa Família em 2025?</h2>
       <p>
-        A inscrição <strong>não pode ser feita pela internet</strong>. O primeiro passo é realizar o pré-cadastro no aplicativo oficial do <strong>Cadastro Único</strong>, mas a validação final exige a entrevista presencial no <strong>CRAS</strong> do seu município.
+        A regra principal é a <strong>renda mensal per capita</strong> (por pessoa) de até <strong>R$ 218,00</strong>. Isso significa que você soma todo o dinheiro que a família ganha no mês e divide pelo número de moradores. Se o resultado for menor que R$ 218, você pode se inscrever no CRAS.
       </p>
       
       <div className="bg-blue-900 text-white p-8 rounded-[2.5rem] my-12 not-prose flex flex-col md:flex-row items-center gap-8 shadow-2xl">
          <div className="flex-grow text-center md:text-left">
             <h3 className="text-2xl font-black mb-2">Conseguiu um Emprego Formal?</h3>
             <p className="text-blue-100 text-sm mb-6 leading-relaxed">
-               Com a nova <strong>Regra de Proteção</strong>, se a sua renda subir para até R$ 706 por pessoa, você continua recebendo 50% do Bolsa Família por até 2 anos. Não tenha medo de assinar a carteira!
+               Não tenha medo de assinar a carteira! Com a <strong>Regra de Proteção</strong>, se a sua renda subir para até meio salário mínimo (R$ 754) por pessoa, você continua recebendo 50% do Bolsa Família por até 2 anos.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
                <button onClick={() => onNavigate('calculator')} className="bg-white text-blue-900 px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors shadow-lg">
                   Calcular Nova Renda <Calculator size={18} />
                </button>
                <button onClick={() => onNavigate('cards')} className="bg-blue-800 text-white border border-blue-700 px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors">
-                  Cartão para Empregado <CreditCard size={18} />
+                  Cartões para Empregados <CreditCard size={18} />
                </button>
             </div>
          </div>
@@ -176,18 +177,18 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
       <div className="space-y-4 not-prose mb-12">
          <details className="group bg-gray-50 p-5 rounded-2xl border border-gray-200 cursor-pointer">
             <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
-               Como sacar sem o cartão físico? <Info size={18} className="text-brand-blue" />
+               Como sacar o benefício sem o cartão? <Info size={18} className="text-brand-blue" />
             </summary>
             <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
-               Utilize o aplicativo <strong>Caixa Tem</strong> para gerar um código de saque (Token). Ele permite retirar o dinheiro em qualquer caixa eletrônico ou Lotérica sem precisar do cartão.
+               Basta utilizar o aplicativo <strong>Caixa Tem</strong>. No app, você gera um código de saque (token) que vale por 1 hora e pode ser usado em qualquer caixa eletrônico ou Lotérica sem precisar do cartão físico.
             </p>
          </details>
          <details className="group bg-gray-50 p-5 rounded-2xl border border-gray-200 cursor-pointer">
             <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
-               O Vale Gás é pago todo mês? <Info size={18} className="text-brand-blue" />
+               O Vale Gás é pago em qual data? <Info size={18} className="text-brand-blue" />
             </summary>
             <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
-               Não. O <strong>Auxílio Gás</strong> é pago a cada dois meses (meses pares: Fevereiro, Abril, Junho, Agosto, Outubro e Dezembro). O valor corresponde a 100% da média nacional do botijão de 13kg.
+               O <strong>Auxílio Gás</strong> é pago a cada dois meses (meses pares: Fevereiro, Abril, Junho, Agosto, Outubro e Dezembro), seguindo exatamente o mesmo calendário do Bolsa Família de acordo com o seu NIS.
             </p>
          </details>
       </div>

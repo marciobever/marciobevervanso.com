@@ -3,6 +3,26 @@ import { Benefit, NewsItem, FaqItem, CreditCardProduct, InsuranceProduct, LoanPr
 
 export const STATIC_QUIZZES: Quiz[] = [
   {
+    id: '2',
+    program: 'Bolsa Família',
+    title: 'Simulador de Valor e Elegibilidade 2025',
+    description: 'Veja se você tem direito e quanto sua família pode receber somando todos os bônus do governo.',
+    createdAt: '01/01/2025',
+    questions: [
+      { id: 1, text: 'Sua família está inscrita e com dados atualizados no CadÚnico?', type: 'yes_no' },
+      { id: 2, text: 'A renda por pessoa da casa é menor que R$ 218,00 por mês?', type: 'yes_no' },
+      { id: 3, text: 'Existe alguma criança de 0 a 6 anos morando com você?', type: 'yes_no' },
+      { id: 4, text: 'Existe alguma gestante ou jovem de 7 a 18 anos na família?', type: 'yes_no' }
+    ],
+    detailedInfo: {
+      introTitle: 'Cálculo do Novo Bolsa Família',
+      introText: 'O valor do benefício agora é calculado por pessoa e por bônus de idade. Use nosso simulador para saber o valor aproximado da sua parcela.',
+      requirementsList: ['Renda per capita até R$ 218', 'CadÚnico atualizado', 'Frequência escolar em dia', 'Vacinação atualizada'],
+      targetAudience: 'Famílias de baixa renda e mães solo',
+      estimatedValue: 'R$ 600,00 a R$ 1.200,00'
+    }
+  },
+  {
     id: '3',
     program: 'CNH Social',
     title: 'Simulador CNH Gratuita 2025',
@@ -17,10 +37,10 @@ export const STATIC_QUIZZES: Quiz[] = [
     ],
     detailedInfo: {
       introTitle: 'Como funciona a CNH Social',
-      introText: 'O programa isenta taxas de exames, aulas teóricas, práticas e emissão do documento para pessoas de baixa renda. A oferta varia de acordo com o Detran de cada estado.',
-      requirementsList: ['Ser penalmente imputável (maior de 18 anos)', 'Saber ler e escrever', 'Possuir CPF e RG', 'Comprovar baixa renda ou desemprego', 'Residir no estado há pelo menos 2 anos'],
-      targetAudience: 'Jovens de baixa renda e Desempregados',
-      estimatedValue: 'Economia de até R$ 3.000,00'
+      introText: 'O programa isenta taxas de exames, aulas teóricas, práticas e emissão do documento para pessoas de baixa renda.',
+      requirementsList: ['Maior de 18 anos', 'Saber ler e escrever', 'CadÚnico ativo', 'Baixa renda'],
+      targetAudience: 'Jovens e Desempregados',
+      estimatedValue: 'Economia de R$ 3.000,00'
     }
   },
   {
@@ -34,14 +54,7 @@ export const STATIC_QUIZZES: Quiz[] = [
       { id: 2, text: 'Sua renda familiar bruta é de até R$ 2.640,00 mensal?', type: 'yes_no' },
       { id: 3, text: 'Sua família recebe Bolsa Família ou BPC/LOAS?', type: 'yes_no' },
       { id: 4, text: 'Você tem inscrição ativa no Cadastro Único?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Regras da Faixa 1 (Gratuidade)',
-      introText: 'A grande novidade de 2025 é que beneficiários do Bolsa Família e BPC são isentos de pagar as parcelas do imóvel na Faixa 1, recebendo a casa praticamente de graça.',
-      requirementsList: ['Não ter casa própria', 'Renda familiar bruta até R$ 2.640,00', 'Não ter financiamento habitacional ativo', 'Não ter recebido subsídio habitacional anteriormente'],
-      targetAudience: 'Famílias sem moradia própria',
-      estimatedValue: 'Subsídio de até 95% ou Isenção Total'
-    }
+    ]
   },
   {
     id: '6',
@@ -52,16 +65,8 @@ export const STATIC_QUIZZES: Quiz[] = [
     questions: [
       { id: 1, text: 'Você possui o Cartão Nacional de Saúde (Cartão SUS)?', type: 'yes_no' },
       { id: 2, text: 'Sente dor aguda ou necessita de intervenção urgente?', type: 'yes_no' },
-      { id: 3, text: 'Sua família é beneficiária de algum programa social (Bolsa Família)?', type: 'yes_no' },
-      { id: 4, text: 'Você tem disponibilidade para atendimento em horário comercial?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Tratamento Dentário Gratuito no SUS',
-      introText: 'O programa Brasil Sorridente oferece desde limpeza básica até tratamentos especializados como canal, tratamento de gengiva e fornecimento de próteses dentárias (dentaduras) gratuitamente nas UBS e CEO.',
-      requirementsList: ['Possuir Cartão do SUS', 'Passar por triagem na UBS mais próxima', 'Residir no município de atendimento', 'Encaminhamento médico para casos complexos'],
-      targetAudience: 'Toda a população (Prioridade para Baixa Renda)',
-      estimatedValue: 'Tratamento 100% Gratuito'
-    }
+      { id: 3, text: 'Sua família é beneficiária de algum programa social?', type: 'yes_no' }
+    ]
   },
   {
     id: '7',
@@ -72,97 +77,8 @@ export const STATIC_QUIZZES: Quiz[] = [
     questions: [
       { id: 1, text: 'Você tem entre 14 e 24 anos?', type: 'yes_no' },
       { id: 2, text: 'Está matriculado no Ensino Médio da rede pública?', type: 'yes_no' },
-      { id: 3, text: 'Sua família está inscrita no CadÚnico?', type: 'yes_no' },
-      { id: 4, text: 'Possui CPF regularizado?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Poupança do Ensino Médio',
-      introText: 'Incentivo financeiro mensal e anual para estudantes de escolas públicas. O valor é depositado em uma conta poupança digital que pode ser sacada após a formatura do ensino médio.',
-      requirementsList: ['Idade entre 14 e 24 anos', 'Matrícula ativa no ensino médio público', 'Frequência escolar mínima de 80%', 'Família inscrita no Cadastro Único', 'Participação no ENEM (para o bônus extra)'],
-      targetAudience: 'Estudantes do Ensino Médio Público',
-      estimatedValue: 'Até R$ 9.200,00 ao final do curso'
-    }
-  },
-  // --- NOVOS QUIZZES PARA AS LPS ---
-  {
-    id: '10',
-    program: 'Inclusão Financeira',
-    title: 'Análise de Crédito para Negativados',
-    description: 'Verifique quais bancos parceiros aprovam seu perfil mesmo com restrição no nome.',
-    createdAt: '01/12/2024',
-    questions: [
-      { id: 1, text: 'Você possui CPF ativo na Receita Federal?', type: 'yes_no' },
-      { id: 2, text: 'Possui renda mensal comprovável (mesmo que informal)?', type: 'yes_no' },
-      { id: 3, text: 'Tem dívidas ativas acima de R$ 5.000,00?', type: 'yes_no' },
-      { id: 4, text: 'Você aceitaria um limite inicial menor (R$ 500) para começar?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Crédito Consciente para Negativados',
-      introText: 'Diversas instituições financeiras estão utilizando novos modelos de análise de crédito que consideram seu momento atual e capacidade de pagamento, e não apenas dívidas antigas de mais de 5 anos.',
-      requirementsList: ['CPF regular na Receita Federal', 'Renda mensal comprovável (extrato bancário serve)', 'Conta digital ativa em banco parceiro', 'Dados cadastrais atualizados'],
-      targetAudience: 'Pessoas com Score baixo ou negativadas',
-      estimatedValue: 'Limites de R$ 300 a R$ 2.000'
-    }
-  },
-  {
-    id: '11',
-    program: 'Cartão Black Acessível',
-    title: 'Elegibilidade Limite Alto',
-    description: 'Descubra se você tem perfil para cartões Platinum/Black com anuidade zero.',
-    createdAt: '01/12/2024',
-    questions: [
-      { id: 1, text: 'Sua renda mensal é superior a R$ 2.000,00?', type: 'yes_no' },
-      { id: 2, text: 'Você costuma pagar suas contas em dia?', type: 'yes_no' },
-      { id: 3, text: 'Já possui algum cartão de crédito ativo?', type: 'yes_no' },
-      { id: 4, text: 'Tem interesse em acumular pontos ou milhas?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Como conseguir cartões de Alta Renda',
-      introText: 'Cartões Black e Infinite oferecem seguros viagem, acesso a salas VIP e pontos que não expiram. Hoje, bancos digitais democratizaram o acesso a esses benefícios sem cobrar anuidade.',
-      requirementsList: ['Renda acima de R$ 4.000 (ou gastos concentrados)', 'Bom histórico de pagamentos recente', 'Score de crédito médio/alto', 'Relacionamento bancário (Open Finance)'],
-      targetAudience: 'Quem busca milhas e benefícios de viagem',
-      estimatedValue: 'Limites acima de R$ 5.000'
-    }
-  },
-  {
-    id: '12',
-    program: 'Proteção Patrimonial',
-    title: 'Simulador Seguro Prestamista (Dívida Zero)',
-    description: 'Veja se você pode proteger sua família de herdar dívidas de empréstimos e financiamentos.',
-    createdAt: '01/12/2024',
-    questions: [
-      { id: 1, text: 'Você possui algum empréstimo consignado ou financiamento ativo?', type: 'yes_no' },
-      { id: 2, text: 'Você tem dependentes financeiros (filhos/cônjuge)?', type: 'yes_no' },
-      { id: 3, text: 'Preocupa-se em deixar dívidas para seus familiares?', type: 'yes_no' },
-      { id: 4, text: 'Tem idade entre 18 e 75 anos?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Blindagem Patrimonial Familiar',
-      introText: 'O seguro prestamista garante a quitação total ou parcial de dívidas em caso de morte ou invalidez do titular, impedindo que o banco tome bens da família (como casa ou carro) para pagar o saldo devedor.',
-      requirementsList: ['Ter contrato de empréstimo ou financiamento ativo', 'Idade até 80 anos (na maioria das apólices)', 'Estar em dia com as parcelas', 'Declaração de saúde simples'],
-      targetAudience: 'Quem possui dívidas de longo prazo',
-      estimatedValue: 'Quitação de 100% do saldo devedor'
-    }
-  },
-  {
-    id: '13',
-    program: 'Auxílio Funeral',
-    title: 'Verificador Seguro Popular',
-    description: 'Confira planos a partir de R$ 5,00 que cobrem funeral e sorteios mensais.',
-    createdAt: '01/12/2024',
-    questions: [
-      { id: 1, text: 'Você é responsável pelo sustento da casa?', type: 'yes_no' },
-      { id: 2, text: 'Gostaria de concorrer a sorteios mensais em dinheiro?', type: 'yes_no' },
-      { id: 3, text: 'Busca um plano que cubra despesas funerárias completas?', type: 'yes_no' },
-      { id: 4, text: 'Pode investir R$ 0,20 por dia na segurança da sua família?', type: 'yes_no' }
-    ],
-    detailedInfo: {
-      introTitle: 'Seguro de Vida Popular e Acessível',
-      introText: 'Novos micro-seguros permitem proteger sua família pagando centavos por dia. A cobertura inclui auxílio funeral completo (para evitar gastos inesperados de até R$ 5 mil) e sorteios mensais em dinheiro.',
-      requirementsList: ['Idade entre 18 e 80 anos', 'CPF válido', 'Não exige exames médicos complexos', 'Pagamento facilitado (conta de luz, débito ou cartão)'],
-      targetAudience: 'Famílias de baixa renda',
-      estimatedValue: 'Planos a partir de R$ 5,00/mês'
-    }
+      { id: 3, text: 'Sua família está inscrita no CadÚnico?', type: 'yes_no' }
+    ]
   }
 ];
 
@@ -182,76 +98,32 @@ export const CREDIT_CARDS: CreditCardProduct[] = [
     tag: 'Aprova Negativado',
     detailedInfo: {
       reviewScore: 4.6,
-      description: 'O amarelinho mais famoso do Brasil. O Will Bank (antigo pag!) é conhecido por sua análise de crédito flexível, aprovando muitos clientes que foram recusados em outros bancos.',
-      pros: ['Aprovação rápida (muitas vezes em minutos)', 'Cartão virtual disponível na hora', 'Loja Will com descontos e cashback', 'Atendimento descomplicado'],
-      cons: ['Limite inicial pode demorar para aumentar', 'Sem agências físicas (100% digital)', 'Não tem programa de milhas próprio'],
-      interestRateRotativo: 'Variável (consulte app)',
-      incomeRequirement: 'Não exige comprovação formal'
-    }
-  },
-  {
-    id: 'carrefour',
-    name: 'Cartão Carrefour',
-    issuer: 'Carrefour Soluções',
-    type: 'Credit',
-    minScore: 400,
-    annualFee: 'Grátis*',
-    benefits: ['Descontos em Alimentos', 'Parcela em 24x', 'Farmácia com Desconto'],
-    colorGradient: 'from-blue-600 to-red-600',
-    flag: 'Mastercard',
-    applyLink: 'card-details',
-    officialLink: 'https://www.carrefoursolucoes.com.br/',
-    tag: 'Fácil Aprovação',
-    detailedInfo: {
-      reviewScore: 4.7,
-      description: 'O cartão ideal para quem quer economizar no supermercado. Oferece descontos exclusivos em milhares de produtos nas lojas Carrefour e Atacadão, além de prazo estendido para pagar.',
-      pros: ['Anuidade zero (basta usar 1x por mês na loja)', 'Parcelamento de eletrodomésticos em até 24x', 'Descontos diários em alimentos e farmácia', 'Aceito em qualquer lugar (Mastercard)'],
-      cons: ['Juros rotativos podem ser altos', 'Exige comprovação mínima de renda', 'App pode apresentar lentidão'],
+      description: 'O amarelinho mais famoso do Brasil. Conhecido por aprovar negativados.',
+      pros: ['Aprovação rápida', 'Anuidade zero', 'Loja com Cashback'],
+      cons: ['Limite inicial baixo', 'Sem agência física'],
       interestRateRotativo: 'Variável',
-      incomeRequirement: 'Salário Mínimo'
+      incomeRequirement: 'Livre'
     }
   },
   {
     id: 'roxinho',
-    name: 'Roxinho Gold',
+    name: 'Nubank Gold',
     issuer: 'Nubank',
     type: 'Credit',
     minScore: 300,
     annualFee: 'Grátis',
-    benefits: ['Sem anuidade', 'Controle pelo App', 'Função Construir Limite'],
+    benefits: ['Sem anuidade', 'Controle Total', 'Rende mais que poupança'],
     colorGradient: 'from-purple-700 to-purple-900',
     flag: 'Mastercard',
     applyLink: 'card-details',
-    officialLink: 'https://nubank.com.br/cartao/',
-    tag: 'Iniciantes',
+    officialLink: 'https://nubank.com.br/',
+    tag: 'O Preferido',
     detailedInfo: {
       reviewScore: 4.8,
-      description: 'O cartão mais querido do Brasil. Ideal para quem está começando a vida financeira ou quer se livrar das taxas abusivas dos grandes bancos. Oferece a função "Construir Limite" para quem tem score baixo.',
-      pros: ['Anuidade zero para sempre', 'App mais fácil de usar do mercado', 'Descontos se antecipar parcelas', 'Função débito e crédito'],
-      cons: ['Não acumula milhas no plano gratuito', 'Saque no Banco24Horas é tarifado', 'Limite inicial pode ser baixo (R$ 50)'],
-      interestRateRotativo: '2,75% a 14% a.m.',
-      incomeRequirement: 'Salário Mínimo (não exige comprovante formal)'
-    }
-  },
-  {
-    id: 'caixa-sim',
-    name: 'Caixa Sim',
-    issuer: 'Caixa',
-    type: 'Credit',
-    minScore: 450,
-    annualFee: 'Grátis',
-    benefits: ['Taxas reduzidas', 'Aceita negativado (sob análise)', 'Programa de Pontos'],
-    colorGradient: 'from-blue-500 to-blue-700',
-    flag: 'Elo',
-    applyLink: 'card-details',
-    officialLink: 'https://www.caixa.gov.br/voce/cartoes/credito/sim/Paginas/default.aspx',
-    tag: 'Juros Baixos',
-    detailedInfo: {
-      reviewScore: 4.5,
-      description: 'O Caixa Sim é a aposta do banco estatal para competir com as fintechs. Oferece as taxas de juros mais baixas do mercado para o rotativo, sendo uma opção segura para quem tem medo de dívidas.',
-      pros: ['Taxas de juros reduzidas (Cheque Especial e Rotativo)', 'Sem anuidade vitalícia', 'Benefícios da bandeira Elo Flex', 'Facilidade para correntistas Caixa'],
-      cons: ['App da Caixa pode ser instável', 'Aprovação pode exigir ida à agência', 'Não tem programa de cashback agressivo'],
-      interestRateRotativo: 'Até 8,99% a.m.',
+      description: 'Cartão mais popular do Brasil. Ideal para quem quer simplicidade.',
+      pros: ['App excelente', 'Sem taxas escondidas', 'Antecipação de parcelas'],
+      cons: ['Limite difícil de subir', 'Programa de milhas pago'],
+      interestRateRotativo: '14,5% a.m.',
       incomeRequirement: 'Salário Mínimo'
     }
   }
@@ -262,37 +134,25 @@ export const LOAN_OFFERS: LoanProduct[] = [
     id: 'supersim',
     name: 'Empréstimo para Negativado',
     provider: 'SuperSim',
-    rate: 'A partir de 12,5% a.m.',
+    rate: '12,5% a.m.',
     minAmount: 'R$ 500,00',
     maxAmount: 'R$ 2.500,00',
-    term: 'Até 12x',
+    term: '12x',
     type: 'Pessoal',
-    tags: ['Aprova Negativado', 'Dinheiro em 30min'],
+    tags: ['Aprova na Hora', 'Garantia Celular'],
     color: 'bg-red-100 text-red-800'
   },
   {
     id: 'credspot',
-    name: 'Antecipação Saque-Aniversário',
-    provider: 'Credspot (Multibancos)',
+    name: 'Antecipação FGTS',
+    provider: 'Credspot',
     rate: '1,49% a.m.',
     minAmount: 'R$ 50,00',
-    maxAmount: 'Saldo FGTS',
-    term: 'Antecipa 10 anos',
+    maxAmount: 'Saldo Total',
+    term: 'Parcela Única',
     type: 'FGTS',
-    tags: ['Sem Consulta SPC', 'Aprovação Garantida'],
+    tags: ['Sem Parcelas Mensais', 'Liberado Agora'],
     color: 'bg-green-100 text-green-800'
-  },
-  {
-    id: 'bompra',
-    name: 'Comparador de Crédito',
-    provider: 'Bom Pra Crédito',
-    rate: 'Variável',
-    minAmount: 'R$ 2.000,00',
-    maxAmount: 'R$ 50.000,00',
-    term: 'Até 36x',
-    type: 'Pessoal',
-    tags: ['1 Cadastro = 30 Bancos', 'Maior chance de aprovação'],
-    color: 'bg-blue-100 text-blue-800'
   }
 ];
 
@@ -302,27 +162,9 @@ export const INSURANCE_OPTIONS: InsuranceProduct[] = [
     title: 'Seguro Amparo (Funeral)',
     provider: 'Caixa Seguridade',
     monthlyPrice: 'R$ 5,00',
-    coverage: ['Auxílio Funeral', 'Sorteios Mensais', 'Sem carência para acidentes'],
+    coverage: ['Auxílio Funeral', 'Sorteios Mensais'],
     type: 'Vida',
     iconName: 'HeartHandshake'
-  },
-  {
-    id: 'prestamista',
-    title: 'Seguro Prestamista',
-    provider: 'Vários Bancos',
-    monthlyPrice: 'Variável',
-    coverage: ['Quitação de dívida em caso de morte', 'Cobre desemprego involuntário'],
-    type: 'Prestamista',
-    iconName: 'ShieldCheck'
-  },
-  {
-    id: 'moto-facil',
-    title: 'Moto Protegida',
-    provider: 'Suhai',
-    monthlyPrice: 'R$ 45,00',
-    coverage: ['Roubo e Furto', 'Assistência 24h', 'Aceita qualquer ano/modelo'],
-    type: 'Auto',
-    iconName: 'Bike'
   }
 ];
 
@@ -330,9 +172,9 @@ export const BENEFITS_DATA: Benefit[] = [
   {
     id: 'bolsa-familia',
     title: 'Bolsa Família',
-    shortDescription: 'Transferência de renda para famílias em situação de vulnerabilidade.',
-    fullDescription: 'O Bolsa Família é o maior programa de transferência de renda do Brasil. Ele visa quebrar o ciclo da pobreza através de auxílio financeiro mensal.',
-    requirements: ['Inscrição no CadÚnico.', 'Renda per capita até R$ 218,00.', 'Dados atualizados.'],
+    shortDescription: 'Renda mensal mínima de R$ 600 para famílias.',
+    fullDescription: 'O maior programa social do Brasil, reformulado para pagar bônus por filhos e gestantes.',
+    requirements: ['Inscrição no CadÚnico', 'Renda até R$ 218 por pessoa', 'Frequência escolar'],
     iconName: 'Wallet',
     category: 'Renda',
     highlight: true,
@@ -340,104 +182,19 @@ export const BENEFITS_DATA: Benefit[] = [
   {
     id: 'tarifa-social',
     title: 'Tarifa Social de Energia',
-    shortDescription: 'Desconto de até 65% na conta de luz.',
-    fullDescription: 'A TSEE concede descontos na conta de luz para famílias de baixa renda. O desconto é aplicado automaticamente para quem está no CadÚnico.',
-    requirements: ['Inscrição no CadÚnico.', 'Renda per capita até meio salário mínimo.'],
+    shortDescription: 'Até 65% de desconto na luz.',
+    fullDescription: 'Desconto automático para quem está no CadÚnico.',
+    requirements: ['CadÚnico ativo', 'Baixo consumo'],
     iconName: 'Zap',
     category: 'Habitação',
     highlight: true,
-  },
-  {
-    id: 'id-jovem',
-    title: 'ID Jovem',
-    shortDescription: 'Viagens interestaduais gratuitas e meia-entrada.',
-    fullDescription: 'A Identidade Jovem é o documento que possibilita acesso aos benefícios de meia-entrada em eventos e vagas gratuitas no transporte coletivo interestadual.',
-    requirements: ['Idade entre 15 e 29 anos.', 'Renda familiar até 2 salários mínimos.', 'Inscrição no CadÚnico.'],
-    iconName: 'Bus',
-    category: 'Educação',
-  },
-  {
-    id: 'farmacia-popular',
-    title: 'Farmácia Popular',
-    shortDescription: 'Remédios gratuitos para Diabetes, Asma e Hipertensão.',
-    fullDescription: 'Programa que oferece medicamentos gratuitos ou com até 90% de desconto em farmácias credenciadas.',
-    requirements: ['Receita médica válida.', 'CPF.', 'Documento com foto.'],
-    iconName: 'Pill',
-    category: 'Saúde',
-  },
-  {
-    id: 'pis-pasep',
-    title: 'Abono Salarial (PIS)',
-    shortDescription: 'Benefício anual de até um salário mínimo para trabalhadores.',
-    fullDescription: 'O Abono Salarial equivale ao valor de, no máximo, um salário mínimo a ser pago conforme calendário anual.',
-    requirements: ['Trabalhou 30 dias no ano-base.', 'Recebeu até 2 salários mínimos.', 'Inscrito há 5 anos.'],
-    iconName: 'Coins',
-    category: 'Renda',
-  },
-  {
-    id: 'cnh-social',
-    title: 'CNH Social',
-    shortDescription: 'Carteira de Habilitação gratuita para baixa renda.',
-    fullDescription: 'O programa CNH Social oferece a primeira habilitação gratuitamente. As regras variam por estado.',
-    requirements: ['Ter mais de 18 anos.', 'Saber ler e escrever.', 'CadÚnico ativo.'],
-    iconName: 'Car',
-    category: 'Educação',
-  },
-  {
-    id: 'kit-antena',
-    title: 'Kit Antena Digital',
-    shortDescription: 'Equipamento gratuito para TV Digital.',
-    fullDescription: 'Distribuição gratuita de antena e conversor para famílias de baixa renda continuarem assistindo TV após o desligamento do sinal analógico parabólico.',
-    requirements: ['Estar no CadÚnico.', 'Ter parabólica tradicional antiga instalada.'],
-    iconName: 'Tv',
-    category: 'Habitação',
-  },
-  {
-    id: 'bpc-loas',
-    title: 'BPC / LOAS',
-    shortDescription: 'Salário mínimo para idosos e PcD.',
-    fullDescription: 'Garante um salário mínimo mensal ao idoso com 65 anos ou mais e à pessoa com deficiência.',
-    requirements: ['CadÚnico.', 'Renda familiar per capita <= 1/4 salário mínimo.'],
-    iconName: 'Accessibility',
-    category: 'Renda',
   }
 ];
 
 export const LATEST_NEWS: NewsItem[] = [
-  {
-    id: '1',
-    date: '12 Out 2023',
-    title: 'Calendário Bolsa Família: Pagamentos antecipados',
-    summary: 'Governo anuncia antecipação de pagamentos para municípios em estado de calamidade pública.',
-    tag: 'Urgente'
-  },
-  {
-    id: '2',
-    date: '10 Out 2023',
-    title: 'Novo pente-fino no CadÚnico',
-    summary: 'Ministério convoca famílias unipessoais para atualização cadastral obrigatória.',
-    tag: 'CadÚnico'
-  },
-  {
-    id: '3',
-    date: '05 Out 2023',
-    title: 'CNH Social abre inscrições em 3 estados',
-    summary: 'Confira se o seu estado está na lista e veja o passo a passo para se inscrever.',
-    tag: 'Educação'
-  }
+  { id: '1', date: 'Hoje', title: 'Calendário Bolsa Família: Pagamento Antecipado', summary: 'Cidades em emergência recebem no 1º dia.', tag: 'Urgente' }
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
-  {
-    question: "Como saber se tenho direito ao Bolsa Família?",
-    answer: "A principal regra é a renda mensal por pessoa de até R$ 218,00. Além disso, a família precisa estar inscrita no Cadastro Único e com os dados atualizados."
-  },
-  {
-    question: "Onde faço o Cadastro Único?",
-    answer: "O cadastramento é feito presencialmente num posto de atendimento na cidade onde a família mora, geralmente no CRAS (Centro de Referência de Assistência Social)."
-  },
-  {
-    question: "O serviço deste site é oficial?",
-    answer: "Não. Este é um portal informativo independente (guia) para auxiliar o cidadão. Para serviços oficiais, acesse sempre os canais do Governo Federal (gov.br)."
-  }
+  { question: "Como consultar pelo CPF?", answer: "Use o app Bolsa Família ou o Portal Cidadão da Caixa." }
 ];
