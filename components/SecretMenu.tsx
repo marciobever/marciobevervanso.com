@@ -24,6 +24,7 @@ const SecretMenu: React.FC<SecretMenuProps> = ({ onNavigate }) => {
   };
 
   const broadcasts = [
+    { label: 'Bolsa Família 2025 (LP)', view: 'landing-bolsa-comparativo', url: '/bolsa-familia-2025-calendario-regras-valores' },
     { label: 'Minha Casa Minha Vida (LP)', view: 'landing-mcmv', url: '/minha-casa-minha-vida-2025-comparativo-faixas-beneficios' },
     { label: 'Dentista / Brasil Sorridente (LP)', view: 'landing-dentista', url: '/dentista-gratuito-sus-quiz-prioridade' },
     { label: 'CNH Social (LP)', view: 'landing-cnh', url: '/cnh-social-2025' },

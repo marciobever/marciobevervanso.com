@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Smile, AlertTriangle, CheckCircle2, Stethoscope } from 'lucide-react';
+import { Smile, AlertTriangle, CheckCircle2, Stethoscope, Heart, ShieldPlus, HelpCircle, MapPin, Sparkles, PlusCircle } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -13,131 +13,134 @@ interface Props {
 
 export const DentistaPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "Dentista Gratuito SUS 2025: Implante, Aparelho e Prótese | Brasil Sorridente";
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Guia completo do Brasil Sorridente. Saiba como conseguir tratamento dentário gratuito pelo SUS, incluindo implantes, aparelhos ortodônticos e próteses.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    }
+    document.title = "Brasil Sorridente 2025: Como Conseguir Dentista Grátis no SUS | Guia";
+    window.scrollTo(0, 0);
   }, []);
-
-  const schemaData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "GovernmentService",
-      "name": "Brasil Sorridente",
-      "serviceType": "Dental Care",
-      "provider": {
-        "@type": "GovernmentOrganization",
-        "name": "Sistema Único de Saúde (SUS)"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "BRL"
-      }
-    }
-  ];
 
   return (
     <BroadcastLayout
-      title="Dentista Gratuito pelo SUS: Como conseguir Implantes, Próteses e Aparelho"
-      subtitle="O Brasil Sorridente foi ampliado. Entenda como funciona o fluxo de atendimento, da limpeza básica até cirurgias complexas e fornecimento de dentaduras."
+      title="Brasil Sorridente 2025: Tratamento Dentário Gratuito no SUS (Guia Completo)"
+      subtitle="O programa nacional de saúde bucal foi ampliado. Saiba como ter acesso a próteses, tratamento de canal, aparelhos e implantes sem custo nenhum."
       quizId="6"
       quizzes={quizzes}
       onNavigate={onNavigate}
-      quizTriggerLabel="Verificar Unidades Próximas"
-      relatedArticle={{
-        title: "Veja a lista completa: O que o SUS cobre de verdade (Implantes e Aparelho)",
-        onClick: () => onNavigate('legacy-dental-plan')
-      }}
+      quizTriggerLabel="Consultar Vagas no SUS"
     >
-      <SchemaMarkup data={schemaData} />
-      <h2>O que é o Brasil Sorridente?</h2>
+      <SchemaMarkup data={{
+        "@context": "https://schema.org",
+        "@type": "MedicalOrganization",
+        "name": "Brasil Sorridente",
+        "description": "Serviço público de saúde bucal do Brasil.",
+        "medicalSpecialty": "Dentistry"
+      }} />
+
+      <h2>Saúde Bucal é um Direito de Todos</h2>
       <p>
-        É a política nacional de saúde bucal. O SUS não oferece apenas extração de dentes. Hoje, a rede conta com os <strong>CEOs (Centros de Especialidades Odontológicas)</strong>, preparados para realizar tratamentos complexos gratuitamente.
+        O <strong>Brasil Sorridente</strong> é hoje o maior programa de saúde pública odontológica do mundo. Muita gente ainda acredita que o dentista do posto de saúde (UBS) só serve para arrancar dentes ("extração"), mas a realidade mudou drasticamente nos últimos anos.
+      </p>
+      <p>
+        Com a criação dos <strong>CEOs (Centros de Especialidades Odontológicas)</strong>, o cidadão brasileiro passou a ter acesso a tratamentos complexos que custariam milhares de reais em clínicas particulares, totalmente financiados pelo Governo Federal.
       </p>
 
-      <h3>O Caminho das Pedras: Como ser atendido?</h3>
-      <p>Muitas pessoas desistem por não saberem o fluxo correto. Você não pode ir direto ao especialista. Siga este passo a passo:</p>
-
-      <div className="space-y-4 not-prose my-8">
-         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-            <div className="bg-blue-100 text-blue-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">1</div>
-            <div>
-               <h4 className="font-bold text-slate-900">Posto de Saúde (UBS)</h4>
-               <p className="text-sm text-slate-600">Marque uma consulta com o clínico geral dentista do seu bairro. Ele fará a limpeza, restaurações simples e a avaliação inicial.</p>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 not-prose">
+         <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
+            <h3 className="font-bold text-green-900 flex items-center gap-2 mb-3">
+               <PlusCircle size={20} className="text-green-600" /> Atendimento Primário (UBS)
+            </h3>
+            <ul className="text-xs text-green-800 space-y-2">
+               <li className="flex items-start gap-1">✅ Limpeza (Profilaxia) e Aplicação de Flúor</li>
+               <li className="flex items-start gap-1">✅ Restaurações (Obturações) simples</li>
+               <li className="flex items-start gap-1">✅ Extrações de dentes com cárie profunda</li>
+               <li className="flex items-start gap-1">✅ Tratamento preventivo para crianças</li>
+            </ul>
          </div>
-         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-            <div className="bg-green-100 text-green-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">2</div>
-            <div>
-               <h4 className="font-bold text-slate-900">Encaminhamento</h4>
-               <p className="text-sm text-slate-600">Se você precisar de canal, cirurgia, prótese ou tratamento de gengiva, o dentista da UBS lhe dará uma <strong>Guia de Referência</strong>.</p>
-            </div>
-         </div>
-         <div className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-            <div className="bg-purple-100 text-purple-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">3</div>
-            <div>
-               <h4 className="font-bold text-slate-900">Agendamento no CEO</h4>
-               <p className="text-sm text-slate-600">Com a guia, a própria unidade marca sua consulta no Centro de Especialidades. Em alguns municípios, você entra numa fila de regulação.</p>
-            </div>
+         <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
+            <h3 className="font-bold text-blue-900 flex items-center gap-2 mb-3">
+               <Sparkles size={20} className="text-blue-600" /> Especialidades (CEO)
+            </h3>
+            <ul className="text-xs text-blue-800 space-y-2">
+               <li className="flex items-start gap-1">💎 Tratamento de Canal (Endodontia)</li>
+               <li className="flex items-start gap-1">💎 Próteses Totais (Dentaduras) e Parciais</li>
+               <li className="flex items-start gap-1">💎 Cirurgias de Siso e bucomaxilofaciais</li>
+               <li className="flex items-start gap-1">💎 Diagnóstico de Câncer de Boca</li>
+            </ul>
          </div>
       </div>
 
-      <h3>Mito ou Verdade: O SUS coloca Implante e Aparelho?</h3>
+      <h2>Como conseguir o atendimento? (Passo a Passo)</h2>
+      <p>Não adianta ir direto ao Centro de Especialidades. O fluxo do SUS exige uma ordem para garantir que os casos mais graves sejam priorizados:</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8 not-prose">
-         <div className="bg-green-50 p-6 rounded-2xl border border-green-100">
-            <h4 className="font-bold text-green-900 flex items-center gap-2 mb-3">
-               <Smile size={20}/> Próteses (Dentaduras)
-            </h4>
-            <p className="text-sm text-green-800 mb-2"><strong>VERDADE.</strong></p>
-            <p className="text-sm text-green-800 leading-relaxed">
-               O SUS fornece próteses totais (dentaduras) e parciais removíveis (pontes). O laboratório regional fabrica a peça sob medida e você retorna para instalar e ajustar. É um dos serviços mais comuns nos CEOs.
-            </p>
+      <div className="space-y-6 my-10 not-prose">
+         <div className="flex gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm relative overflow-hidden group hover:border-brand-blue transition-all">
+            <div className="bg-slate-100 text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 group-hover:bg-brand-blue group-hover:text-white transition-colors">1</div>
+            <div>
+               <h4 className="font-bold text-slate-900 text-lg">A Porta de Entrada: UBS</h4>
+               <p className="text-sm text-slate-600 leading-relaxed">Procure o Posto de Saúde mais próximo da sua residência com seu Cartão do SUS. Marque uma consulta com o dentista da unidade para uma avaliação geral.</p>
+            </div>
          </div>
+         <div className="flex gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm relative overflow-hidden group hover:border-brand-blue transition-all">
+            <div className="bg-slate-100 text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 group-hover:bg-brand-blue group-hover:text-white transition-colors">2</div>
+            <div>
+               <h4 className="font-bold text-slate-900 text-lg">A Triagem e Encaminhamento</h4>
+               <p className="text-sm text-slate-600 leading-relaxed">Se o seu caso for complexo (ex: canal ou prótese), o dentista da UBS fará o encaminhamento através do sistema de regulação para o CEO (Centro de Especialidades).</p>
+            </div>
+         </div>
+         <div className="flex gap-4 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm relative overflow-hidden group hover:border-brand-blue transition-all">
+            <div className="bg-slate-100 text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 group-hover:bg-brand-blue group-hover:text-white transition-colors">3</div>
+            <div>
+               <h4 className="font-bold text-slate-900 text-lg">O Tratamento Especializado</h4>
+               <p className="text-sm text-slate-600 leading-relaxed">Você será convocado para o CEO, onde o especialista fará o procedimento necessário. O tempo de espera varia conforme a fila de cada município.</p>
+            </div>
+         </div>
+      </div>
 
-         <div className="bg-orange-50 p-6 rounded-2xl border border-orange-100">
-            <h4 className="font-bold text-orange-900 flex items-center gap-2 mb-3">
-               <Stethoscope size={20}/> Implantes e Aparelhos
-            </h4>
-            <p className="text-sm text-orange-800 mb-2"><strong>DEPENDE.</strong></p>
-            <p className="text-sm text-orange-800 leading-relaxed">
-               <strong>Aparelhos (Ortodontia):</strong> Sim, mas apenas em CEOs tipo III (maiores) e para casos severos que afetam a mastigação ou fala, não apenas estética.
+      <h2>Prótese Dentária e Dentadura Grátis</h2>
+      <p>
+        Este é um dos serviços mais procurados no Brasil Sorridente. O SUS financia a fabricação de próteses totais (dentaduras) e parciais removíveis (pontes).
+      </p>
+      <p>
+        <strong>Quem pode solicitar?</strong> Qualquer pessoa que tenha perda de dentes que comprometa a mastigação ou a fala. Idosos têm prioridade legal no atendimento. Após a moldagem, o laboratório parceiro fabrica a peça e você retorna para os ajustes finais.
+      </p>
+
+      <div className="bg-yellow-50 p-6 rounded-2xl border border-yellow-200 my-10 flex gap-4 items-start not-prose">
+         <AlertTriangle size={32} className="text-yellow-600 shrink-0 mt-1" />
+         <div>
+            <h4 className="font-bold text-yellow-900 text-lg mb-1">E os Implantes e Aparelhos?</h4>
+            <p className="text-sm text-yellow-800 leading-relaxed">
+               <strong>Aparelhos:</strong> Estão disponíveis apenas para casos graves de deformidade ou problemas funcionais sérios, geralmente para jovens.
                <br/><br/>
-               <strong>Implantes:</strong> Ainda é raro. Está disponível apenas em alguns centros universitários parceiros ou CEOs específicos em grandes capitais. A maioria oferece apenas a prótese removível.
+               <strong>Implantes:</strong> Ainda não são universais. Estão presentes apenas em alguns municípios com CEOs tipo III ou em parceria com Universidades Federais. A prioridade nacional ainda é o fornecimento de próteses removíveis.
             </p>
          </div>
       </div>
 
-      <h3>Lista de Tratamentos Garantidos</h3>
-      <ul className="space-y-2 mb-8">
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Limpeza e aplicação de flúor;</li>
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Restaurações (obturações);</li>
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Extrações simples e cirurgias do siso;</li>
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Tratamento de canal (Endodontia);</li>
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Tratamento de gengiva (Periodontia);</li>
-         <li className="flex items-center gap-2"><CheckCircle2 className="text-brand-blue" size={18}/> Biópsias para diagnóstico de câncer bucal.</li>
-      </ul>
-
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex gap-3 items-start my-6 not-prose">
-         <AlertTriangle className="text-yellow-600 shrink-0 mt-0.5" />
-         <p className="text-sm text-yellow-800">
-            <strong>Dica Importante:</strong> Se você sente dor aguda ou está com inchaço no rosto, não precisa agendar. Vá à UPA (Unidade de Pronto Atendimento) ou UBS e solicite atendimento de <strong>Urgência Odontológica</strong>.
-         </p>
+      <h2>FAQ - Dúvidas Frequentes Brasil Sorridente</h2>
+      <div className="space-y-4 not-prose mb-12">
+         <details className="group bg-gray-50 p-5 rounded-2xl border border-gray-200 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               Como emitir o Cartão do SUS online? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               Basta baixar o aplicativo <strong>Meu SUS Digital</strong> (antigo Conecte SUS) e fazer login com sua conta Gov.br. O cartão digital tem a mesma validade do físico.
+            </p>
+         </details>
+         <details className="group bg-gray-50 p-5 rounded-2xl border border-gray-200 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               Estou com muita dor de dente agora. O que fazer? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               Casos de <strong>Urgência Odontológica</strong> (dor aguda, inchaço, trauma) não precisam de agendamento. Procure uma UPA 24h ou o pronto-atendimento da UBS logo no primeiro horário.
+            </p>
+         </details>
+         <details className="group bg-gray-50 p-5 rounded-2xl border border-gray-200 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               O tratamento no SUS é demorado? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               O atendimento na UBS costuma ser rápido. A fila maior ocorre para os especialistas dos CEOs (canal e prótese). Municípios maiores costumam ter mais CEOs, o que agiliza o processo.
+            </p>
+         </details>
       </div>
-
-      <h3>Documentos Necessários</h3>
-      <ul className="space-y-1 text-sm text-slate-600">
-         <li>Cartão do SUS (físico ou no app Meu SUS Digital);</li>
-         <li>Documento de identidade (RG/CNH);</li>
-         <li>Comprovante de residência atualizado.</li>
-      </ul>
 
     </BroadcastLayout>
   );

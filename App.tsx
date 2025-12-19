@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -34,6 +33,9 @@ const AnalyticsDashboard = lazy(() => import('./components/AnalyticsDashboard'))
 const SecretMenu = lazy(() => import('./components/SecretMenu'));
 const ScamDetector = lazy(() => import('./components/tools/ScamDetector').then(m => ({ default: m.ScamDetector })));
 const LegalPage = lazy(() => import('./components/pages/LegalPage').then(m => ({ default: m.LegalPage })));
+// Fix: Added missing lazy imports for SocialPostGenerator and SeoTools
+const SocialPostGenerator = lazy(() => import('./components/admin/SocialPostGenerator').then(m => ({ default: m.SocialPostGenerator })));
+const SeoTools = lazy(() => import('./components/admin/SeoTools').then(m => ({ default: m.SeoTools })));
 
 // Lazy Guides
 const BolsaFamiliaGuide = lazy(() => import('./components/guides/BolsaFamiliaGuide'));
@@ -66,9 +68,9 @@ const CardsNegativadoPage = lazy(() => import('./components/broadcast/CardsNegat
 const CardsLimitePage = lazy(() => import('./components/broadcast/CardsLimitePage').then(m => ({ default: m.CardsLimitePage })));
 const SeguroDividaPage = lazy(() => import('./components/broadcast/SeguroDividaPage').then(m => ({ default: m.SeguroDividaPage })));
 const SeguroVidaPage = lazy(() => import('./components/broadcast/SeguroVidaPage').then(m => ({ default: m.SeguroVidaPage })));
+const BolsaFamiliaLP = lazy(() => import('./components/broadcast/BolsaFamiliaLP').then(m => ({ default: m.BolsaFamiliaLP })));
 
 // Legacy Pages
-const LegacyArticles = lazy(() => import('./components/pages/LegacyArticles').then(module => ({ default: module.QuizBeneficiosPage })));
 import { 
   QuizBeneficiosPage, 
   BrasilSorridentePrivadoPage, 
@@ -83,10 +85,6 @@ import {
   CnhLegacyPage,
   BolsaFamiliaLegacyPage
 } from './components/pages/LegacyArticles';
-
-// Admin Tools
-const SocialPostGenerator = lazy(() => import('./components/admin/SocialPostGenerator').then(m => ({ default: m.SocialPostGenerator })));
-const SeoTools = lazy(() => import('./components/admin/SeoTools').then(m => ({ default: m.SeoTools })));
 
 const ROUTES: Record<string, ViewState> = {
   '/': 'home',
@@ -118,6 +116,7 @@ const ROUTES: Record<string, ViewState> = {
   '/dentista-gratuito-sus-quiz-prioridade': 'landing-dentista',
   '/cnh-social-2025': 'landing-cnh',
   '/beneficio-pe-de-meia-2025-guia-completo': 'landing-pe-de-meia',
+  '/bolsa-familia-2025-calendario-regras-valores': 'landing-bolsa-comparativo', // Mapeando nova LP
   '/cartao-credito-para-negativado-2025-lista-facil': 'landing-cards-negativado',
   '/ranking-cartoes-limite-alto-aprovacao-imediata': 'landing-cards-limite',
   '/lei-protege-herdeiros-seguro-quita-dividas': 'landing-seguro-divida',
@@ -165,7 +164,7 @@ function App() {
   const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
-  // Initialize state from URL params to support direct links/reloads
+  // Initialize state from URL params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const qId = params.get('quizId');
@@ -189,7 +188,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Scroll top on mount
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -198,16 +196,11 @@ function App() {
       window.location.href = '/';
       return;
     }
-    
-    // Find path for view
     const path = Object.keys(ROUTES).find(key => ROUTES[key] === view) || '/';
-    
-    // Use Full Page Reload for navigation to ensure scripts (VideoWall) re-trigger
     window.location.href = path;
   };
 
   const handleStartQuiz = (id: string) => {
-    // Navigate with param to persist state across reload
     window.location.href = `/quiz?quizId=${id}`;
   };
 
@@ -228,7 +221,6 @@ function App() {
               title="Guia Social Brasil 2025: Consulta de Benefícios e Cidadania" 
               description="Portal informativo independente. Consulte o Calendário Bolsa Família 2025, regras do BPC/LOAS, CNH Social e Empréstimos." 
             />
-            
             <Hero onNavigate={handleNavigate} />
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
@@ -236,12 +228,9 @@ function App() {
             <FinancialSection onNavigate={handleNavigate} />
             <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
             <CadUnicoSection onNavigate={handleNavigate} />
-            
-            {/* Stories moved here */}
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
                <StoriesGallery onNavigate={handleNavigate} />
             </div>
-
             <FaqSection />
             <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
           </>
@@ -302,8 +291,8 @@ function App() {
       case 'landing-cards-limite': return <CardsLimitePage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-seguro-divida': return <SeguroDividaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
       case 'landing-seguro-vida': return <SeguroVidaPage onNavigate={handleNavigate} onSimulate={handleStartQuiz} quizzes={quizzes} />;
+      case 'landing-bolsa-comparativo': return <BolsaFamiliaLP onNavigate={handleNavigate} quizzes={quizzes} />;
       case 'landing-bpc-comparativo':
-      case 'landing-bolsa-comparativo':
       case 'landing-general-rights': return <ComparativoPage />;
       // Legacy Render
       case 'legacy-quiz': return <QuizBeneficiosPage onNavigate={handleNavigate} quizzes={quizzes} />;

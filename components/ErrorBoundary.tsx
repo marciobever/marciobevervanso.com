@@ -10,11 +10,14 @@ interface State {
   error?: Error;
 }
 
+// Fixed inheritance: Using Component directly and declaring state/props to resolve potential inheritance issues in strict environments.
 export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
+  // Fixed: Explicitly declare the state property on the class to resolve "Property 'state' does not exist" errors
+  public override state: State = {
     hasError: false
   };
 
+  // Fixed: Explicit constructor that correctly calls super to initialize inherited properties
   constructor(props: Props) {
     super(props);
   }
@@ -28,6 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public render() {
+    // Fixed: Standard access to this.state which is now explicitly declared and inherited
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 text-center">
@@ -39,6 +43,7 @@ export class ErrorBoundary extends Component<Props, State> {
             Não foi possível carregar o conteúdo solicitado. Isso pode ser uma falha temporária de conexão ou um erro interno.
           </p>
           
+          {/* Fixed: Accessing error from state via this.state */}
           {this.state.error && (
              <div className="bg-white p-4 rounded-lg border border-red-200 shadow-sm text-left mb-8 w-full max-w-md overflow-hidden">
                 <p className="text-[10px] text-red-500 font-mono break-all">
@@ -65,6 +70,7 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
+    // Fixed: Correctly accessing inherited props property from Component
     return this.props.children;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import { Loader2, RefreshCw, ExternalLink, Calendar, TrendingUp, AlertCircle } from 'lucide-react';
+import { Loader2, RefreshCw, ExternalLink, Calendar, TrendingUp, AlertCircle, Search } from 'lucide-react';
 import { NewsItem } from '../types';
 import { AdSlot } from './AdSlot';
 
@@ -54,11 +54,13 @@ const NewsPage: React.FC = () => {
     setError(null);
 
     try {
+      // Create a new instance right before making an API call to ensure it uses up-to-date API key
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       // PROMPT OPTIMIZED FOR "AUTO-UPDATE" FEEL AND OFFICIAL SOURCES
+      // Updated model to gemini-3-flash-preview as per text task guidelines
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: `Atue como um jornalista especializado em Diário Oficial da União e Ministério da Cidadania. 
         Pesquise por alterações RECENTES (últimas 24-48 horas) em leis, decretos ou anúncios oficiais sobre:
         1. Calendário ou valores do Bolsa Família.
@@ -73,15 +75,26 @@ const NewsPage: React.FC = () => {
         }
       });
 
+      // Extract URLs from groundingChunks as required by guidelines
       const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-      // (Optional) Process grounding chunks if needed to display links explicitly
+      const sources: string[] = (groundingChunks as any[])
+        .map((chunk: any) => chunk.web?.uri)
+        .filter((uri: unknown): uri is string => typeof uri === 'string' && !!uri);
+      
+      const uniqueSources = Array.from(new Set(sources));
+      
+      // Append sources to content summary for display
+      let summaryContent = response.text || "Nenhuma atualização encontrada nos canais oficiais hoje.";
+      if (uniqueSources.length > 0) {
+        summaryContent += "\n\n**Fontes verificadas:**\n" + uniqueSources.map(url => `- ${url}`).join("\n");
+      }
 
       // Create a "Digest" news item
       const digestItem: NewsItem = {
         id: 'digest-' + Date.now(),
         date: new Date().toLocaleDateString('pt-BR'),
         title: 'Plantão Oficial: Resumo de Benefícios Sociais',
-        summary: response.text || "Nenhuma atualização encontrada nos canais oficiais hoje.",
+        summary: summaryContent,
         tag: 'Diário Oficial'
       };
 

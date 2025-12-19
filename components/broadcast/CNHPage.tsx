@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { MapPin, ExternalLink, Calendar, AlertCircle } from 'lucide-react';
+import { MapPin, ExternalLink, Calendar, AlertCircle, CheckCircle2, SteeringWheel, Briefcase, Award, HelpCircle, FileText, Info } from 'lucide-react';
 import { Quiz } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -51,156 +51,152 @@ const STATE_PROGRAMS: StateProgram[] = [
     status: 'Previsto',
     prediction: 'Abril/2025',
     website: 'https://detran.pa.gov.br',
-    specifics: ['Ter 18 anos completos', 'Saber ler e escrever', 'Possuir CPF e RG', 'Certidão de nascimento dos dependentes (se houver)']
-  },
-  {
-    state: 'Distrito Federal',
-    programName: 'Habilitação Social',
-    status: 'Previsto',
-    prediction: 'Fevereiro/2025',
-    website: 'https://detran.df.gov.br',
-    specifics: ['Estar no CadÚnico', 'Ser domiciliado no DF há 2 anos', 'Não ter sofrido penalidades de trânsito']
-  },
-  {
-    state: 'Pernambuco',
-    programName: 'CNH Popular',
-    status: 'Previsto',
-    prediction: 'Maio/2025',
-    website: 'https://www.detran.pe.gov.br',
-    specifics: ['Alunos de escola pública', 'Beneficiários de programas assistenciais', 'Trabalhadores rurais']
+    specifics: ['Ter 18 anos completos', 'Saber ler e escrever', 'Possuir CPF e RG']
   }
 ];
 
 export const CNHPage: React.FC<Props> = ({ onNavigate, onSimulate, quizzes }) => {
   useEffect(() => {
-    document.title = "CNH Social 2025: Inscrições Abertas, Estados e Requisitos";
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const desc = "Tudo sobre a CNH Social 2025. Veja a lista de estados com inscrições abertas, requisitos para gratuidade e como tirar sua habilitação sem custo.";
-    if (metaDesc) {
-      metaDesc.setAttribute('content', desc);
-    }
+    document.title = "CNH Social 2025: Como Conseguir Habilitação Gratuita | Guia Completo";
+    window.scrollTo(0, 0);
   }, []);
-
-  const schemaData = [
-    {
-      "@context": "https://schema.org",
-      "@type": "GovernmentService",
-      "name": "CNH Social",
-      "serviceType": "Driving License Support",
-      "provider": {
-        "@type": "GovernmentOrganization",
-        "name": "Detran"
-      },
-      "audience": {
-        "@type": "Audience",
-        "audienceType": "Baixa Renda"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "BRL",
-        "description": "Gratuidade total para taxas e exames de habilitação."
-      }
-    }
-  ];
 
   return (
     <BroadcastLayout
-      title="CNH Social 2025: Como se inscrever, Prazos e Critérios de Aprovação"
-      subtitle="Não perca o prazo. O programa oferece a 1ª habilitação gratuita para quem tem baixa renda. Entenda as 3 etapas para garantir sua vaga."
+      title="CNH Social 2025: O Guia Definitivo para Tirar a Habilitação de Graça"
+      subtitle="O custo da primeira habilitação no Brasil ultrapassa R$ 3.000. Saiba como o programa governamental isenta 100% das taxas para cidadãos de baixa renda e estudantes."
       quizId="3"
       quizzes={quizzes}
       onNavigate={onNavigate}
-      quizTriggerLabel="Verificar Minha Elegibilidade"
-      relatedArticle={{
-        title: "Dica: Como comprar moto sem entrada usando o FGTS",
-        onClick: () => onNavigate('loans')
-      }}
+      quizTriggerLabel="Simular Minha Vaga"
     >
-      <SchemaMarkup data={schemaData} />
-      <h2>O que é a CNH Social?</h2>
+      <SchemaMarkup data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Como funciona a CNH Social 2025",
+        "description": "Guia passo a passo sobre inscrições, estados participantes e requisitos da CNH Social.",
+        "author": { "@type": "Organization", "name": "Guia Social Brasil" }
+      }} />
+
+      <h2>O que é o Programa CNH Social?</h2>
       <p>
-        A CNH Social é um programa estadual que custeia 100% do processo de habilitação (exames, aulas teóricas, práticas e taxas) para pessoas de baixa renda. A economia é de cerca de <strong>R$ 3.000,00</strong>.
+        A <strong>CNH Social</strong> (ou CNH Popular/Gratuita) é uma iniciativa de inclusão social que visa democratizar o acesso à Carteira Nacional de Habilitação. O programa é gerenciado pelos Detrans estaduais e financiado por fundos de combate à pobreza ou incentivos governamentais.
+      </p>
+      <p>
+        Muitas vezes, a falta da carteira de motorista é o que impede um pai ou mãe de família de conseguir um emprego como motorista de aplicativo, entregador ou em transportadoras. Por isso, este benefício é considerado um dos mais importantes para a geração de renda.
       </p>
 
-      <h3>As 3 Etapas da Aprovação</h3>
-      <div className="space-y-4 not-prose my-8">
-         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
-            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
-               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">1</span>
-               Inscrição Online
-            </h4>
-            <p className="text-sm text-slate-600">
-               Feita exclusivamente no site do DETRAN do seu estado. Você preenche os dados e o sistema cruza automaticamente com o <strong>CadÚnico</strong> para verificar a renda.
-            </p>
-         </div>
-         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
-            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
-               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">2</span>
-               Lista de Selecionados
-            </h4>
-            <p className="text-sm text-slate-600">
-               Após o fim do prazo, o DETRAN divulga a lista. Os critérios de desempate geralmente são: menor renda per capita, maior número de filhos e beneficiários do Bolsa Família.
-            </p>
-         </div>
-         <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
-            <h4 className="font-bold text-slate-900 flex items-center gap-2 mb-2">
-               <span className="bg-slate-900 text-white w-6 h-6 rounded flex items-center justify-center text-xs">3</span>
-               Matrícula Presencial
-            </h4>
-            <p className="text-sm text-slate-600">
-               Se aprovado, você tem um prazo curto (geralmente 15 dias) para ir ao DETRAN ou Autoescola parceira confirmar os dados. <strong>Se perder esse prazo, perde a vaga.</strong>
-            </p>
+      <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100 my-8 not-prose">
+         <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <Award className="text-blue-600" /> Vantagens de ser Aprovado
+         </h3>
+         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+               <strong className="text-brand-blue block mb-1">Isenção Total</strong>
+               <p className="text-xs text-slate-600">Você não paga taxas de exames, aulas teóricas, práticas e nem a emissão do documento.</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+               <strong className="text-brand-blue block mb-1">Oportunidade de Emprego</strong>
+               <p className="text-xs text-slate-600">Ter CNH abre portas para vagas de logística, vendas externas e transporte.</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+               <strong className="text-brand-blue block mb-1">Inclusão Digital</strong>
+               <p className="text-xs text-slate-600">Acesso à CNH Digital facilitando o dia a dia e identificação oficial.</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm">
+               <strong className="text-brand-blue block mb-1">Adoção de Categorias</strong>
+               <p className="text-xs text-slate-600">Muitos estados permitem mudar de 'B' para 'D' ou 'E' gratuitamente.</p>
+            </div>
          </div>
       </div>
 
-      <h3>Critérios que Reprovam (Cuidado!)</h3>
-      <ul className="space-y-2 mb-8">
-         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> CadÚnico desatualizado há mais de 24 meses.</li>
-         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Renda per capita superior a meio salário mínimo.</li>
-         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Ter cometido infração de trânsito grave ou gravíssima nos últimos 12 meses (para quem tenta mudança de categoria).</li>
-         <li className="flex items-center gap-2 text-red-700"><AlertCircle size={16}/> Faltar à matrícula após ser convocado.</li>
+      <h2>Quem pode participar em 2025?</h2>
+      <p>Embora as regras variem um pouco em cada estado, a base de requisitos costuma ser:</p>
+      <ul className="space-y-3">
+         <li className="flex gap-2"><strong><CheckCircle2 size={18} className="text-green-500 shrink-0 mt-1" /> Estar no CadÚnico:</strong> A inscrição no Cadastro Único do Governo Federal deve estar ativa e atualizada nos últimos 24 meses.</li>
+         <li className="flex gap-2"><strong><CheckCircle2 size={18} className="text-green-500 shrink-0 mt-1" /> Renda Familiar:</strong> Geralmente até 2 salários mínimos totais ou meio salário por pessoa.</li>
+         <li className="flex gap-2"><strong><CheckCircle2 size={18} className="text-green-500 shrink-0 mt-1" /> Escolaridade:</strong> Saber ler e escrever (alfabetizado).</li>
+         <li className="flex gap-2"><strong><CheckCircle2 size={18} className="text-green-500 shrink-0 mt-1" /> Domicílio:</strong> Morar no estado onde está solicitando o benefício por pelo menos 1 ou 2 anos.</li>
       </ul>
 
-      <h3>Editais e Prazos por Estado (2025)</h3>
+      <div className="bg-red-50 p-6 rounded-2xl border border-red-100 my-8 not-prose">
+         <h4 className="flex items-center gap-2 text-red-800 font-bold mb-2">
+            <AlertCircle size={20} /> O que REPROVA sua inscrição?
+         </h4>
+         <p className="text-sm text-red-700 leading-relaxed">
+            Muitos candidatos são desclassificados por <strong>divergência de dados</strong>. Se seu endereço no DETRAN for diferente do endereço no CadÚnico (CRAS), o sistema bloqueia seu pedido automaticamente. Atualize tudo antes de se inscrever!
+         </p>
+      </div>
+
+      <h3>Categorias Disponíveis</h3>
+      <p>Você pode solicitar a CNH Social para as seguintes modalidades:</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose my-6">
+         <div className="p-4 bg-slate-100 rounded-2xl border border-slate-200">
+            <h5 className="font-bold text-slate-900 mb-1">Categoria A</h5>
+            <p className="text-xs text-slate-600">Motos e triciclos. Ideal para quem quer trabalhar com entregas (Motofrete).</p>
+         </div>
+         <div className="p-4 bg-slate-100 rounded-2xl border border-slate-200">
+            <h5 className="font-bold text-slate-900 mb-1">Categoria B</h5>
+            <p className="text-xs text-slate-600">Carros de passeio e utilitários leves. A porta de entrada para motoristas de app.</p>
+         </div>
+         <div className="p-4 bg-slate-100 rounded-2xl border border-slate-200">
+            <h5 className="font-bold text-slate-900 mb-1">Mudança D/E</h5>
+            <p className="text-xs text-slate-600">Caminhões e Ônibus. Focada em qualificação profissional avançada.</p>
+         </div>
+      </div>
+
+      <h2>Prazos e Estados Participantes</h2>
+      <p>Confira a situação atual nos principais estados que oferecem a gratuidade:</p>
+      
       <div className="not-prose grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
         {STATE_PROGRAMS.map((prog, idx) => (
-           <div key={idx} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-brand-blue transition-colors relative overflow-hidden group">
+           <div key={idx} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-brand-blue transition-colors">
               <div className="flex justify-between items-start mb-4">
                  <div className="flex items-center gap-2">
                     <MapPin className="text-brand-blue" size={20} />
                     <h4 className="font-bold text-slate-900 text-lg">{prog.state}</h4>
                  </div>
-                 <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${
-                    prog.status === 'Aberto' ? 'bg-green-100 text-green-700' :
-                    prog.status === 'Em Breve' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-gray-100 text-gray-500'
-                 }`}>
-                    {prog.status}
-                 </span>
+                 <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${prog.status === 'Aberto' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>{prog.status}</span>
               </div>
-              
-              <p className="text-brand-blue font-bold text-sm mb-1">{prog.programName}</p>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                 <Calendar size={14} /> Previsão: {prog.prediction}
-              </div>
-
-              <a 
-                href={prog.website} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-gray-200 text-brand-medium font-bold text-sm hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all"
-              >
-                Site Oficial Detran <ExternalLink size={14} />
+              <p className="text-brand-blue font-bold text-sm mb-4">{prog.programName}</p>
+              <ul className="text-xs text-slate-500 space-y-1 mb-6">
+                 {prog.specifics.map((s, i) => <li key={i}>• {s}</li>)}
+              </ul>
+              <a href={prog.website} target="_blank" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:bg-brand-blue transition-all">
+                Site Oficial <ExternalLink size={14} />
               </a>
            </div>
         ))}
       </div>
-      
-      <p>
-        As vagas são limitadas e a concorrência é alta. Mantenha seu CadÚnico atualizado, pois ele é a base de tudo.
-      </p>
+
+      <h2>Perguntas Frequentes (FAQ CNH Grátis)</h2>
+      <div className="space-y-4 not-prose mb-12">
+         <details className="group bg-white p-5 rounded-2xl border border-gray-100 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               Quanto tempo demora o processo? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               Após a seleção, você tem cerca de 12 meses para concluir todas as etapas (exames médicos, curso teórico, prova teórica, aulas práticas e prova prática).
+            </p>
+         </details>
+         <details className="group bg-white p-5 rounded-2xl border border-gray-100 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               Se eu reprovar na prova, perco o benefício? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               Geralmente o programa permite uma reprovação gratuita. Caso o aluno reprove mais vezes, ele poderá ter que arcar com a taxa de reteste por conta própria para continuar no programa.
+            </p>
+         </details>
+         <details className="group bg-white p-5 rounded-2xl border border-gray-100 cursor-pointer">
+            <summary className="font-bold text-slate-800 flex justify-between items-center list-none">
+               Posso fazer a CNH Social em outro estado? <HelpCircle size={18} className="text-brand-blue" />
+            </summary>
+            <p className="text-sm text-slate-600 mt-4 leading-relaxed pl-4 border-l-2 border-brand-blue">
+               Não. O benefício exige que você comprove moradia no estado de inscrição por um período determinado em edital (geralmente 1 ou 2 anos).
+            </p>
+         </details>
+      </div>
+
     </BroadcastLayout>
   );
 };

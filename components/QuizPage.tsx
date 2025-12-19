@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Quiz, ViewState } from '../types';
-import { CheckCircle2, XCircle, ArrowRight, RotateCcw, ChevronLeft, Loader2, Sparkles, Lock, FileText, Banknote, BookOpen, CalendarClock, ExternalLink, ShieldCheck, Users, Target, Wallet, Car, GraduationCap, Home } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, RotateCcw, ChevronLeft, Loader2, Sparkles, Lock, FileText, Banknote, BookOpen, CalendarClock, ExternalLink, ShieldCheck, Users, Target, Wallet, Car, GraduationCap, Home, Calculator, CreditCard } from 'lucide-react';
 import { AdSlot } from './AdSlot';
 import { Analytics } from '../lib/analytics';
 
@@ -11,68 +11,34 @@ interface QuizPageProps {
   onCloseQuiz: () => void;
   onSelectQuiz: (id: string) => void;
   onNavigate: (view: ViewState) => void;
-  isEmbedded?: boolean; // NEW PROP: Toggle embedded mode
+  isEmbedded?: boolean;
 }
 
 const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz, onSelectQuiz, onNavigate, isEmbedded = false }) => {
-  // State for quiz flow
   const [quizState, setQuizState] = useState<'intro' | 'active' | 'result'>('intro');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, boolean>>({});
-  
   const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<boolean | null>(null);
-  const [showIntermissionAd, setShowIntermissionAd] = useState<boolean>(false);
 
   const activeQuiz = quizzes.find(q => q.id === activeQuizId);
 
-  // SEO Optimization for Standalone Quiz Mode
   useEffect(() => {
     if (!isEmbedded) {
       const baseTitle = activeQuiz 
         ? `${activeQuiz.title} - Simulação de Direito 2025` 
         : "Simulador de Benefícios Sociais: Teste de Elegibilidade";
-      
       document.title = baseTitle;
-
-      // Description
-      const descContent = activeQuiz 
-        ? `Faça o teste de elegibilidade para o ${activeQuiz.program}. Descubra se você cumpre os requisitos e como solicitar o benefício em 2025.`
-        : "Como saber se tenho direito ao Bolsa Família? Use nosso simulador de benefícios sociais gratuito e faça o teste de elegibilidade para programas do governo.";
-
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute('content', descContent);
-      } else {
-        const m = document.createElement('meta');
-        m.name = "description";
-        m.content = descContent;
-        document.head.appendChild(m);
-      }
-
-      // Keywords
-      const keysContent = "simulador de benefícios sociais, teste de elegibilidade, como saber se tenho direito ao bolsa família, consulta cpf, quiz governo, auxilio brasil, cadastro único";
-      let metaKeys = document.querySelector('meta[name="keywords"]');
-      if (metaKeys) {
-        metaKeys.setAttribute('content', keysContent);
-      } else {
-        const m = document.createElement('meta');
-        m.name = "keywords";
-        m.content = keysContent;
-        document.head.appendChild(m);
-      }
     }
   }, [isEmbedded, activeQuiz]);
 
-  // If embedded, we might want to skip the "Intro" card and go straight to questions if the user clicked "Simulate" in the article
-  // But keeping intro is nice for confirmation. Let's keep intro but styled differently.
   useEffect(() => {
     if (activeQuizId) {
-      // If embedded, we can auto-start or show intro. Let's show intro for context but simpler.
       setQuizState('intro'); 
       setCurrentQuestionIndex(0);
       setAnswers({});
-      setShowIntermissionAd(false);
+      setIsEvaluating(false);
+      setSelectedOption(null);
     }
   }, [activeQuizId]);
 
@@ -81,10 +47,9 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
       Analytics.trackQuizStart(activeQuiz.id, activeQuiz.title);
     }
     setQuizState('active');
-    // If embedded, scroll slightly to ensure visibility
     if (isEmbedded) {
        const el = document.getElementById('embedded-quiz-anchor');
-       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+       el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -96,246 +61,136 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
     setSelectedOption(answer);
     setIsEvaluating(true);
 
-    // 1.5s delay for embedded to feel snappier
     setTimeout(() => {
       const currentQId = activeQuiz.questions[currentQuestionIndex].id;
       const newAnswers = { ...answers, [currentQId]: answer };
       setAnswers(newAnswers);
-
       setIsEvaluating(false);
       setSelectedOption(null);
 
-      // Ad Intermission Logic
-      // In embedded mode, maybe skip the intermission ad to keep flow tight? 
-      // Let's keep it but make it smaller in logic below.
-      if (currentQuestionIndex === 4 && !isEmbedded) {
-        setShowIntermissionAd(true);
-      } else if (currentQuestionIndex < activeQuiz.questions.length - 1) {
+      if (currentQuestionIndex < activeQuiz.questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
         const finalYesCount = Object.values(newAnswers).filter(v => v === true).length;
         const passed = finalYesCount / activeQuiz.questions.length >= 0.7;
-        
-        Analytics.trackQuizCompletion(
-          activeQuiz.id, 
-          activeQuiz.title, 
-          passed ? 'eligible' : 'not_eligible'
-        );
-        
+        Analytics.trackQuizCompletion(activeQuiz.id, activeQuiz.title, passed ? 'eligible' : 'not_eligible');
         setQuizState('result');
       }
-    }, 1500);
-  };
-
-  const handleContinueFromAd = () => {
-    setShowIntermissionAd(false);
-    if (activeQuiz && currentQuestionIndex < activeQuiz.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    }
-  };
-
-  const resetQuiz = (fullReset = true) => {
-    setCurrentQuestionIndex(0);
-    setAnswers({});
-    if(fullReset) setQuizState('intro');
-    setShowIntermissionAd(false);
-    setIsEvaluating(false);
-    setSelectedOption(null);
-  };
-
-  const calculateResult = () => {
-    if (!activeQuiz) return false;
-    const yesCount = Object.values(answers).filter(v => v === true).length;
-    return yesCount / activeQuiz.questions.length >= 0.7; 
+    }, 800);
   };
 
   const renderRecommendations = () => {
      if (!activeQuiz) return null;
      const p = activeQuiz.program.toLowerCase();
 
-     // Contextual Logic
-     let contextAction = { label: 'Ver Últimas Notícias', view: 'news' as ViewState, icon: BookOpen, desc: 'Fique por dentro das novidades.' };
-     
-     if (p.includes('bolsa')) {
-        contextAction = { label: 'Guia Bolsa Família', view: 'guide-bolsa', icon: Wallet, desc: 'Consulte calendário e valores.' };
-     } else if (p.includes('bpc') || p.includes('loas')) {
-        contextAction = { label: 'Guia BPC/LOAS', view: 'guide-bpc', icon: FileText, desc: 'Regras e como solicitar.' };
-     } else if (p.includes('cnh')) {
-        contextAction = { label: 'CNH Social: Estados', view: 'landing-cnh', icon: Car, desc: 'Veja onde as inscrições estão abertas.' };
-     }
-
      return (
-        <div className="w-full mt-8 animate-fade-in-up">
-           <h4 className="font-bold text-slate-800 mb-4 flex items-center justify-center gap-2 text-sm uppercase tracking-wide">
-              <Sparkles size={16} className="text-yellow-500" fill="currentColor" /> Oportunidades para Você
-           </h4>
-           
-           <div className="grid grid-cols-1 gap-3">
-              
-              {/* Contextual Card */}
+        <div className="w-full mt-6 animate-fade-in-up">
+           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">Próximos Passos Recomendados</p>
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button 
-                onClick={() => onNavigate(contextAction.view)}
-                className="w-full bg-white hover:bg-blue-50 border border-gray-200 hover:border-brand-blue p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
+                onClick={() => onNavigate('calculator')}
+                className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:border-brand-blue hover:shadow-md transition-all text-left group"
               >
-                 <div className="bg-blue-100 text-brand-blue p-3 rounded-full group-hover:bg-brand-blue group-hover:text-white transition-colors shrink-0">
-                    <contextAction.icon size={24} />
+                 <div className="bg-blue-50 text-brand-blue p-2 rounded-xl group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                    <Calculator size={20} />
                  </div>
-                 <div className="flex-grow">
-                    <span className="block font-bold text-brand-dark text-sm">{contextAction.label}</span>
-                    <span className="text-xs text-gray-500">{contextAction.desc}</span>
+                 <div>
+                    <span className="block font-bold text-slate-800 text-sm">Calculadora de Renda</span>
+                    <span className="text-[10px] text-slate-500">Confirme sua elegibilidade</span>
                  </div>
-                 <ArrowRight size={20} className="text-gray-300 group-hover:text-brand-blue" />
               </button>
 
-              {/* Pé-de-Meia Card */}
               <button 
-                onClick={() => onNavigate('landing-pe-de-meia')}
-                className="w-full bg-white hover:bg-green-50 border border-gray-200 hover:border-green-500 p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
+                onClick={() => onNavigate('calendarios')}
+                className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:border-green-500 hover:shadow-md transition-all text-left group"
               >
-                 <div className="bg-green-100 text-green-600 p-3 rounded-full group-hover:bg-green-600 group-hover:text-white transition-colors shrink-0">
-                    <GraduationCap size={24} />
+                 <div className="bg-green-50 text-green-600 p-2 rounded-xl group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <CalendarClock size={20} />
                  </div>
-                 <div className="flex-grow">
-                    <span className="block font-bold text-brand-dark text-sm">Pé-de-Meia (Estudantes)</span>
-                    <span className="text-xs text-gray-500">Receba até R$ 9.200 no Ensino Médio.</span>
+                 <div>
+                    <span className="block font-bold text-slate-800 text-sm">Calendário 2025</span>
+                    <span className="text-[10px] text-slate-500">Veja quando você recebe</span>
                  </div>
-                 <ArrowRight size={20} className="text-gray-300 group-hover:text-green-600" />
               </button>
 
-              {/* MCMV Card */}
               <button 
-                onClick={() => onNavigate('landing-mcmv')}
-                className="w-full bg-white hover:bg-orange-50 border border-gray-200 hover:border-orange-500 p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm group text-left"
+                onClick={() => onNavigate('cards')}
+                className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:border-purple-500 hover:shadow-md transition-all text-left group"
               >
-                 <div className="bg-orange-100 text-orange-600 p-3 rounded-full group-hover:bg-orange-600 group-hover:text-white transition-colors shrink-0">
-                    <Home size={24} />
+                 <div className="bg-purple-50 text-purple-600 p-2 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <CreditCard size={20} />
                  </div>
-                 <div className="flex-grow">
-                    <span className="block font-bold text-brand-dark text-sm">Minha Casa Minha Vida</span>
-                    <span className="text-xs text-gray-500">Subsídio de 95% ou Imóvel Grátis.</span>
+                 <div>
+                    <span className="block font-bold text-slate-800 text-sm">Cartões de Crédito</span>
+                    <span className="text-[10px] text-slate-500">Aprovação para negativados</span>
                  </div>
-                 <ArrowRight size={20} className="text-gray-300 group-hover:text-orange-600" />
               </button>
 
+              <button 
+                onClick={() => onNavigate('all-benefits')}
+                className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl hover:border-orange-500 hover:shadow-md transition-all text-left group"
+              >
+                 <div className="bg-orange-50 text-orange-600 p-2 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                    <BookOpen size={20} />
+                 </div>
+                 <div>
+                    <span className="block font-bold text-slate-800 text-sm">Outros Benefícios</span>
+                    <span className="text-[10px] text-slate-500">Veja a lista completa</span>
+                 </div>
+              </button>
            </div>
         </div>
      );
   };
 
-  // --------------------------------------------------------------------------------
-  // VIEW: SINGLE QUIZ (INTRO / ACTIVE / RESULT)
-  // --------------------------------------------------------------------------------
   if (activeQuizId && activeQuiz) {
-    const info = activeQuiz.detailedInfo;
-    
-    // EMBEDDED CONTAINER STYLES - REFINED: White bg, Left Border Highlight
     const containerClasses = isEmbedded 
-      ? "w-full bg-white rounded-xl border-l-4 border-brand-blue border-y border-r border-gray-100 overflow-hidden relative flex flex-col my-8 shadow-sm"
+      ? "w-full bg-white rounded-[2rem] border-2 border-brand-blue/10 overflow-hidden relative flex flex-col my-4 shadow-xl"
       : "bg-white rounded-3xl shadow-xl border border-blue-50 overflow-hidden relative min-h-[400px] flex flex-col";
 
     return (
-      <div className={isEmbedded ? "font-sans text-brand-dark" : "min-h-screen bg-brand-light py-6 transition-colors duration-500"}>
+      <div className={isEmbedded ? "font-sans text-brand-dark" : "min-h-screen bg-brand-light py-6"}>
         <div className={isEmbedded ? "" : "container mx-auto px-4 max-w-4xl"}>
           
-          {/* Top Nav (Only if NOT embedded) */}
           {!isEmbedded && (
-            <button 
-              onClick={onCloseQuiz} 
-              className="mb-4 flex items-center gap-2 text-sm text-brand-medium hover:text-brand-blue font-medium bg-white px-3 py-1.5 rounded-lg shadow-sm border border-gray-100 w-fit"
-            >
+            <button onClick={onCloseQuiz} className="mb-4 flex items-center gap-2 text-sm text-brand-medium hover:text-brand-blue font-medium bg-white px-3 py-1.5 rounded-lg shadow-sm border border-gray-100 w-fit">
               <ChevronLeft size={16} /> Voltar
             </button>
           )}
 
-          {/* Ad Top (Only if NOT embedded) */}
-          {!isEmbedded && (
-            <div className="mb-6">
-              <AdSlot 
-                id="Content1" 
-                label="Publicidade em Destaque" 
-                refreshKey={quizState === 'active' ? currentQuestionIndex : 'static'} 
-              />
-            </div>
-          )}
-
-          {/* MAIN QUIZ CARD */}
           <div id="embedded-quiz-anchor" className={containerClasses}>
-             
-             {/* DECORATION (Only for standalone) */}
-             {!isEmbedded && (
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-             )}
-
-             {/* STATE 1: INTRO */}
              {quizState === 'intro' && (
-               <div className={`flex flex-col animate-fade-in ${isEmbedded ? 'p-6 items-start text-left' : 'p-8 items-center text-center bg-gradient-to-b from-white to-blue-50/30'}`}>
-                  
-                  {/* Icon */}
-                  {!isEmbedded ? (
-                    <div className="w-16 h-16 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center mb-4 shadow-sm">
-                       <Sparkles size={32} />
-                    </div>
-                  ) : (
-                    <div className="mb-3 flex items-center gap-2 text-brand-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                       <ShieldCheck size={16} />
-                       <span className="text-xs font-bold uppercase tracking-wider">Verificação Oficial</span>
-                    </div>
-                  )}
-
-                  <h2 className={`font-extrabold text-brand-dark mb-3 ${isEmbedded ? 'text-xl' : 'text-2xl'}`}>
-                    {isEmbedded ? "Simulador de Elegibilidade" : activeQuiz.title}
+               <div className={`flex flex-col animate-fade-in p-8 ${isEmbedded ? 'items-center text-center' : 'items-center text-center bg-gradient-to-b from-white to-blue-50/30'}`}>
+                  <div className="w-16 h-16 bg-blue-100 text-brand-blue rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+                     <Sparkles size={32} />
+                  </div>
+                  <h2 className="font-black text-slate-900 mb-3 text-2xl">
+                    {activeQuiz.title}
                   </h2>
-                  
-                  <p className={`text-brand-medium mb-6 leading-relaxed ${isEmbedded ? 'text-sm' : 'text-base max-w-lg'}`}>
-                    {isEmbedded ? "Responda a algumas perguntas rápidas para verificar se você cumpre os requisitos exigidos pelo governo para este benefício." : activeQuiz.description}
+                  <p className="text-slate-600 mb-8 leading-relaxed max-w-md">
+                    Descubra sua elegibilidade e estime o valor das suas parcelas em menos de 1 minuto.
                   </p>
-                  
                   <button 
                     onClick={handleStartQuiz}
-                    className={`bg-brand-blue hover:bg-brand-hover text-white font-bold rounded-xl shadow-lg shadow-brand-blue/20 hover:-translate-y-1 transition-all flex items-center gap-2 justify-center ${isEmbedded ? 'w-full py-4 text-base' : 'px-10 py-3 text-lg w-full md:w-auto'}`}
+                    className="bg-brand-blue hover:bg-brand-hover text-white font-bold rounded-2xl shadow-lg shadow-brand-blue/30 hover:-translate-y-1 transition-all flex items-center gap-3 justify-center w-full md:w-auto px-12 py-4 text-lg"
                   >
-                    {isEmbedded ? "Verificar Agora" : "Iniciar Teste"} <ArrowRight size={20} />
-                  </button>
-                  
-                  {!isEmbedded && (
-                      <p className="text-xs text-gray-400 mt-4 flex items-center gap-1 justify-center">
-                        <ShieldCheck size={12} /> Seus dados não são armazenados.
-                      </p>
-                  )}
-               </div>
-             )}
-
-             {/* STATE 2: INTERMISSION AD (Only if NOT embedded usually, but kept simple here) */}
-             {quizState === 'active' && showIntermissionAd && !isEmbedded && (
-               <div className="p-8 flex flex-col items-center justify-center h-full animate-fade-in text-center">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Intervalo Comercial</span>
-                  <div className="w-full mb-6">
-                     <AdSlot id="Content2" label="Oferta Especial" />
-                  </div>
-                  <button 
-                    onClick={handleContinueFromAd}
-                    className="bg-brand-blue text-white px-8 py-3 rounded-xl font-bold hover:bg-brand-hover transition-all flex items-center gap-2 shadow-lg"
-                  >
-                    Continuar para Resultado <ArrowRight size={18} />
+                    Começar Simulação <ArrowRight size={22} />
                   </button>
                </div>
              )}
 
-             {/* STATE 3: ACTIVE QUESTIONS */}
-             {quizState === 'active' && (!showIntermissionAd || isEmbedded) && (
+             {quizState === 'active' && (
                <div className="flex flex-col h-full animate-fade-in">
-                  {/* Header */}
-                  <div className={`${isEmbedded ? 'bg-slate-100 text-slate-700 border-b border-gray-200' : 'bg-brand-blue text-white'} p-4 flex justify-between items-center`}>
-                     <span className="font-bold text-sm opacity-90 truncate max-w-[200px]">{activeQuiz.program}</span>
-                     <span className={`text-xs px-2 py-1 rounded ${isEmbedded ? 'bg-white border border-gray-200' : 'bg-white/20'}`}>Questão {currentQuestionIndex + 1}/{activeQuiz.questions.length}</span>
+                  <div className="bg-brand-blue text-white p-5 flex justify-between items-center">
+                     <span className="font-bold text-sm uppercase tracking-widest">{activeQuiz.program}</span>
+                     <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-bold">Questão {currentQuestionIndex + 1}/{activeQuiz.questions.length}</span>
                   </div>
-                  {/* Progress */}
-                  <div className="w-full bg-gray-100 h-1.5">
-                     <div className="bg-green-500 h-1.5 transition-all duration-500" style={{ width: `${((currentQuestionIndex) / activeQuiz.questions.length) * 100}%` }}></div>
+                  <div className="w-full bg-slate-100 h-2">
+                     <div className="bg-green-500 h-full transition-all duration-500" style={{ width: `${((currentQuestionIndex + 1) / activeQuiz.questions.length) * 100}%` }}></div>
                   </div>
                   
-                  <div className="p-6 md:p-8 flex-grow flex flex-col justify-center items-center">
-                     <h3 className={`font-bold text-brand-dark mb-8 text-center leading-snug ${isEmbedded ? 'text-lg' : 'text-lg md:text-2xl'}`}>
+                  <div className="p-8 md:p-12 flex-grow flex flex-col justify-center items-center bg-white">
+                     <h3 className="font-black text-slate-900 mb-10 text-center leading-tight text-xl md:text-2xl max-w-lg">
                        {activeQuiz.questions[currentQuestionIndex].text}
                      </h3>
 
@@ -343,8 +198,8 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
                         <button 
                           onClick={() => handleAnswer(true)}
                           disabled={isEvaluating}
-                          className={`p-4 rounded-xl border-2 flex items-center justify-center gap-3 font-bold text-lg transition-all ${
-                            isEvaluating && selectedOption === true ? 'bg-green-50 border-green-500 text-green-700' : 'border-gray-100 hover:border-green-500 hover:bg-green-50 text-gray-700 bg-white'
+                          className={`p-5 rounded-2xl border-2 flex items-center justify-center gap-3 font-black text-lg transition-all ${
+                            isEvaluating && selectedOption === true ? 'bg-green-500 border-green-500 text-white shadow-lg scale-95' : 'border-slate-100 hover:border-green-500 hover:bg-green-50 text-slate-700 bg-white shadow-sm'
                           }`}
                         >
                           {isEvaluating && selectedOption === true ? <Loader2 className="animate-spin"/> : <CheckCircle2/>} Sim
@@ -353,8 +208,8 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
                         <button 
                           onClick={() => handleAnswer(false)}
                           disabled={isEvaluating}
-                          className={`p-4 rounded-xl border-2 flex items-center justify-center gap-3 font-bold text-lg transition-all ${
-                            isEvaluating && selectedOption === false ? 'bg-red-50 border-red-500 text-red-700' : 'border-gray-100 hover:border-red-500 hover:bg-red-50 text-gray-700 bg-white'
+                          className={`p-5 rounded-2xl border-2 flex items-center justify-center gap-3 font-black text-lg transition-all ${
+                            isEvaluating && selectedOption === false ? 'bg-red-500 border-red-500 text-white shadow-lg scale-95' : 'border-slate-100 hover:border-red-500 hover:bg-red-50 text-slate-700 bg-white shadow-sm'
                           }`}
                         >
                           {isEvaluating && selectedOption === false ? <Loader2 className="animate-spin"/> : <XCircle/>} Não
@@ -364,132 +219,38 @@ const QuizPage: React.FC<QuizPageProps> = ({ quizzes, activeQuizId, onCloseQuiz,
                </div>
              )}
 
-             {/* STATE 4: RESULT */}
              {quizState === 'result' && (
-               <div className="p-8 flex flex-col items-center justify-center text-center h-full flex-grow animate-fade-in-up">
-                  {calculateResult() ? (
-                    <div className="mb-4">
-                      <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-soft">
-                        <CheckCircle2 size={40} />
-                      </div>
-                      <h3 className="text-2xl font-bold text-brand-dark mb-2">Você tem o perfil!</h3>
-                      <p className="text-brand-medium text-sm max-w-xs mx-auto">Com base nas respostas, você cumpre os requisitos básicos.</p>
-                    </div>
-                  ) : (
-                     <div className="mb-4">
-                      <div className="w-20 h-20 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-soft">
-                        <Lock size={40} />
-                      </div>
-                      <h3 className="text-2xl font-bold text-brand-dark mb-2">Critérios Pendentes</h3>
-                      <p className="text-brand-medium text-sm max-w-xs mx-auto">Alguns requisitos parecem não ter sido atendidos.</p>
-                    </div>
-                  )}
+               <div className="p-8 md:p-10 flex flex-col items-center justify-center text-center animate-fade-in-up bg-white">
+                  <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                    <CheckCircle2 size={40} />
+                  </div>
+                  <h3 className="text-3xl font-black text-slate-900 mb-2">Simulação Concluída!</h3>
+                  <p className="text-slate-500 text-sm mb-8 max-w-sm">Análise finalizada com base nas regras do CadÚnico 2025.</p>
 
-                  {/* Internal Recommendations */}
-                  {renderRecommendations()}
+                  <div className="w-full bg-blue-50 p-6 rounded-3xl border border-blue-100 mb-8">
+                     <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">Valor Estimado</p>
+                     <p className="text-4xl font-black text-slate-900">R$ 600 a R$ 950*</p>
+                     <p className="text-[10px] text-slate-400 mt-2">*Valor final depende da entrevista presencial no CRAS.</p>
+                  </div>
+
+                  <div className="w-full border-t border-slate-100 pt-8">
+                     {renderRecommendations()}
+                  </div>
                   
-                  {/* Ad Result */}
-                  {!isEmbedded && (
-                    <div className="w-full my-6">
-                       <AdSlot id="Content3" label="Oportunidades" />
-                    </div>
-                  )}
-
-                  <div className="flex gap-3 w-full max-w-xs justify-center mt-6">
-                     {isEmbedded ? (
-                        <button onClick={onCloseQuiz} className="bg-gray-200 text-brand-dark px-6 py-3 rounded-xl font-bold hover:bg-gray-300 text-sm w-full transition-colors">
-                           Fechar e Continuar Lendo
-                        </button>
-                     ) : (
-                       <>
-                         <button onClick={onCloseQuiz} className="bg-gray-100 text-brand-dark px-6 py-2 rounded-lg font-bold hover:bg-gray-200 text-sm">Voltar</button>
-                         <button onClick={() => resetQuiz(true)} className="text-brand-medium hover:text-brand-blue py-2 text-sm font-semibold flex items-center gap-1"><RotateCcw size={14}/> Refazer</button>
-                       </>
-                     )}
+                  <div className="mt-8">
+                    <button onClick={() => setQuizState('intro')} className="text-slate-400 hover:text-brand-blue text-xs font-bold flex items-center gap-2 transition-colors mx-auto">
+                       <RotateCcw size={14}/> Refazer Simulação
+                    </button>
                   </div>
                </div>
              )}
           </div>
-
-          {/* RICH CONTENT ARTICLE (Show only if NOT embedded, because in embedded mode this IS the article content already around it) */}
-          {!isEmbedded && info && (
-            <article className="mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 prose prose-slate max-w-none">
-               {/* Header Info */}
-               <div className="flex items-center gap-2 text-brand-blue mb-4 border-b border-gray-100 pb-2">
-                  <FileText size={20} />
-                  <span className="text-sm font-bold uppercase tracking-widest">Guia Informativo</span>
-               </div>
-               
-               <h1 className="text-2xl font-bold text-brand-dark mb-4">{info.introTitle}</h1>
-               <p className="text-base text-brand-medium mb-6 leading-relaxed">{info.introText}</p>
-
-               {/* Grid for Audience & Value */}
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 not-prose">
-                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                     <h4 className="text-sm font-bold text-blue-800 uppercase mb-1 flex items-center gap-2">
-                        <Users size={16} /> Público Alvo
-                     </h4>
-                     <p className="text-blue-900 font-medium">{info.targetAudience}</p>
-                  </div>
-                  {info.estimatedValue && (
-                    <div className="bg-green-50 p-4 rounded-xl border border-green-100">
-                       <h4 className="text-sm font-bold text-green-800 uppercase mb-1 flex items-center gap-2">
-                          <Banknote size={16} /> Valor Estimado
-                       </h4>
-                       <p className="text-green-900 font-medium">{info.estimatedValue}</p>
-                    </div>
-                  )}
-               </div>
-
-               {/* Requirements List */}
-               <h3 className="text-xl font-bold text-slate-800 mb-4">Principais Requisitos</h3>
-               <ul className="space-y-3 not-prose">
-                  {info.requirementsList.map((req, idx) => (
-                     <li key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
-                        <div className="mt-0.5 bg-brand-blue text-white rounded-full p-1 shrink-0">
-                           <CheckCircle2 size={12} />
-                        </div>
-                        <span className="text-slate-700 font-medium text-sm">{req}</span>
-                     </li>
-                  ))}
-               </ul>
-            </article>
-          )}
         </div>
       </div>
     );
   }
 
-  // FALLBACK LIST VIEW (Standard)
-  return (
-      <div className="bg-brand-light min-h-screen py-16">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="text-center mb-10">
-            <span className="text-brand-blue font-bold tracking-widest uppercase text-xs mb-3 block">Simulador Oficial</span>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-brand-dark">Verificação de Elegibilidade</h1>
-          </div>
-          <AdSlot id="Content1" label="Publicidade Patrocinada" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-10">
-            {quizzes.map((quiz) => (
-              <div 
-                key={quiz.id} 
-                className="bg-white p-6 rounded-3xl border border-gray-100 shadow-card hover:shadow-xl transition-all duration-300 group cursor-pointer hover:-translate-y-1 relative overflow-hidden" 
-                onClick={() => onSelectQuiz(quiz.id)}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="bg-brand-light text-brand-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-blue-100">
-                    {quiz.program}
-                  </span>
-                  <ArrowRight size={20} className="text-gray-300 group-hover:text-brand-blue" />
-                </div>
-                <h3 className="text-xl font-bold text-brand-dark mb-2">{quiz.title}</h3>
-                <p className="text-sm text-brand-medium line-clamp-2">{quiz.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-  );
+  return null;
 };
 
 export default QuizPage;
