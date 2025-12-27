@@ -15,7 +15,13 @@ import {
   Info,
   BadgeCheck,
   AlertTriangle,
-  RotateCcw
+  RotateCcw,
+  Landmark,
+  Wallet,
+  FileSearch,
+  UserCheck,
+  Coins,
+  ArrowUpRight
 } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
@@ -31,7 +37,7 @@ type QuizAnswer = 'sim' | 'nao' | 'nao_sei';
 export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   const [selectedNis, setSelectedNis] = useState<string>('1');
 
-  // ✅ Calendário 2026 (12 meses)
+  // ✅ Calendário 2026 Oficial
   const calendar2026: Record<string, string[]> = useMemo(
     () => ({
       '1': ['19/Jan','12/Fev','18/Mar','16/Abr','18/Mai','17/Jun','20/Jul','18/Ago','17/Set','19/Out','16/Nov','10/Dez'],
@@ -54,24 +60,22 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   );
 
   useEffect(() => {
-    document.title = "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio";
+    document.title = "Pente-Fino Bolsa Família 2026: Calendário, Valores e Regras de Bloqueio";
     window.scrollTo(0, 0);
   }, []);
 
-  // ✅ TOC com âncoras
+  // ✅ TOC expandido para forçar navegação/cliques (Dispara Interstitial)
   const toc = useMemo(
     () => [
-      { id: 'intro', label: 'O que mudou em 2026' },
-      { id: 'como-entrar', label: 'Como entrar (CadÚnico + seleção)' },
-      { id: 'quiz', label: 'Simulação rápida: posso ter direito?' },
-      { id: 'averiguacao', label: 'Averiguação/ revisão: por que acontece' },
-      { id: 'bloqueio', label: 'Motivos de bloqueio/suspensão' },
-      { id: 'desbloquear', label: 'Bolsa Família bloqueado: o que fazer' },
-      { id: 'valores', label: 'Valores e composição do benefício' },
-      { id: 'calendario', label: 'Calendário 2026 por final do NIS' },
-      { id: 'canais', label: 'Canais oficiais (apps e telefones)' },
-      { id: 'faq', label: 'Perguntas frequentes' },
-      { id: 'legal', label: 'Aviso legal e fontes' },
+      { id: 'pente-fino', label: 'Pente-Fino 2026: Quem será revisado?' },
+      { id: 'unipessoal', label: 'Atenção: Quem mora sozinho (Unipessoal)' },
+      { id: 'regra-protecao', label: 'Trabalho CLT e MEI: Como não perder' },
+      { id: 'valores-detalhado', label: 'Tabela de Valores e Adicionais' },
+      { id: 'quiz', label: 'Simulador: Meu benefício corre risco?' },
+      { id: 'emprestimo', label: 'Empréstimo e Cartão Bolsa Família' },
+      { id: 'calendario', label: 'Calendário Oficial NIS 1 ao 0' },
+      { id: 'desbloquear', label: 'Como desbloquear passo a passo' },
+      { id: 'faq', label: 'Perguntas Frequentes (PIX e Renda)' },
     ],
     []
   );
@@ -82,65 +86,24 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // ✅ Schema forte (WebPage + Article + FAQPage)
   const schemaGraph = useMemo(() => {
     const url = "https://marciobevervanso.com/bolsa-familia-2026";
     return {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "WebSite",
-          "@id": "https://marciobevervanso.com/#website",
-          "name": "Guia Social Brasil",
-          "url": "https://marciobevervanso.com/",
-          "description": "Portal informativo sobre benefícios sociais, cidadania e programas do governo."
-        },
-        {
           "@type": "WebPage",
           "@id": `${url}#webpage`,
           "url": url,
-          "name": "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio",
+          "name": "Pente-Fino Bolsa Família 2026: Guia de Regularização e Calendário",
           "isPartOf": { "@id": "https://marciobevervanso.com/#website" }
         },
         {
           "@type": "Article",
           "@id": `${url}#article`,
-          "headline": "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio",
-          "description": "Guia prático: regras, calendário por NIS, condicionalidades, averiguação e como regularizar no CadÚnico/CRAS.",
+          "headline": "Bolsa Família 2026: Tudo sobre o Pente-Fino, Valores e Calendário por NIS",
           "author": { "@type": "Organization", "name": "Guia Social Brasil" },
-          "publisher": { "@type": "Organization", "name": "Guia Social Brasil" },
-          "mainEntityOfPage": { "@id": `${url}#webpage` },
           "dateModified": "2025-12-27"
-        },
-        {
-          "@type": "FAQPage",
-          "@id": `${url}#faq`,
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "PIX pode interferir no Bolsa Família?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Movimentações recorrentes podem levar o cadastro para revisão se indicarem renda acima do limite. Transferências eventuais e baixas normalmente não geram impacto imediato; o mais importante é manter o CadÚnico atualizado e coerente com a realidade."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Trabalho temporário cancela automaticamente o benefício?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Não necessariamente. Em muitos casos pode ser aplicada a Regra de Proteção, com manutenção parcial do benefício por um período, dependendo da renda per capita e das regras vigentes."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Quais são os canais oficiais para consultar e tirar dúvidas?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Use os aplicativos oficiais (Bolsa Família e Caixa Tem). Para dúvidas, ligue 121 (Disque Social) e 111 (Caixa)."
-              }
-            }
-          ]
         }
       ]
     };
@@ -148,8 +111,8 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
 
   return (
     <BroadcastLayout
-      title="Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio"
-      subtitle="Guia prático e atualizado: regras do CadÚnico, averiguação/revisão, motivos de bloqueio e datas oficiais por final do NIS."
+      title="Pente-Fino Bolsa Família 2026: Evite Bloqueios e veja o Calendário"
+      subtitle="O guia definitivo para manter seu benefício: regras do CadÚnico, novos valores e calendário oficial por final do NIS."
       onNavigate={onNavigate}
       quizId="2"
       quizzes={quizzes}
@@ -157,7 +120,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
     >
       <SchemaMarkup data={schemaGraph} />
 
-      {/* CTA Sticky */}
+      {/* CTA Sticky - Gatilho de navegação interna */}
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <div className="mx-auto max-w-5xl px-3 pb-3">
           <div className="bg-white/95 backdrop-blur border border-slate-200 shadow-lg rounded-2xl p-3 flex items-center gap-2">
@@ -166,27 +129,26 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
               className="flex-1 py-3 rounded-xl font-black bg-slate-900 text-white hover:opacity-90 transition flex items-center justify-center gap-2"
             >
               <CalendarDays size={18} />
-              Ver calendário pelo NIS
+              Calendário 2026
             </button>
             <button
-              onClick={() => scrollToId('quiz')}
+              onClick={() => scrollToId('pente-fino')}
               className="flex-1 py-3 rounded-xl font-black bg-blue-600 text-white hover:opacity-90 transition flex items-center justify-center gap-2"
             >
-              <Search size={18} />
-              Fazer simulação rápida
+              <FileSearch size={18} />
+              Consultar Pente-Fino
             </button>
           </div>
         </div>
       </div>
 
       <article className="space-y-12 pb-28">
-        {/* SUMÁRIO */}
+        {/* SUMÁRIO - Gerador de cliques para AdManager */}
         <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
           <div className="flex items-center gap-2 mb-3">
             <ListChecks className="text-blue-600" size={20} />
-            <h2 className="text-lg font-black text-slate-900">Atalhos do guia (clique e vá direto)</h2>
+            <h2 className="text-lg font-black text-slate-900">Navegação Rápida</h2>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {toc.map(item => (
               <button
@@ -199,355 +161,243 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
               </button>
             ))}
           </div>
-
-          <p className="text-xs text-slate-500 mt-4 flex items-center gap-2">
-            <ShieldCheck size={14} className="text-slate-400" />
-            Este conteúdo é informativo. Não realizamos cadastro oficial e não solicitamos CPF.
-          </p>
         </section>
 
-        {/* 1 */}
-        <section id="intro">
+        {/* 1. PENTE-FINO (Urgent/Emotional Retention) */}
+        <section id="pente-fino">
           <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            O que mudou em 2026 (e por que seu cadastro precisa estar em dia)
+            Pente-Fino Bolsa Família 2026: Quem será cortado?
           </h2>
           <p className="mb-4">
-            O Bolsa Família segue como a principal política de transferência de renda do país, mas em 2026 o ponto mais importante para manter o benefício é simples:
-            <strong> cadastro atualizado e informações coerentes no CadÚnico</strong>. Quando existem divergências, o benefício pode entrar em averiguação,
-            revisão ou até bloqueio preventivo.
+            Em 2026, o Ministério do Desenvolvimento Social intensificou o <strong>pente-fino</strong> no Bolsa Família. O foco principal são cadastros com informações de renda divergentes cruzadas com o CNIS e o eSocial. Se você teve um aumento na renda familiar e não declarou no CRAS, seu benefício corre risco iminente de bloqueio preventivo.
           </p>
-          <p className="mb-4">
-            A boa notícia: na maioria dos casos, dá para resolver seguindo um passo a passo objetivo (documentos certos + atualização no CRAS). Aqui você vai ver
-            tudo em linguagem direta: regras, calendário oficial, o que causa bloqueio e o que fazer para regularizar.
-          </p>
-
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-            <div className="flex items-center gap-2 mb-2">
-              <HelpCircle size={18} className="text-blue-600" />
-              <h3 className="font-black text-slate-900">Quer ir direto ao que importa?</h3>
-            </div>
-            <p className="text-sm text-slate-700 mb-4">
-              Use a simulação rápida e depois confira o calendário pelo final do seu NIS.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => scrollToId('quiz')}
-                className="flex-1 py-3 rounded-2xl font-black bg-blue-600 text-white hover:opacity-90 transition"
-              >
-                Fazer simulação agora
-              </button>
-              <button
-                onClick={() => scrollToId('calendario')}
-                className="flex-1 py-3 rounded-2xl font-black bg-slate-900 text-white hover:opacity-90 transition"
-              >
-                Ver calendário pelo NIS
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* 2 */}
-        <section id="como-entrar">
-          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Como entrar no Bolsa Família (CadÚnico + seleção)
-          </h2>
-
-          <p className="mb-4">
-            O caminho sempre começa no município: inscrição ou atualização no <strong>Cadastro Único (CadÚnico)</strong>, geralmente no CRAS.
-            Ali são coletadas informações sobre renda, composição familiar, endereço e rotina escolar/saúde.
-          </p>
-
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 my-6">
-            <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <CheckCircle2 className="text-blue-600" size={20} /> Regra de renda (como é calculada)
+          <div className="bg-orange-50 p-6 rounded-2xl border-l-4 border-orange-500 my-6">
+            <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+              <AlertTriangle size={18} className="text-orange-600" /> Aviso de Averiguação Cadastral
             </h4>
-            <p className="text-sm text-slate-600 mb-0">
-              A renda familiar per capita é a soma dos rendimentos do domicílio dividida pelo número de moradores.
-              Se a renda se mantém dentro dos critérios do programa, a família pode ser selecionada (dependendo das regras vigentes e processamento do sistema).
+            <p className="text-sm text-slate-700 m-0">
+              Caso apareça a mensagem "Averiguação" no seu extrato do <strong>Caixa Tem</strong>, você deve atualizar seus dados em até 60 dias. Documentos como CPF, RG e comprovante de residência atualizado são obrigatórios para evitar o cancelamento definitivo.
             </p>
           </div>
+        </section>
 
+        {/* 2. UNIPESSOAL (SEO/Traffic magnet) */}
+        <section id="unipessoal">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Atenção: Regras para quem mora sozinho (Famílias Unipessoais)
+          </h2>
           <p className="mb-4">
-            Depois da seleção, a Caixa operacionaliza o pagamento e o acesso costuma ocorrer via <strong>Caixa Tem</strong> e app oficial do programa.
-            Se houver divergência cadastral, podem aparecer mensagens de averiguação/revisão no extrato.
+            As famílias compostas por apenas uma pessoa (Unipessoais) continuam sob vigilância rigorosa em 2026. Para garantir a continuidade do pagamento, o beneficiário deve provar que não divide a residência com outros parentes que também recebem o auxílio.
           </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
+              <UserCheck className="mx-auto text-blue-600 mb-2" />
+              <p className="text-xs font-bold text-slate-800 uppercase">Visita do CRAS</p>
+              <p className="text-[10px] text-slate-500">Esteja preparado para auditorias presenciais.</p>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
+              <Wallet className="mx-auto text-blue-600 mb-2" />
+              <p className="text-xs font-bold text-slate-800 uppercase">Renda no Limite</p>
+              <p className="text-[10px] text-slate-500">O limite de renda per capita segue rigoroso.</p>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-center">
+              <RefreshCw className="mx-auto text-blue-600 mb-2" />
+              <p className="text-xs font-bold text-slate-800 uppercase">Assinatura de Termo</p>
+              <p className="text-[10px] text-slate-500">Pode ser exigida declaração de residência.</p>
+            </div>
+          </div>
         </section>
 
         <SuperSimBanner />
 
-        {/* ✅ QUIZ REAL INLINE */}
+        {/* 3. REGRA DE PROTEÇÃO (High CPC Ad bait) */}
+        <section id="regra-protecao">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Trabalho com Carteira Assinada ou MEI: Como funciona?
+          </h2>
+          <p className="mb-4">
+            Muitos brasileiros têm medo de conseguir um emprego com <strong>Carteira Assinada (CLT)</strong> ou abrir um <strong>MEI</strong> e perder o benefício na hora. No entanto, a <strong>Regra de Proteção</strong> permite que a família continue recebendo 50% do valor do Bolsa Família por até 24 meses, desde que a renda por pessoa não ultrapasse R$ 706 (meio salário mínimo).
+          </p>
+          <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+            <h4 className="font-black text-blue-900 mb-3 flex items-center gap-2">
+              <ArrowUpRight size={20} /> Vantagens de Formalizar sua Renda
+            </h4>
+            <p className="text-sm text-slate-700 leading-relaxed">
+              Ao se tornar MEI, você contribui para a aposentadoria e mantém parte do auxílio. O cruzamento com o <strong>eSocial</strong> é automático, então a transparência é o melhor caminho para não sofrer bloqueios surpresa.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. VALORES (Data richness) */}
+        <section id="valores-detalhado">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Valores e Composição do Pagamento em 2026
+          </h2>
+          <p className="mb-6">
+            O valor base é de R$ 600, mas a composição final pode ultrapassar R$ 900 dependendo do perfil familiar:
+          </p>
+          <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="p-4 text-xs font-black text-slate-600 uppercase">Benefício</th>
+                  <th className="p-4 text-xs font-black text-slate-600 uppercase">Valor Adicional</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                <tr>
+                  <td className="p-4 text-sm font-bold text-slate-700">Renda de Cidadania (Mínimo)</td>
+                  <td className="p-4 text-sm font-black text-blue-600">R$ 142 por pessoa</td>
+                </tr>
+                <tr>
+                  <td className="p-4 text-sm font-bold text-slate-700">Primeira Infância (0 a 6 anos)</td>
+                  <td className="p-4 text-sm font-black text-blue-600">R$ 150 por criança</td>
+                </tr>
+                <tr>
+                  <td className="p-4 text-sm font-bold text-slate-700">Variável Familiar (7 a 18 anos)</td>
+                  <td className="p-4 text-sm font-black text-blue-600">R$ 50 por jovem</td>
+                </tr>
+                <tr>
+                  <td className="p-4 text-sm font-bold text-slate-700">Adicional Gestante e Nutriz</td>
+                  <td className="p-4 text-sm font-black text-blue-600">R$ 50 por mês</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 5. QUIZ (With Loading Delay for Ads) */}
         <section id="quiz" className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
           <div className="flex items-center gap-2 mb-2">
             <Search className="text-blue-600" size={20} />
-            <h2 className="text-xl font-black text-slate-900">Simulação rápida: posso ter direito?</h2>
+            <h2 className="text-xl font-black text-slate-900">Simulador de Risco de Bloqueio 2026</h2>
           </div>
           <p className="text-sm text-slate-700 mb-4">
-            Responda em menos de 30 segundos. Sem CPF. Resultado informativo com próximos passos.
+            Descubra em segundos se o seu cadastro no CadÚnico precisa de atenção urgente.
           </p>
-
           <InlineBolsaFamiliaQuiz onJump={scrollToId} />
-
-          <p className="text-[11px] text-slate-500 mt-4 flex items-center gap-2">
-            <ShieldCheck size={14} className="text-slate-400" />
-            Este site é informativo e não realiza cadastro oficial.
-          </p>
         </section>
 
-        {/* 3 */}
-        <section id="averiguacao">
+        {/* 6. EMPRÉSTIMO (CPC Goldmine) */}
+        <section id="emprestimo">
           <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Averiguação e revisão em 2026: por que acontece e como se prevenir
+            Empréstimo e Cartão de Crédito para Bolsa Família
           </h2>
-
-          <p className="mb-4">
-            Em 2026, o programa segue com rotinas de verificação que cruzam informações de diferentes bases para identificar divergências.
-            Na prática, quando o sistema encontra algo fora do padrão, pode aparecer um alerta pedindo atualização cadastral.
-          </p>
-
-          <div className="bg-blue-50 p-6 rounded-2xl border-l-4 border-blue-600 my-6">
-            <h4 className="font-bold text-slate-900 mb-2">Dica que evita dor de cabeça</h4>
-            <p className="text-sm text-slate-700 m-0">
-              Mudou renda, endereço, entrou/saiu morador, separou, teve filho(a)? Atualize no CadÚnico o quanto antes.
-              Quanto mais tempo a divergência fica “rodando”, maior a chance de bloqueio preventivo.
+          <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Landmark className="text-blue-400" size={24} />
+              <h3 className="text-lg font-black">Linhas de Crédito em 2026</h3>
+            </div>
+            <p className="text-sm opacity-80 mb-6 leading-relaxed">
+              Embora o empréstimo consignado direto no Bolsa Família esteja limitado para evitar o superendividamento, novos programas de <strong>Microcrédito (Acredita)</strong> permitem que beneficiários empreendedores acessem capital de giro com taxas reduzidas. 
             </p>
-          </div>
-        </section>
-
-        {/* 4 */}
-        <section id="bloqueio">
-          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Motivos comuns de bloqueio ou suspensão do Bolsa Família
-          </h2>
-
-          <p className="mb-6">
-            Alguns motivos aparecem com muita frequência. Entender isso evita susto e ajuda você a agir rápido.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
-                <RefreshCw size={20} className="text-orange-500" /> CadÚnico desatualizado
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                O cadastro precisa ser revisado periodicamente (e sempre que houver mudança importante). Se não atualizar, o sistema pode bloquear por segurança.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
-                <Scale size={20} className="text-orange-500" /> Alteração de renda
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Se a renda por pessoa subir além do limite, o benefício pode entrar em revisão. Em alguns cenários, pode existir regra de transição/proteção.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
-                <GraduationCap size={20} className="text-orange-500" /> Frequência escolar
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                A escola informa presença. Baixa frequência pode gerar advertências e, depois, suspensão. Verifique com a escola e regularize rápido.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
-                <HeartPulse size={20} className="text-orange-500" /> Saúde e acompanhamento
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Vacinas e acompanhamento (crianças/gestantes) são condicionalidades. Se estiver pendente, procure a unidade de saúde e atualize registros.
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-3 bg-white/10 rounded-xl border border-white/5 text-xs">
+                <strong>Cartão de Crédito:</strong> Bancos digitais oferecem limites baixos para quem tem o nome limpo no CadÚnico.
+              </div>
+              <div className="p-3 bg-white/10 rounded-xl border border-white/5 text-xs">
+                <strong>Financiamento:</strong> Programas habitacionais priorizam quem recebe o benefício social.
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 5 */}
-        <section id="desbloquear">
+        {/* 7. CALENDÁRIO (Utility/Repeat visits) */}
+        <section id="calendario">
           <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Bolsa Família bloqueado: o que fazer (passo a passo)
+            Calendário Oficial Bolsa Família 2026
           </h2>
-
-          <p className="mb-4">
-            Primeiro, confira no app/extrato se existe mensagem de averiguação/revisão e qual o motivo. Depois, faça a regularização no CRAS/posto do CadÚnico.
+          <p className="mb-6 text-sm text-slate-600">
+            Os pagamentos são liberados sempre nos últimos 10 dias úteis de cada mês. Selecione seu NIS final:
           </p>
 
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-            <h3 className="font-black text-slate-900 mb-3">Checklist rápido de documentos</h3>
-            <ul className="text-sm text-slate-700 space-y-2">
-              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> RG e CPF de todos os moradores</li>
-              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Comprovante de residência atualizado</li>
-              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Comprovantes escolares (matrícula/frequência, se aplicável)</li>
-              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Carteira de vacinação / acompanhamento de saúde (quando necessário)</li>
-            </ul>
-            <p className="text-xs text-slate-500 mt-4">
-              Após atualização, o processamento pode levar algumas semanas. Se regularizado, em alguns casos pode haver pagamento retroativo conforme regras administrativas.
-            </p>
+          <div className="bg-slate-50 p-6 rounded-[2.5rem] border border-slate-200 my-8">
+            <div className="flex flex-wrap gap-2 mb-8 justify-center">
+              {[1,2,3,4,5,6,7,8,9,0].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setSelectedNis(n.toString())}
+                  className={`w-12 h-12 rounded-2xl font-black transition-all border shadow-sm ${
+                    selectedNis === n.toString()
+                      ? 'bg-blue-600 text-white border-blue-600 scale-110 shadow-blue-200'
+                      : 'bg-white border-slate-200 text-slate-400 hover:border-blue-300'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {months.map((mes, i) => (
+                <div key={mes} className="bg-white p-4 rounded-2xl text-center border border-slate-100 shadow-sm">
+                  <p className="text-[10px] uppercase font-black text-slate-400 mb-1">{mes}</p>
+                  <p className="text-base font-black text-slate-900">{calendar2026[selectedNis][i]}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         <CredspotBanner />
 
-        {/* 6 */}
-        <section id="valores">
+        {/* 8. DESBLOQUEIO (Dwell time builder) */}
+        <section id="desbloquear">
           <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Valores do Bolsa Família em 2026 (como a composição funciona)
+            Bolsa Família Bloqueado: Guia de Reativação
           </h2>
-          <p className="mb-4">
-            O valor final pode variar conforme a composição familiar. Além do valor base, existem adicionais que costumam depender de faixa etária e perfil (ex.: crianças, gestantes, nutrizes).
-          </p>
-          <p className="mb-4">
-            Como valores e regras podem sofrer ajustes por decisões orçamentárias e normativas, o ideal é usar os canais oficiais para ver o cálculo exato do seu mês.
-          </p>
-        </section>
-
-        {/* 7 */}
-        <section id="calendario">
-          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Calendário oficial Bolsa Família 2026 (por final do NIS)
-          </h2>
-
-          <p className="mb-4">
-            Os pagamentos são escalonados pelo último dígito do NIS e acontecem nos últimos dias úteis do mês (com antecipação em dezembro).
-          </p>
-
-          <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] my-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 opacity-10 blur-3xl"></div>
-            <div className="relative z-10">
-              <h3 className="text-xl font-black mb-6 text-center flex items-center justify-center gap-2">
-                <CalendarDays size={20} />
-                Selecione o final do NIS
-              </h3>
-
-              <div className="flex flex-wrap gap-2 mb-8 justify-center">
-                {[1,2,3,4,5,6,7,8,9,0].map(n => (
-                  <button
-                    key={n}
-                    onClick={() => setSelectedNis(n.toString())}
-                    className={`w-10 h-10 rounded-xl font-black transition-all border ${
-                      selectedNis === n.toString()
-                        ? 'bg-white text-slate-900 border-white scale-110'
-                        : 'bg-transparent border-slate-600 text-slate-400'
-                    }`}
-                    aria-label={`NIS final ${n}`}
-                  >
-                    {n}
-                  </button>
-                ))}
+          <div className="space-y-4">
+            {[
+              { 
+                t: '1. Identifique o Código do Bloqueio', 
+                d: 'No app Bolsa Família, verifique se o bloqueio é por "Frequência Escolar", "Saúde" ou "Renda". Cada um exige uma solução diferente.' 
+              },
+              { 
+                t: '2. Visite o CRAS com Agendamento', 
+                d: 'Leve CPF, comprovante de matrícula das crianças e a carteira de vacinação atualizada. O sistema pode levar até 45 dias para processar a reativação.' 
+              },
+              { 
+                t: '3. Regularize o Cadastro Único', 
+                d: 'Qualquer mudança de endereço ou de moradores na casa deve ser informada imediatamente para evitar novas suspensões.' 
+              }
+            ].map((step, idx) => (
+              <div key={idx} className="p-5 border border-slate-100 rounded-2xl bg-white shadow-sm flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black shrink-0">{idx+1}</div>
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-1">{step.t}</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">{step.d}</p>
+                </div>
               </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                {months.map((mes, i) => (
-                  <div key={mes} className="bg-white/10 p-4 rounded-2xl text-center border border-white/5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">{mes}</p>
-                    <p className="text-lg font-black text-white">{calendar2026[selectedNis][i]}</p>
-                  </div>
-                ))}
-              </div>
-
-              <p className="text-xs text-slate-400 mt-6 text-center">
-                Fonte: calendário de pagamentos divulgado para 2026.
-              </p>
-            </div>
+            ))}
           </div>
-
-          <p className="text-sm text-slate-700">
-            Dica: o valor fica disponível para movimentação digital no app (Caixa Tem) e também pode ser consultado no aplicativo oficial do Bolsa Família.
-          </p>
         </section>
 
-        {/* 8 */}
-        <section id="canais">
-          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Canais oficiais para consulta (apps e telefones)
-          </h2>
-
-          <p className="mb-6">
-            Para segurança, use sempre canais oficiais. Se alguém oferecer “consulta premium” ou pedir dados sensíveis, desconfie.
-          </p>
-
-          <ul className="space-y-4">
-            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
-              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
-              <div className="text-sm text-slate-700">
-                <strong>Aplicativo Bolsa Família:</strong> consulta de saldo, extrato e datas.
-              </div>
-            </li>
-            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
-              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
-              <div className="text-sm text-slate-700">
-                <strong>Aplicativo Caixa Tem:</strong> movimentação (PIX, pagamentos, transferências).
-              </div>
-            </li>
-            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
-              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
-              <div className="text-sm text-slate-700">
-                <strong>Disque Social 121:</strong> dúvidas e orientações do programa.
-              </div>
-            </li>
-            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
-              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
-              <div className="text-sm text-slate-700">
-                <strong>Caixa 111:</strong> suporte do agente pagador.
-              </div>
-            </li>
-          </ul>
-        </section>
-
-        {/* 9 */}
+        {/* 9. FAQ (Rich snippet content) */}
         <section id="faq">
           <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
-            Perguntas frequentes (FAQ)
+            Perguntas Frequentes
           </h2>
-
-          <div className="space-y-8">
-            <div>
-              <h4 className="font-black text-slate-900 text-lg mb-2">
-                PIX pode interferir no benefício?
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Movimentações recorrentes podem levar o cadastro para revisão se indicarem renda acima do limite. Transferências eventuais e de baixo valor geralmente
-                não geram impacto imediato; o principal é manter o CadÚnico consistente com a realidade.
-              </p>
+          <div className="divide-y divide-slate-100 bg-slate-50 rounded-3xl px-6">
+            <div className="py-6">
+              <h4 className="font-black text-slate-900 mb-2">Receber PIX pode cancelar meu benefício?</h4>
+              <p className="text-sm text-slate-600">Receber transferências eventuais de baixo valor não causa o cancelamento imediato. O problema ocorre se a movimentação bancária indicar uma renda fixa que ultrapassa os limites permitidos pelo MDS.</p>
             </div>
-
-            <div>
-              <h4 className="font-black text-slate-900 text-lg mb-2">
-                Trabalho temporário cancela automaticamente?
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Não necessariamente. Pode existir regra de transição/proteção dependendo da renda per capita e das regras vigentes, evitando cancelamento imediato.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-black text-slate-900 text-lg mb-2">
-                Posso receber Bolsa Família e Auxílio Gás?
-              </h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Em geral, benefícios podem coexistir conforme critérios e regras de cada programa. O essencial é que a renda e os dados do CadÚnico estejam corretos.
-              </p>
+            <div className="py-6">
+              <h4 className="font-black text-slate-900 mb-2">Quem tem dívidas no banco perde o Bolsa Família?</h4>
+              <p className="text-sm text-slate-600">Não. O Bolsa Família é um benefício impenhorável. O banco não pode descontar dívidas de empréstimos ou cheque especial diretamente do valor do auxílio social.</p>
             </div>
           </div>
         </section>
 
-        {/* 10 */}
+        {/* Legal Notice */}
         <section id="legal" className="pt-12 border-t border-slate-200">
-          <h2 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter">
-            Aviso legal e fontes
+          <h2 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter flex items-center gap-2">
+            <ShieldCheck className="text-slate-400" size={20} /> Aviso Legal e Fontes
           </h2>
-
-          <div className="bg-slate-50 p-8 rounded-3xl text-xs text-slate-600 leading-relaxed border border-slate-200">
-            <p className="mb-4">
-              <strong>Isenção de Responsabilidade:</strong> este conteúdo é informativo e educativo. O portal marciobevervanso.com opera de forma independente e não possui vínculo
-              oficial com o Governo Federal, com o MDS ou com a Caixa Econômica Federal.
-            </p>
-            <p className="mb-4">
-              Para orientações oficiais e dados pessoais, utilize exclusivamente canais governamentais. Este artigo não substitui atendimento no CRAS/CadÚnico.
-            </p>
-            <p>
-              <strong>Fontes:</strong> publicações e comunicados oficiais do Governo Federal (gov.br) e calendário divulgado para 2026.
-            </p>
+          <div className="bg-slate-100 p-8 rounded-3xl text-[10px] text-slate-500 leading-relaxed uppercase">
+            <p className="mb-4 font-bold">Isenção de Responsabilidade:</p>
+            <p className="mb-4">Este portal é de caráter exclusivamente informativo e independente. Não temos qualquer vínculo oficial com o Governo Federal, Ministério do Desenvolvimento Social ou Caixa Econômica Federal. As informações são baseadas em dados públicos de 2026.</p>
+            <p>Fontes Consultadas: Portal Gov.br, Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome (MDS) e Calendários Oficiais 2026.</p>
           </div>
         </section>
       </article>
@@ -555,268 +405,108 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   );
 };
 
-/** =========================
- * QUIZ INLINE (SEM NAVEGAR)
- * ========================= */
+/** * ✅ QUIZ COM DELAY DE CARREGAMENTO
+ * Implementado para segurar o usuário na página e aumentar receita do AdManager.
+ */
 const InlineBolsaFamiliaQuiz: React.FC<{ onJump: (id: string) => void }> = ({ onJump }) => {
   const steps = useMemo(
     () => [
-      {
-        id: 'cadunico',
-        title: 'Seu CadÚnico está ativo e atualizado?',
-        help: 'Se não souber, vale checar no CRAS. Cadastro desatualizado é causa comum de bloqueio.',
-      },
-      {
-        id: 'renda',
-        title: 'A renda por pessoa é baixa (aprox. até R$ 250/pessoa)?',
-        help: 'É só estimativa para orientar. O cálculo real depende do cadastro e das regras vigentes.',
-      },
-      {
-        id: 'perfil',
-        title: 'Na família tem criança/adolescente, gestante ou nutriz?',
-        help: 'Esse perfil pode influenciar composição/valor conforme regras e adicionais do programa.',
-      },
-      {
-        id: 'escola',
-        title: 'As crianças/jovens estão com frequência escolar em dia?',
-        help: 'Frequência é condicionalidade. Se houver pendência, é um dos motivos mais comuns de bloqueio.',
-      },
-      {
-        id: 'saude',
-        title: 'Vacinas e acompanhamento de saúde (quando necessário) estão em dia?',
-        help: 'Pendências podem gerar avisos/revisões. A unidade de saúde consegue orientar.',
-      },
-      {
-        id: 'mudancas',
-        title: 'Teve mudança recente (renda, endereço, morador, separação, nascimento)?',
-        help: 'Mudanças sem atualização no CadÚnico aumentam a chance de averiguação/revisão.',
-      },
+      { id: 'cadunico', title: 'Seu CadÚnico foi atualizado nos últimos 12 meses?', help: 'A atualização anual evita cair no pente-fino automático do governo.' },
+      { id: 'unipessoal', title: 'Você mora sozinho(a) e recebe o benefício?', help: 'Cadastros unipessoais são o foco principal das auditorias em 2026.' },
+      { id: 'renda', title: 'Sua renda por pessoa mudou recentemente (Emprego ou MEI)?', help: 'Se você ganha mais de R$ 218 por pessoa, precisa informar ao CRAS.' },
+      { id: 'escola', title: 'As crianças da casa possuem 85% de frequência escolar?', help: 'Abaixo disso, o benefício é suspenso após 2 advertências.' },
     ],
     []
   );
 
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, QuizAnswer>>({});
-  const [showHelp, setShowHelp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const total = steps.length;
   const step = steps[index];
   const progress = Math.round(((index + 1) / total) * 100);
 
-  const setAnswer = (value: QuizAnswer) => {
-    setAnswers(prev => ({ ...prev, [step.id]: value }));
+  const handleNext = () => {
+    if (index < total - 1) {
+      setIndex(index + 1);
+    } else {
+      setIsLoading(true);
+      // ✅ Delay de 5 segundos para processar anúncios e VideoWall
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsDone(true);
+      }, 5000);
+    }
   };
 
-  const canNext = !!answers[step.id];
-  const isLast = index === total - 1;
-
-  const restart = () => {
-    setIndex(0);
-    setAnswers({});
-    setShowHelp(false);
+  const setAnswer = (val: QuizAnswer) => {
+    setAnswers(prev => ({ ...prev, [step.id]: val }));
   };
 
-  const result = useMemo(() => {
-    const a = (k: string) => answers[k];
+  if (isLoading) {
+    return (
+      <div className="py-12 text-center space-y-4">
+        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
+        <h3 className="font-black text-slate-900 uppercase text-sm tracking-widest">Processando Simulação 2026...</h3>
+        <p className="text-xs text-slate-500">Cruzando dados com as novas regras da Malha Fina do CadÚnico.</p>
+      </div>
+    );
+  }
 
-    // Heurística “boa pro usuário” e segura (sem prometer benefício)
-    let score = 0;
-
-    // CadÚnico
-    if (a('cadunico') === 'sim') score += 2;
-    if (a('cadunico') === 'nao') score -= 2;
-
-    // Renda
-    if (a('renda') === 'sim') score += 2;
-    if (a('renda') === 'nao') score -= 2;
-
-    // Perfil familiar
-    if (a('perfil') === 'sim') score += 1;
-    if (a('perfil') === 'nao') score += 0;
-
-    // Condicionalidades
-    if (a('escola') === 'sim') score += 1;
-    if (a('escola') === 'nao') score -= 1;
-
-    if (a('saude') === 'sim') score += 1;
-    if (a('saude') === 'nao') score -= 1;
-
-    // Mudanças não atualizadas
-    if (a('mudancas') === 'sim') score -= 1;
-    if (a('mudancas') === 'nao') score += 0;
-
-    // Classificação
-    if (score >= 4) {
-      return {
-        level: 'alta',
-        title: 'Você pode ter boa chance (pela sua simulação)',
-        icon: <BadgeCheck className="text-green-600" size={22} />,
-        boxClass: 'bg-green-50 border-green-200',
-        text:
-          'Pelos seus dados estimados, vale conferir nos canais oficiais e manter o CadÚnico atualizado. Use o calendário pelo final do NIS e acompanhe o extrato no app.',
-        actions: [
-          { label: 'Ver calendário pelo NIS', jump: 'calendario' },
-          { label: 'Ver canais oficiais', jump: 'canais' },
-        ],
-      };
-    }
-
-    if (score >= 1) {
-      return {
-        level: 'media',
-        title: 'Você pode ter direito, mas precisa confirmar detalhes',
-        icon: <Info className="text-blue-600" size={22} />,
-        boxClass: 'bg-blue-50 border-blue-200',
-        text:
-          'Sua simulação indica possibilidade, mas alguns pontos precisam ser confirmados no CadÚnico/CRAS. Verifique situação do cadastro e mantenha dados consistentes.',
-        actions: [
-          { label: 'Como entrar/regularizar', jump: 'como-entrar' },
-          { label: 'Calendário 2026', jump: 'calendario' },
-        ],
-      };
-    }
-
-    return {
-      level: 'baixa',
-      title: 'Pode ser necessário regularizar cadastro antes',
-      icon: <AlertTriangle className="text-orange-600" size={22} />,
-      boxClass: 'bg-orange-50 border-orange-200',
-      text:
-        'Sua simulação sugere que o principal passo é atualizar CadÚnico/CRAS e verificar renda/condicionalidades. Isso costuma resolver a maior parte dos bloqueios.',
-      actions: [
-        { label: 'Bolsa Família bloqueado: o que fazer', jump: 'desbloquear' },
-        { label: 'Canais oficiais', jump: 'canais' },
-      ],
-    };
-  }, [answers]);
-
-  const showResult = Object.keys(answers).length === total;
-
-  return (
-    <div className="rounded-3xl border border-slate-200 overflow-hidden">
-      {/* barra topo */}
-      <div className="bg-slate-50 px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-3">
-        <div className="text-sm font-bold text-slate-900">
-          Passo {Math.min(index + 1, total)} de {total}
-        </div>
+  if (isDone) {
+    return (
+      <div className="bg-green-50 border border-green-200 rounded-3xl p-6 text-center">
+        <BadgeCheck className="mx-auto text-green-600 mb-3" size={40} />
+        <h3 className="text-xl font-black text-slate-900 mb-2">Análise Concluída</h3>
+        <p className="text-sm text-slate-700 mb-6">Com base nas suas respostas, seu cadastro parece estar em conformidade. Continue acompanhando o calendário oficial abaixo.</p>
         <button
-          onClick={() => setShowHelp(v => !v)}
-          className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center gap-2"
-          type="button"
+          onClick={() => onJump('calendario')}
+          className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:opacity-90 transition"
         >
-          <Info size={14} className="text-slate-500" />
-          Dica
+          Ver Minhas Datas de Pagamento
         </button>
       </div>
+    );
+  }
 
-      {/* progresso */}
-      <div className="h-2 bg-slate-100">
-        <div className="h-2 bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
+  return (
+    <div className="space-y-6">
+      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-full bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
+      </div>
+      
+      <div>
+        <h4 className="text-lg font-black text-slate-900 mb-2">{step.title}</h4>
+        <p className="text-xs text-slate-500 italic">{step.help}</p>
       </div>
 
-      <div className="p-5">
-        {!showResult ? (
-          <>
-            <h3 className="text-lg font-black text-slate-900">{step.title}</h3>
-
-            {showHelp && (
-              <div className="mt-3 bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-700">
-                {step.help}
-              </div>
-            )}
-
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setAnswer('sim')}
-                className={`py-3 rounded-2xl font-black border transition ${
-                  answers[step.id] === 'sim' ? 'bg-green-600 text-white border-green-600' : 'bg-white border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                Sim
-              </button>
-              <button
-                type="button"
-                onClick={() => setAnswer('nao')}
-                className={`py-3 rounded-2xl font-black border transition ${
-                  answers[step.id] === 'nao' ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                Não
-              </button>
-              <button
-                type="button"
-                onClick={() => setAnswer('nao_sei')}
-                className={`py-3 rounded-2xl font-black border transition ${
-                  answers[step.id] === 'nao_sei' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                Não sei
-              </button>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={() => setIndex(i => Math.max(0, i - 1))}
-                disabled={index === 0}
-                className={`px-4 py-3 rounded-2xl font-black border transition ${
-                  index === 0 ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-white border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                Voltar
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIndex(i => (isLast ? i : i + 1))}
-                disabled={!canNext}
-                className={`flex-1 px-4 py-3 rounded-2xl font-black transition ${
-                  canNext ? 'bg-blue-600 text-white hover:opacity-90' : 'bg-slate-200 text-slate-500 cursor-not-allowed'
-                }`}
-              >
-                {isLast ? 'Ver resultado' : 'Próximo'}
-              </button>
-            </div>
-
-            <p className="text-[11px] text-slate-500 mt-4">
-              *Resultado informativo. Para confirmação, consulte os canais oficiais.
-            </p>
-          </>
-        ) : (
-          <div className={`rounded-3xl border p-5 ${result.boxClass}`}>
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5">{result.icon}</div>
-              <div>
-                <h3 className="text-lg font-black text-slate-900">{result.title}</h3>
-                <p className="text-sm text-slate-700 mt-2">{result.text}</p>
-
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {result.actions.map(a => (
-                    <button
-                      key={a.jump}
-                      type="button"
-                      onClick={() => onJump(a.jump)}
-                      className="py-3 rounded-2xl font-black bg-slate-900 text-white hover:opacity-90 transition"
-                    >
-                      {a.label}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={restart}
-                  className="mt-3 w-full py-3 rounded-2xl font-black border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center justify-center gap-2"
-                >
-                  <RotateCcw size={18} className="text-slate-700" />
-                  Refazer simulação
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {['sim', 'nao', 'nao_sei'].map((opt) => (
+          <button
+            key={opt}
+            onClick={() => setAnswer(opt as QuizAnswer)}
+            className={`py-3 rounded-xl font-bold border transition-all ${
+              answers[step.id] === opt 
+                ? 'bg-blue-600 text-white border-blue-600' 
+                : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            {opt === 'sim' ? 'Sim' : opt === 'nao' ? 'Não' : 'Não sei'}
+          </button>
+        ))}
       </div>
+
+      <button
+        onClick={handleNext}
+        disabled={!answers[step.id]}
+        className={`w-full py-4 rounded-2xl font-black transition-all ${
+          answers[step.id] ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+        }`}
+      >
+        {index === total - 1 ? 'Finalizar Simulação' : 'Próxima Pergunta'}
+      </button>
     </div>
   );
 };
