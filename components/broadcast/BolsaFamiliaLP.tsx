@@ -1,7 +1,18 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BroadcastLayout } from './BroadcastLayout';
-import { Wallet, Calendar, CheckCircle2, AlertTriangle, FileText, Info, ShieldCheck, Search, Users, Landmark } from 'lucide-react';
+import {
+  CheckCircle2,
+  GraduationCap,
+  HeartPulse,
+  Scale,
+  RefreshCw,
+  ListChecks,
+  CalendarDays,
+  HelpCircle,
+  Search,
+  ShieldCheck,
+  ArrowRight
+} from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 import { CredspotBanner, SuperSimBanner } from '../ActionPayBanners';
@@ -14,229 +25,548 @@ interface Props {
 export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   const [selectedNis, setSelectedNis] = useState<string>('1');
 
+  // ✅ Calendário oficial 2026 (MDS / Agência Brasil)
+  const calendar2026: Record<string, string[]> = useMemo(
+    () => ({
+      '1': ['19/Jan','12/Fev','18/Mar','16/Abr','18/Mai','17/Jun','20/Jul','18/Ago','17/Set','19/Out','16/Nov','10/Dez'],
+      '2': ['20/Jan','13/Fev','19/Mar','17/Abr','19/Mai','18/Jun','21/Jul','19/Ago','18/Set','20/Out','17/Nov','11/Dez'],
+      '3': ['21/Jan','18/Fev','20/Mar','20/Abr','20/Mai','19/Jun','22/Jul','20/Ago','21/Set','21/Out','18/Nov','14/Dez'],
+      '4': ['22/Jan','19/Fev','23/Mar','22/Abr','21/Mai','22/Jun','23/Jul','21/Ago','22/Set','22/Out','19/Nov','15/Dez'],
+      '5': ['23/Jan','20/Fev','24/Mar','23/Abr','22/Mai','23/Jun','24/Jul','24/Ago','23/Set','23/Out','23/Nov','16/Dez'],
+      '6': ['26/Jan','23/Fev','25/Mar','24/Abr','25/Mai','24/Jun','27/Jul','25/Ago','24/Set','26/Out','24/Nov','17/Dez'],
+      '7': ['27/Jan','24/Fev','26/Mar','27/Abr','26/Mai','25/Jun','28/Jul','26/Ago','25/Set','27/Out','25/Nov','18/Dez'],
+      '8': ['28/Jan','25/Fev','27/Mar','28/Abr','27/Mai','26/Jun','29/Jul','27/Ago','28/Set','28/Out','26/Nov','21/Dez'],
+      '9': ['29/Jan','26/Fev','30/Mar','29/Abr','28/Mai','29/Jun','30/Jul','28/Ago','29/Set','29/Out','27/Nov','22/Dez'],
+      '0': ['30/Jan','27/Fev','31/Mar','30/Abr','29/Mai','30/Jun','31/Jul','31/Ago','30/Set','30/Out','30/Nov','23/Dez'],
+    }),
+    []
+  );
+
+  const months = useMemo(
+    () => ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    []
+  );
+
   useEffect(() => {
-    document.title = "Informativo Bolsa Família 2026: Regras, Fiscalização e Acompanhamento Cadastral";
+    document.title = "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio";
     window.scrollTo(0, 0);
   }, []);
 
-  const calendar2026: Record<string, string[]> = {
-    '1': ['19/Jan', '18/Fev', '18/Mar', '17/Abr', '18/Mai'],
-    '2': ['20/Jan', '19/Fev', '19/Mar', '18/Abr', '19/Mai'],
-    '3': ['21/Jan', '20/Fev', '20/Mar', '22/Abr', '22/Mai'],
-    '4': ['22/Jan', '21/Fev', '21/Mar', '23/Abr', '23/Mai'],
-    '5': ['23/Jan', '24/Fev', '24/Mar', '24/Abr', '24/Mai'],
-    '6': ['26/Jan', '25/Fev', '25/Mar', '27/Abr', '25/Mai'],
-    '7': ['27/Jan', '26/Fev', '26/Mar', '28/Abr', '26/Mai'],
-    '8': ['28/Jan', '27/Fev', '27/Mar', '29/Abr', '29/Mai'],
-    '9': ['29/Jan', '28/Fev', '28/Mar', '30/Abr', '30/Mai'],
-    '0': ['30/Jan', '29/Fev', '31/Mar', '30/Abr', '31/Mai'],
+  // ✅ TOC com âncoras (melhora scan + tempo na página)
+  const toc = useMemo(
+    () => [
+      { id: 'intro', label: 'O que mudou em 2026' },
+      { id: 'como-entrar', label: 'Como entrar (CadÚnico + seleção)' },
+      { id: 'quiz', label: 'Simulação rápida: posso ter direito?' },
+      { id: 'averiguacao', label: 'Averiguação/ revisão: por que acontece' },
+      { id: 'bloqueio', label: 'Motivos de bloqueio/suspensão' },
+      { id: 'desbloquear', label: 'Bolsa Família bloqueado: o que fazer' },
+      { id: 'valores', label: 'Valores e composição do benefício' },
+      { id: 'calendario', label: 'Calendário 2026 por final do NIS' },
+      { id: 'canais', label: 'Canais oficiais (apps e telefones)' },
+      { id: 'faq', label: 'Perguntas frequentes' },
+      { id: 'legal', label: 'Aviso legal e fontes' },
+    ],
+    []
+  );
+
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  // ✅ Schema forte (WebPage + Article + FAQPage)
+  const schemaGraph = useMemo(() => {
+    const url = "https://marciobevervanso.com/bolsa-familia-2026";
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://marciobevervanso.com/#website",
+          "name": "Guia Social Brasil",
+          "url": "https://marciobevervanso.com/",
+          "description": "Portal informativo sobre benefícios sociais, cidadania e programas do governo."
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${url}#webpage`,
+          "url": url,
+          "name": "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio",
+          "isPartOf": { "@id": "https://marciobevervanso.com/#website" }
+        },
+        {
+          "@type": "Article",
+          "@id": `${url}#article`,
+          "headline": "Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio",
+          "description": "Guia prático: regras, calendário por NIS, condicionalidades, averiguação e como regularizar no CadÚnico/CRAS.",
+          "author": { "@type": "Organization", "name": "Guia Social Brasil" },
+          "publisher": { "@type": "Organization", "name": "Guia Social Brasil" },
+          "mainEntityOfPage": { "@id": `${url}#webpage` },
+          "dateModified": "2025-12-27"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": `${url}#faq`,
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "PIX pode interferir no Bolsa Família?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Movimentações recorrentes podem levar o cadastro para revisão se indicarem renda acima do limite. Transferências eventuais e baixas normalmente não geram impacto imediato; o mais importante é manter o CadÚnico atualizado e coerente com a realidade."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Trabalho temporário cancela automaticamente o benefício?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não necessariamente. Em muitos casos pode ser aplicada a Regra de Proteção, com manutenção parcial do benefício por um período, dependendo da renda per capita e das regras vigentes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Quais são os canais oficiais para consultar e tirar dúvidas?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use os aplicativos oficiais (Bolsa Família e Caixa Tem). Para dúvidas, ligue 121 (Disque Social) e 111 (Caixa)."
+              }
+            }
+          ]
+        }
+      ]
+    };
+  }, []);
 
   return (
     <BroadcastLayout
-      title="Bolsa Família 2026: Guia Informativo sobre Regras e Manutenção do Benefício"
-      subtitle="Entenda as diretrizes para o acompanhamento do Cadastro Único, os processos de verificação de dados e as condicionalidades para a permanência no programa em 2026."
+      title="Bolsa Família 2026: quem tem direito, valores, calendário e como evitar bloqueio"
+      subtitle="Guia prático e atualizado: regras do CadÚnico, averiguação/revisão, motivos de bloqueio e datas oficiais por final do NIS."
       onNavigate={onNavigate}
       quizId="2"
       quizzes={quizzes}
-      updatedDate="Atualizado recentemente"
+      updatedDate="Atualizado em 27/12/2025"
     >
-      <SchemaMarkup data={{
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": "Guia Completo Bolsa Família 2026",
-        "description": "Artigo informativo detalhado sobre as regras, valores e processos de fiscalização do programa Bolsa Família para o ano de 2026.",
-        "author": { "@type": "Organization", "name": "Guia Social Brasil" }
-      }} />
+      <SchemaMarkup data={schemaGraph} />
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">1. Introdução ao Cenário do Bolsa Família em 2026</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          O Programa Bolsa Família consolida-se em 2026 como a principal ferramenta de transferência direta de renda e combate à vulnerabilidade social no Brasil. Instituído para garantir a segurança alimentar e o acesso a direitos básicos, o programa vai além do repasse financeiro, exigindo que as famílias beneficiárias mantenham um acompanhamento rigoroso de suas informações no Cadastro Único para Programas Sociais do Governo Federal (CadÚnico).
-        </p>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          A importância do acompanhamento cadastral reside na necessidade de garantir que os recursos públicos cheguem, efetivamente, às parcelas da população que se enquadram nos critérios legais de renda. Em 2026, a ênfase governamental recai sobre a precisão dos dados, incentivando os cidadãos a realizarem atualizações proativas sempre que houver mudanças na estrutura familiar, como nascimento, óbito, alteração de endereço ou variação na renda mensal.
-        </p>
-      </section>
+      {/* CTA Sticky (ganha clique + sessão) */}
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <div className="mx-auto max-w-5xl px-3 pb-3">
+          <div className="bg-white/95 backdrop-blur border border-slate-200 shadow-lg rounded-2xl p-3 flex items-center gap-2">
+            <button
+              onClick={() => scrollToId('calendario')}
+              className="flex-1 py-3 rounded-xl font-black bg-slate-900 text-white hover:opacity-90 transition flex items-center justify-center gap-2"
+            >
+              <CalendarDays size={18} />
+              Ver calendário pelo NIS
+            </button>
+            <button
+              onClick={() => scrollToId('quiz')}
+              className="flex-1 py-3 rounded-xl font-black bg-blue-600 text-white hover:opacity-90 transition flex items-center justify-center gap-2"
+            >
+              <Search size={18} />
+              Fazer simulação rápida
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">2. Como funciona o sistema de concessão e pagamentos</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          O funcionamento do Bolsa Família é estruturado em três pilares fundamentais: a identificação via Cadastro Único, a verificação da renda familiar per capita e a operacionalização dos pagamentos pela Caixa Econômica Federal. O processo inicia-se obrigatoriamente com a inscrição da família no CadÚnico, realizada em postos de atendimento municipais, como o Centro de Referência de Assistência Social (CRAS).
-        </p>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          A elegibilidade é determinada pela renda familiar per capita, que é a soma de todos os rendimentos brutos da casa dividida pelo número de moradores. Segundo as diretrizes vigentes, podem ter acesso ao programa famílias com renda por pessoa compatível com as linhas de pobreza e extrema pobreza estabelecidas legalmente. Uma vez aprovada, a família recebe o benefício mensalmente, seguindo um fluxo de depósitos automatizados que podem ser acessados via aplicativo Caixa Tem ou cartões magnéticos específicos.
-        </p>
-        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 my-8">
-          <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2"><Info size={20} className="text-brand-blue" /> Observação Importante</h3>
-          <p className="text-sm text-slate-600 leading-relaxed">
-            A inclusão no Cadastro Único não garante a entrada imediata no programa Bolsa Família, uma vez que a concessão depende da disponibilidade orçamentária do Governo Federal e da análise contínua de elegibilidade realizada pelos sistemas de assistência social.
+      <article className="space-y-12 pb-28">
+        {/* SUMÁRIO */}
+        <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-3">
+            <ListChecks className="text-blue-600" size={20} />
+            <h2 className="text-lg font-black text-slate-900">Atalhos do guia (clique e vá direto)</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {toc.map(item => (
+              <button
+                key={item.id}
+                onClick={() => scrollToId(item.id)}
+                className="text-left px-4 py-3 rounded-2xl border border-slate-200 hover:border-blue-200 hover:bg-blue-50 transition flex items-center justify-between"
+              >
+                <span className="text-sm font-semibold text-slate-800">{item.label}</span>
+                <ArrowRight size={16} className="text-slate-400" />
+              </button>
+            ))}
+          </div>
+
+          <p className="text-xs text-slate-500 mt-4 flex items-center gap-2">
+            <ShieldCheck size={14} className="text-slate-400" />
+            Este conteúdo é informativo. Não realizamos cadastro oficial e não solicitamos CPF.
           </p>
-        </div>
-      </section>
+        </section>
 
-      <SuperSimBanner />
+        {/* 1 */}
+        <section id="intro">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            O que mudou em 2026 (e por que seu cadastro precisa estar em dia)
+          </h2>
+          <p className="mb-4">
+            O Bolsa Família segue como a principal política de transferência de renda do país, mas em 2026 o ponto mais importante para manter o benefício é simples:
+            <strong> cadastro atualizado e informações coerentes no CadÚnico</strong>. Quando existem divergências, o benefício pode entrar em averiguação,
+            revisão ou até bloqueio preventivo.
+          </p>
+          <p className="mb-4">
+            A boa notícia: na maioria dos casos, dá para resolver seguindo um passo a passo objetivo (documentos certos + atualização no CRAS). Aqui você vai ver
+            tudo em linguagem direta: regras, calendário oficial, o que causa bloqueio e o que fazer para regularizar.
+          </p>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">3. Atualizações e fiscalização em 2026</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          Para o ano de 2026, o Governo Federal aprimorou os mecanismos de fiscalização e cruzamento de dados para assegurar a transparência do programa. A fiscalização em 2026 utiliza tecnologias de integração entre diferentes bases públicas, como o Cadastro Nacional de Informações Sociais (CNIS), a Relação Anual de Informações Sociais (RAIS) e dados do eSocial.
-        </p>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          Esse processo de verificação digital busca identificar possíveis inconsistências entre a renda declarada no CadÚnico e os dados de emprego formal ou outros rendimentos registrados em nome dos beneficiários. De acordo com as orientações oficiais, essa fiscalização ocorre de forma preventiva e automatizada. Quando o sistema detecta uma divergência, o benefício pode ser encaminhado para um processo de revisão cadastral, onde o titular é convidado a prestar esclarecimentos no CRAS de sua região para evitar interrupções no recebimento.
-        </p>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">4. Principais motivos que podem gerar bloqueio ou suspensão</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          A manutenção do benefício depende do cumprimento das regras de permanência. Abaixo, listamos os fatores que, segundo os manuais de gestão do programa, podem resultar na suspensão temporária ou bloqueio do repasse:
-        </p>
-        <div className="space-y-6 not-prose">
-          <div className="bg-white p-6 rounded-2xl border-2 border-slate-100 flex gap-4 items-start">
-            <div className="bg-slate-100 p-3 rounded-xl text-slate-600"><FileText /></div>
-            <div>
-              <h4 className="font-bold text-slate-900 mb-1">Cadastro Desatualizado</h4>
-              <p className="text-sm text-slate-600">A legislação exige a atualização dos dados a cada 24 meses. A ausência de revisão no prazo pode sinalizar ao sistema que a família não necessita mais do auxílio.</p>
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <HelpCircle size={18} className="text-blue-600" />
+              <h3 className="font-black text-slate-900">Quer ir direto ao que importa?</h3>
+            </div>
+            <p className="text-sm text-slate-700 mb-4">
+              Use a simulação rápida e depois confira o calendário pelo final do seu NIS.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={() => scrollToId('quiz')}
+                className="flex-1 py-3 rounded-2xl font-black bg-blue-600 text-white hover:opacity-90 transition"
+              >
+                Fazer simulação agora
+              </button>
+              <button
+                onClick={() => scrollToId('calendario')}
+                className="flex-1 py-3 rounded-2xl font-black bg-slate-900 text-white hover:opacity-90 transition"
+              >
+                Ver calendário pelo NIS
+              </button>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-2xl border-2 border-slate-100 flex gap-4 items-start">
-            <div className="bg-slate-100 p-3 rounded-xl text-slate-600"><Landmark /></div>
-            <div>
-              <h4 className="font-bold text-slate-900 mb-1">Renda Incompatível</h4>
-              <p className="text-sm text-slate-600">Se a renda per capita superar os limites estabelecidos, a família pode ser desligada do programa ou inserida na Regra de Proteção, que permite o recebimento parcial por um período determinado.</p>
-            </div>
+        </section>
+
+        {/* 2 */}
+        <section id="como-entrar">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Como entrar no Bolsa Família (CadÚnico + seleção)
+          </h2>
+
+          <p className="mb-4">
+            O caminho sempre começa no município: inscrição ou atualização no <strong>Cadastro Único (CadÚnico)</strong>, geralmente no CRAS.
+            Ali são coletadas informações sobre renda, composição familiar, endereço e rotina escolar/saúde.
+          </p>
+
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 my-6">
+            <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <CheckCircle2 className="text-blue-600" size={20} /> Regra de renda (como é calculada)
+            </h4>
+            <p className="text-sm text-slate-600 mb-0">
+              A renda familiar per capita é a soma dos rendimentos do domicílio dividida pelo número de moradores.
+              Se a renda se mantém dentro dos critérios do programa, a família pode ser selecionada (dependendo das regras vigentes e processamento do sistema).
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border-2 border-slate-100 flex gap-4 items-start">
-            <div className="bg-slate-100 p-3 rounded-xl text-slate-600"><ShieldCheck /></div>
-            <div>
-              <h4 className="font-bold text-slate-900 mb-1">Descumprimento de Condicionalidades</h4>
-              <p className="text-sm text-slate-600">O não cumprimento da frequência escolar mínima ou a ausência de acompanhamento vacinal e nutricional (pesagem) são causas frequentes de interrupção preventiva.</p>
-            </div>
+
+          <p className="mb-4">
+            Depois da seleção, a Caixa operacionaliza o pagamento e o acesso costuma ocorrer via <strong>Caixa Tem</strong> e app oficial do programa.
+            Se houver divergência cadastral, podem aparecer mensagens de averiguação/revisão no extrato.
+          </p>
+        </section>
+
+        {/* Banner */}
+        <SuperSimBanner />
+
+        {/* QUIZ TEASER (ponto ideal do funil) */}
+        <section id="quiz" className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Search className="text-blue-600" size={20} />
+            <h2 className="text-xl font-black text-slate-900">Simulação rápida: posso ter direito?</h2>
           </div>
-        </div>
-      </section>
+          <p className="text-sm text-slate-700 mb-4">
+            Responda 6 perguntas rápidas e veja quais critérios você precisa conferir no CadÚnico.
+          </p>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">5. O que fazer se o benefício for bloqueado</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          Caso o cidadão identifique que seu benefício não foi depositado ou apresenta status de bloqueio no aplicativo, é necessário seguir um protocolo padrão de regularização. O primeiro passo recomendado é a verificação do motivo específico através dos canais de consulta digital ou pelo telefone oficial do ministério.
-        </p>
-        <div className="bg-blue-50 border-l-4 border-brand-blue p-8 rounded-r-3xl my-8">
-          <h4 className="text-brand-blue font-bold text-xl mb-4">Passo a passo para regularização:</h4>
-          <ol className="list-decimal pl-5 space-y-4 text-slate-700 font-medium">
-            <li>Agendar atendimento no CRAS ou unidade do CadÚnico do município.</li>
-            <li>Apresentar documentos de todos os membros da família (RG, CPF, Certidões, Comprovante de Residência e de Matrícula Escolar).</li>
-            <li>Informar detalhadamente qualquer mudança na renda ou composição do núcleo familiar.</li>
-            <li>Aguardar o prazo de processamento do sistema federal, que pode levar de 30 a 90 dias dependendo da complexidade da revisão.</li>
-          </ol>
-        </div>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">6. Estrutura de Valores do Bolsa Família</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          A composição dos valores repassados pelo Bolsa Família em 2026 é variável e depende diretamente das características de cada núcleo familiar. Existe um valor base garantido para as famílias elegíveis, sobre o qual podem ser somados benefícios adicionais conforme a legislação vigente e possíveis decretos atualizadores.
-        </p>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          Como referência, o programa costuma oferecer suplementos para famílias com crianças na primeira infância (até 6 anos), gestantes e jovens em idade escolar. É fundamental compreender que esses valores não são estáticos e podem ser reajustados ou alterados mediante decisões do Poder Executivo e disponibilidade de recursos no orçamento da seguridade social. Para saber o valor exato correspondente ao seu perfil, a consulta deve ser feita individualmente nos canais oficiais.
-        </p>
-      </section>
-
-      <CredspotBanner />
-
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">7. Organização do Calendário de Pagamentos</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          A logística de pagamentos do Bolsa Família em 2026 segue o modelo escalonado por meio do Número de Identificação Social (NIS). Este sistema visa evitar aglomerações em agências bancárias e garantir que o fluxo de depósitos ocorra de maneira ordenada ao longo dos últimos dez dias úteis de cada mês.
-        </p>
-        <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] my-10 relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-20 blur-3xl"></div>
-           <div className="relative z-10">
-              <h3 className="text-xl font-bold mb-6 text-center">Referência de Pagamento 2026</h3>
-              <div className="flex flex-wrap gap-2 mb-8 justify-center">
-                 {[1,2,3,4,5,6,7,8,9,0].map(n => (
-                    <button 
-                      key={n}
-                      onClick={() => setSelectedNis(n.toString())}
-                      className={`w-10 h-10 rounded-xl font-black transition-all border ${selectedNis === n.toString() ? 'bg-white text-brand-dark border-white scale-110' : 'bg-transparent border-slate-600 text-slate-400'}`}
-                    >
-                       {n}
-                    </button>
-                 ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            {[
+              'Renda por pessoa (estimativa)',
+              'Crianças/gestantes/nutrizes',
+              'Situação do CadÚnico',
+            ].map((t) => (
+              <div key={t} className="bg-slate-50 rounded-2xl border border-slate-200 p-4">
+                <p className="text-sm font-bold text-slate-900">{t}</p>
+                <p className="text-xs text-slate-600 mt-1">
+                  Sem pedir CPF. É uma orientação informativa para você entender o caminho.
+                </p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                 {['Jan', 'Fev', 'Mar', 'Abr', 'Mai'].map((mes, i) => (
-                   <div key={mes} className="bg-white/10 p-4 rounded-2xl text-center border border-white/5">
-                      <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">{mes}</p>
-                      <p className="text-lg font-black text-white">{calendar2026[selectedNis][i]}</p>
-                   </div>
-                 ))}
-              </div>
-              <p className="text-xs text-slate-400 mt-6 text-center italic">
-                *Datas baseadas no padrão de repasses da Caixa Econômica Federal.
+            ))}
+          </div>
+
+          <button
+            onClick={() => onNavigate('quiz' as unknown as ViewState)}
+            className="w-full py-3 rounded-2xl font-black bg-blue-600 text-white hover:opacity-90 transition"
+          >
+            Começar simulação agora
+          </button>
+
+          <p className="text-[11px] text-slate-500 mt-3 flex items-center gap-2">
+            <ShieldCheck size={14} className="text-slate-400" />
+            Não é cadastro oficial. Para dados oficiais, use os canais do governo.
+          </p>
+        </section>
+
+        {/* 3 */}
+        <section id="averiguacao">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Averiguação e revisão em 2026: por que acontece e como se prevenir
+          </h2>
+
+          <p className="mb-4">
+            Em 2026, o programa segue com rotinas de verificação que cruzam informações de diferentes bases para identificar divergências.
+            Na prática, quando o sistema encontra algo fora do padrão, pode aparecer um alerta pedindo atualização cadastral.
+          </p>
+
+          <div className="bg-blue-50 p-6 rounded-2xl border-l-4 border-blue-600 my-6">
+            <h4 className="font-bold text-slate-900 mb-2">Dica que evita dor de cabeça</h4>
+            <p className="text-sm text-slate-700 m-0">
+              Mudou renda, endereço, entrou/saiu morador, separou, teve filho(a)? Atualize no CadÚnico o quanto antes.
+              Quanto mais tempo a divergência fica “rodando”, maior a chance de bloqueio preventivo.
+            </p>
+          </div>
+        </section>
+
+        {/* 4 */}
+        <section id="bloqueio">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Motivos comuns de bloqueio ou suspensão do Bolsa Família
+          </h2>
+
+          <p className="mb-6">
+            Alguns motivos aparecem com muita frequência. Entender isso evita susto e ajuda você a agir rápido.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
+                <RefreshCw size={20} className="text-orange-500" /> CadÚnico desatualizado
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                O cadastro precisa ser revisado periodicamente (e sempre que houver mudança importante). Se não atualizar, o sistema pode bloquear por segurança.
               </p>
-           </div>
-        </div>
-      </section>
+            </div>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">8. Canais Oficiais de Consulta</h2>
-        <p className="text-lg leading-relaxed text-slate-700 mb-6">
-          Para garantir a segurança das informações e evitar a exposição a fraudes, os beneficiários devem utilizar exclusivamente os meios oficiais de comunicação com o governo. Atualmente, os canais de autoatendimento permitem verificar o status do benefício, o valor da parcela e a existência de possíveis mensagens de advertência ou convocação para o CRAS.
-        </p>
-        <ul className="space-y-4 text-slate-700">
-          <li className="flex gap-3 items-center"><CheckCircle2 className="text-green-500" size={20} /> <strong>Aplicativo Bolsa Família:</strong> Disponível nas lojas oficiais de aplicativos para dispositivos móveis.</li>
-          <li className="flex gap-3 items-center"><CheckCircle2 className="text-green-500" size={20} /> <strong>Aplicativo Caixa Tem:</strong> Ferramenta para movimentação financeira e consulta de extratos.</li>
-          <li className="flex gap-3 items-center"><CheckCircle2 className="text-green-500" size={20} /> <strong>Atendimento Telefônico:</strong> Central de Atendimento 111 (Caixa) ou 121 (Ministério do Desenvolvimento Social).</li>
-        </ul>
-      </section>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
+                <Scale size={20} className="text-orange-500" /> Alteração de renda
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Se a renda por pessoa subir além do limite, o benefício pode entrar em revisão. Em alguns cenários, pode existir regra de transição/proteção.
+              </p>
+            </div>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-black text-slate-900 mb-6">9. Perguntas Frequentes (FAQ)</h2>
-        <div className="space-y-8">
-          <div>
-            <h4 className="font-bold text-slate-900 text-xl mb-2">O recebimento de transferências via PIX interfere no Bolsa Família?</h4>
-            <p className="text-slate-700 leading-relaxed">
-              O recebimento esporádico de valores via PIX, como ajuda de familiares ou vendas pontuais de itens usados, geralmente não acarreta o cancelamento imediato. Entretanto, movimentações recorrentes de valores elevados podem ser captadas pelos sistemas de cruzamento de dados bancários, sugerindo uma renda superior à declarada no CadÚnico. Segundo orientações oficiais, é importante que a declaração de renda seja fiel à realidade financeira da família.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-bold text-slate-900 text-xl mb-2">Trabalho temporário cancela o benefício?</h4>
-            <p className="text-slate-700 leading-relaxed">
-              Não necessariamente. O programa possui a chamada Regra de Proteção. Se um membro da família conseguir um emprego e a renda subir, a família pode permanecer no programa recebendo 50% do valor do benefício por até dois anos, desde que a renda por pessoa não ultrapasse meio salário mínimo.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-bold text-slate-900 text-xl mb-2">Receber ajuda financeira de familiares conta como renda?</h4>
-            <p className="text-slate-700 leading-relaxed">
-              De acordo com as regras do Cadastro Único, toda forma de rendimento que contribui para o sustento da casa deve ser informada. Isso inclui não apenas salários formais, mas também pensões, aposentadorias e ajudas financeiras regulares. A transparência na entrevista do CRAS é o que garante a segurança jurídica do benefício.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-bold text-slate-900 text-xl mb-2">É possível acumular o Bolsa Família com outros benefícios?</h4>
-            <p className="text-slate-700 leading-relaxed">
-              Sim, o Bolsa Família pode ser acumulado com outros programas sociais, como o Auxílio Gás, o Benefício de Prestação Continuada (BPC) — respeitadas as regras de cálculo de renda de cada um — e incentivos educacionais como o Pé-de-Meia para estudantes do ensino médio.
-            </p>
-          </div>
-        </div>
-      </section>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
+                <GraduationCap size={20} className="text-orange-500" /> Frequência escolar
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                A escola informa presença. Baixa frequência pode gerar advertências e, depois, suspensão. Verifique com a escola e regularize rápido.
+              </p>
+            </div>
 
-      <section className="mt-12 pt-12 border-t border-slate-200">
-        <h2 className="text-2xl font-black text-slate-900 mb-4">10. Aviso legal e fontes</h2>
-        <div className="bg-slate-100 p-8 rounded-3xl text-sm text-slate-600 leading-relaxed">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 className="font-black text-slate-800 mb-3 flex items-center gap-2">
+                <HeartPulse size={20} className="text-orange-500" /> Saúde e acompanhamento
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Vacinas e acompanhamento (crianças/gestantes) são condicionalidades. Se estiver pendente, procure a unidade de saúde e atualize registros.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 5 */}
+        <section id="desbloquear">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Bolsa Família bloqueado: o que fazer (passo a passo)
+          </h2>
+
           <p className="mb-4">
-            <strong>Aviso Legal:</strong> Este conteúdo possui caráter meramente informativo e educacional. O portal marciobevervanso.com é um veículo independente e não possui qualquer vínculo oficial com o Governo Federal, com o Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome, ou com a Caixa Econômica Federal.
+            Primeiro, confira no app/extrato se existe mensagem de averiguação/revisão e qual o motivo. Depois, faça a regularização no CRAS/posto do CadÚnico.
+          </p>
+
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <h3 className="font-black text-slate-900 mb-3">Checklist rápido de documentos</h3>
+            <ul className="text-sm text-slate-700 space-y-2">
+              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> RG e CPF de todos os moradores</li>
+              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Comprovante de residência atualizado</li>
+              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Comprovantes escolares (matrícula/frequência, se aplicável)</li>
+              <li className="flex gap-2"><CheckCircle2 size={18} className="text-green-600 mt-0.5" /> Carteira de vacinação / acompanhamento de saúde (quando necessário)</li>
+            </ul>
+            <p className="text-xs text-slate-500 mt-4">
+              Após atualização, o processamento pode levar algumas semanas. Se regularizado, em alguns casos pode haver pagamento retroativo conforme regras administrativas.
+            </p>
+          </div>
+        </section>
+
+        {/* Banner */}
+        <CredspotBanner />
+
+        {/* 6 */}
+        <section id="valores">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Valores do Bolsa Família em 2026 (como a composição funciona)
+          </h2>
+          <p className="mb-4">
+            O valor final pode variar conforme a composição familiar. Além do valor base, existem adicionais que costumam depender de faixa etária e perfil (ex.: crianças, gestantes, nutrizes).
           </p>
           <p className="mb-4">
-            As informações aqui contidas foram compiladas com base em dados públicos, manuais de gestão do programa e legislações vigentes (Lei nº 14.601/2023). Este artigo não substitui o atendimento presencial em órgãos oficiais, como o CRAS, nem as orientações fornecidas pelos canais de atendimento do Governo Federal.
+            Como valores e regras podem sofrer ajustes por decisões orçamentárias e normativas, o ideal é usar os canais oficiais para ver o cálculo exato do seu mês.
           </p>
-          <p>
-            <strong>Fontes consultadas:</strong> Portal Gov.br, Site Oficial da Caixa Econômica Federal, Diário Oficial da União e manuais técnicos do Ministério do Desenvolvimento Social.
-          </p>
-        </div>
-      </section>
+        </section>
 
+        {/* 7 */}
+        <section id="calendario">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Calendário oficial Bolsa Família 2026 (por final do NIS)
+          </h2>
+
+          <p className="mb-4">
+            Os pagamentos são escalonados pelo último dígito do NIS e acontecem nos últimos dias úteis do mês (com antecipação em dezembro).
+          </p>
+
+          <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] my-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 opacity-10 blur-3xl"></div>
+            <div className="relative z-10">
+              <h3 className="text-xl font-black mb-6 text-center flex items-center justify-center gap-2">
+                <CalendarDays size={20} />
+                Selecione o final do NIS
+              </h3>
+
+              <div className="flex flex-wrap gap-2 mb-8 justify-center">
+                {[1,2,3,4,5,6,7,8,9,0].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => setSelectedNis(n.toString())}
+                    className={`w-10 h-10 rounded-xl font-black transition-all border ${
+                      selectedNis === n.toString()
+                        ? 'bg-white text-slate-900 border-white scale-110'
+                        : 'bg-transparent border-slate-600 text-slate-400'
+                    }`}
+                    aria-label={`NIS final ${n}`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                {months.map((mes, i) => (
+                  <div key={mes} className="bg-white/10 p-4 rounded-2xl text-center border border-white/5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">{mes}</p>
+                    <p className="text-lg font-black text-white">{calendar2026[selectedNis][i]}</p>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-xs text-slate-400 mt-6 text-center">
+                Fonte: calendário de pagamentos divulgado pelo MDS para 2026.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-sm text-slate-700">
+            Dica: o valor fica disponível para movimentação digital no app (Caixa Tem) e também pode ser consultado no aplicativo oficial do Bolsa Família.
+          </p>
+        </section>
+
+        {/* 8 */}
+        <section id="canais">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Canais oficiais para consulta (apps e telefones)
+          </h2>
+
+          <p className="mb-6">
+            Para segurança, use sempre canais oficiais. Se alguém oferecer “consulta premium” ou pedir dados sensíveis, desconfie.
+          </p>
+
+          <ul className="space-y-4">
+            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
+              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
+              <div className="text-sm text-slate-700">
+                <strong>Aplicativo Bolsa Família:</strong> consulta de saldo, extrato e datas.
+              </div>
+            </li>
+            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
+              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
+              <div className="text-sm text-slate-700">
+                <strong>Aplicativo Caixa Tem:</strong> movimentação (PIX, pagamentos, transferências).
+              </div>
+            </li>
+            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
+              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
+              <div className="text-sm text-slate-700">
+                <strong>Disque Social 121:</strong> dúvidas e orientações do programa.
+              </div>
+            </li>
+            <li className="flex gap-4 items-start bg-white p-4 rounded-xl border border-slate-100">
+              <CheckCircle2 className="text-green-600 shrink-0 mt-1" size={20} />
+              <div className="text-sm text-slate-700">
+                <strong>Caixa 111:</strong> suporte do agente pagador.
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        {/* 9 */}
+        <section id="faq">
+          <h2 className="text-2xl font-black text-slate-900 mb-6 pb-2 border-b border-slate-100">
+            Perguntas frequentes (FAQ)
+          </h2>
+
+          <div className="space-y-8">
+            <div>
+              <h4 className="font-black text-slate-900 text-lg mb-2">
+                PIX pode interferir no benefício?
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Movimentações recorrentes podem levar o cadastro para revisão se indicarem renda acima do limite. Transferências eventuais e de baixo valor geralmente
+                não geram impacto imediato; o principal é manter o CadÚnico consistente com a realidade.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-black text-slate-900 text-lg mb-2">
+                Trabalho temporário cancela automaticamente?
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Não necessariamente. Pode existir regra de transição/proteção dependendo da renda per capita e das regras vigentes, evitando cancelamento imediato.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-black text-slate-900 text-lg mb-2">
+                Posso receber Bolsa Família e Auxílio Gás?
+              </h4>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Em geral, benefícios podem coexistir conforme critérios e regras de cada programa. O essencial é que a renda e os dados do CadÚnico estejam corretos.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 10 */}
+        <section id="legal" className="pt-12 border-t border-slate-200">
+          <h2 className="text-xl font-black text-slate-900 mb-4 uppercase tracking-tighter">
+            Aviso legal e fontes
+          </h2>
+
+          <div className="bg-slate-50 p-8 rounded-3xl text-xs text-slate-600 leading-relaxed border border-slate-200">
+            <p className="mb-4">
+              <strong>Isenção de Responsabilidade:</strong> este conteúdo é informativo e educativo. O portal marciobevervanso.com opera de forma independente e não possui vínculo
+              oficial com o Governo Federal, com o MDS ou com a Caixa Econômica Federal.
+            </p>
+            <p className="mb-4">
+              Para orientações oficiais e dados pessoais, utilize exclusivamente canais governamentais. Este artigo não substitui atendimento no CRAS/CadÚnico.
+            </p>
+            <p>
+              <strong>Fontes:</strong> publicações e comunicados oficiais do Governo Federal (gov.br) e calendário divulgado pelo MDS para 2026.
+            </p>
+          </div>
+        </section>
+      </article>
     </BroadcastLayout>
   );
 };
