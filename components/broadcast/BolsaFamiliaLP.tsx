@@ -11,7 +11,11 @@ import {
   HelpCircle,
   Search,
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
+  Info,
+  BadgeCheck,
+  AlertTriangle,
+  RotateCcw
 } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
@@ -22,10 +26,12 @@ interface Props {
   quizzes?: Quiz[];
 }
 
+type QuizAnswer = 'sim' | 'nao' | 'nao_sei';
+
 export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
   const [selectedNis, setSelectedNis] = useState<string>('1');
 
-  // ✅ Calendário oficial 2026 (MDS / Agência Brasil)
+  // ✅ Calendário 2026 (12 meses)
   const calendar2026: Record<string, string[]> = useMemo(
     () => ({
       '1': ['19/Jan','12/Fev','18/Mar','16/Abr','18/Mai','17/Jun','20/Jul','18/Ago','17/Set','19/Out','16/Nov','10/Dez'],
@@ -52,7 +58,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  // ✅ TOC com âncoras (melhora scan + tempo na página)
+  // ✅ TOC com âncoras
   const toc = useMemo(
     () => [
       { id: 'intro', label: 'O que mudou em 2026' },
@@ -151,7 +157,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
     >
       <SchemaMarkup data={schemaGraph} />
 
-      {/* CTA Sticky (ganha clique + sessão) */}
+      {/* CTA Sticky */}
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <div className="mx-auto max-w-5xl px-3 pb-3">
           <div className="bg-white/95 backdrop-blur border border-slate-200 shadow-lg rounded-2xl p-3 flex items-center gap-2">
@@ -267,44 +273,23 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
           </p>
         </section>
 
-        {/* Banner */}
         <SuperSimBanner />
 
-        {/* QUIZ TEASER (ponto ideal do funil) */}
+        {/* ✅ QUIZ REAL INLINE */}
         <section id="quiz" className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
           <div className="flex items-center gap-2 mb-2">
             <Search className="text-blue-600" size={20} />
             <h2 className="text-xl font-black text-slate-900">Simulação rápida: posso ter direito?</h2>
           </div>
           <p className="text-sm text-slate-700 mb-4">
-            Responda 6 perguntas rápidas e veja quais critérios você precisa conferir no CadÚnico.
+            Responda em menos de 30 segundos. Sem CPF. Resultado informativo com próximos passos.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-            {[
-              'Renda por pessoa (estimativa)',
-              'Crianças/gestantes/nutrizes',
-              'Situação do CadÚnico',
-            ].map((t) => (
-              <div key={t} className="bg-slate-50 rounded-2xl border border-slate-200 p-4">
-                <p className="text-sm font-bold text-slate-900">{t}</p>
-                <p className="text-xs text-slate-600 mt-1">
-                  Sem pedir CPF. É uma orientação informativa para você entender o caminho.
-                </p>
-              </div>
-            ))}
-          </div>
+          <InlineBolsaFamiliaQuiz onJump={scrollToId} />
 
-          <button
-            onClick={() => onNavigate('quiz' as unknown as ViewState)}
-            className="w-full py-3 rounded-2xl font-black bg-blue-600 text-white hover:opacity-90 transition"
-          >
-            Começar simulação agora
-          </button>
-
-          <p className="text-[11px] text-slate-500 mt-3 flex items-center gap-2">
+          <p className="text-[11px] text-slate-500 mt-4 flex items-center gap-2">
             <ShieldCheck size={14} className="text-slate-400" />
-            Não é cadastro oficial. Para dados oficiais, use os canais do governo.
+            Este site é informativo e não realiza cadastro oficial.
           </p>
         </section>
 
@@ -401,7 +386,6 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
           </div>
         </section>
 
-        {/* Banner */}
         <CredspotBanner />
 
         {/* 6 */}
@@ -462,7 +446,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
               </div>
 
               <p className="text-xs text-slate-400 mt-6 text-center">
-                Fonte: calendário de pagamentos divulgado pelo MDS para 2026.
+                Fonte: calendário de pagamentos divulgado para 2026.
               </p>
             </div>
           </div>
@@ -562,11 +546,277 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
               Para orientações oficiais e dados pessoais, utilize exclusivamente canais governamentais. Este artigo não substitui atendimento no CRAS/CadÚnico.
             </p>
             <p>
-              <strong>Fontes:</strong> publicações e comunicados oficiais do Governo Federal (gov.br) e calendário divulgado pelo MDS para 2026.
+              <strong>Fontes:</strong> publicações e comunicados oficiais do Governo Federal (gov.br) e calendário divulgado para 2026.
             </p>
           </div>
         </section>
       </article>
     </BroadcastLayout>
+  );
+};
+
+/** =========================
+ * QUIZ INLINE (SEM NAVEGAR)
+ * ========================= */
+const InlineBolsaFamiliaQuiz: React.FC<{ onJump: (id: string) => void }> = ({ onJump }) => {
+  const steps = useMemo(
+    () => [
+      {
+        id: 'cadunico',
+        title: 'Seu CadÚnico está ativo e atualizado?',
+        help: 'Se não souber, vale checar no CRAS. Cadastro desatualizado é causa comum de bloqueio.',
+      },
+      {
+        id: 'renda',
+        title: 'A renda por pessoa é baixa (aprox. até R$ 250/pessoa)?',
+        help: 'É só estimativa para orientar. O cálculo real depende do cadastro e das regras vigentes.',
+      },
+      {
+        id: 'perfil',
+        title: 'Na família tem criança/adolescente, gestante ou nutriz?',
+        help: 'Esse perfil pode influenciar composição/valor conforme regras e adicionais do programa.',
+      },
+      {
+        id: 'escola',
+        title: 'As crianças/jovens estão com frequência escolar em dia?',
+        help: 'Frequência é condicionalidade. Se houver pendência, é um dos motivos mais comuns de bloqueio.',
+      },
+      {
+        id: 'saude',
+        title: 'Vacinas e acompanhamento de saúde (quando necessário) estão em dia?',
+        help: 'Pendências podem gerar avisos/revisões. A unidade de saúde consegue orientar.',
+      },
+      {
+        id: 'mudancas',
+        title: 'Teve mudança recente (renda, endereço, morador, separação, nascimento)?',
+        help: 'Mudanças sem atualização no CadÚnico aumentam a chance de averiguação/revisão.',
+      },
+    ],
+    []
+  );
+
+  const [index, setIndex] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, QuizAnswer>>({});
+  const [showHelp, setShowHelp] = useState(false);
+
+  const total = steps.length;
+  const step = steps[index];
+  const progress = Math.round(((index + 1) / total) * 100);
+
+  const setAnswer = (value: QuizAnswer) => {
+    setAnswers(prev => ({ ...prev, [step.id]: value }));
+  };
+
+  const canNext = !!answers[step.id];
+  const isLast = index === total - 1;
+
+  const restart = () => {
+    setIndex(0);
+    setAnswers({});
+    setShowHelp(false);
+  };
+
+  const result = useMemo(() => {
+    const a = (k: string) => answers[k];
+
+    // Heurística “boa pro usuário” e segura (sem prometer benefício)
+    let score = 0;
+
+    // CadÚnico
+    if (a('cadunico') === 'sim') score += 2;
+    if (a('cadunico') === 'nao') score -= 2;
+
+    // Renda
+    if (a('renda') === 'sim') score += 2;
+    if (a('renda') === 'nao') score -= 2;
+
+    // Perfil familiar
+    if (a('perfil') === 'sim') score += 1;
+    if (a('perfil') === 'nao') score += 0;
+
+    // Condicionalidades
+    if (a('escola') === 'sim') score += 1;
+    if (a('escola') === 'nao') score -= 1;
+
+    if (a('saude') === 'sim') score += 1;
+    if (a('saude') === 'nao') score -= 1;
+
+    // Mudanças não atualizadas
+    if (a('mudancas') === 'sim') score -= 1;
+    if (a('mudancas') === 'nao') score += 0;
+
+    // Classificação
+    if (score >= 4) {
+      return {
+        level: 'alta',
+        title: 'Você pode ter boa chance (pela sua simulação)',
+        icon: <BadgeCheck className="text-green-600" size={22} />,
+        boxClass: 'bg-green-50 border-green-200',
+        text:
+          'Pelos seus dados estimados, vale conferir nos canais oficiais e manter o CadÚnico atualizado. Use o calendário pelo final do NIS e acompanhe o extrato no app.',
+        actions: [
+          { label: 'Ver calendário pelo NIS', jump: 'calendario' },
+          { label: 'Ver canais oficiais', jump: 'canais' },
+        ],
+      };
+    }
+
+    if (score >= 1) {
+      return {
+        level: 'media',
+        title: 'Você pode ter direito, mas precisa confirmar detalhes',
+        icon: <Info className="text-blue-600" size={22} />,
+        boxClass: 'bg-blue-50 border-blue-200',
+        text:
+          'Sua simulação indica possibilidade, mas alguns pontos precisam ser confirmados no CadÚnico/CRAS. Verifique situação do cadastro e mantenha dados consistentes.',
+        actions: [
+          { label: 'Como entrar/regularizar', jump: 'como-entrar' },
+          { label: 'Calendário 2026', jump: 'calendario' },
+        ],
+      };
+    }
+
+    return {
+      level: 'baixa',
+      title: 'Pode ser necessário regularizar cadastro antes',
+      icon: <AlertTriangle className="text-orange-600" size={22} />,
+      boxClass: 'bg-orange-50 border-orange-200',
+      text:
+        'Sua simulação sugere que o principal passo é atualizar CadÚnico/CRAS e verificar renda/condicionalidades. Isso costuma resolver a maior parte dos bloqueios.',
+      actions: [
+        { label: 'Bolsa Família bloqueado: o que fazer', jump: 'desbloquear' },
+        { label: 'Canais oficiais', jump: 'canais' },
+      ],
+    };
+  }, [answers]);
+
+  const showResult = Object.keys(answers).length === total;
+
+  return (
+    <div className="rounded-3xl border border-slate-200 overflow-hidden">
+      {/* barra topo */}
+      <div className="bg-slate-50 px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-3">
+        <div className="text-sm font-bold text-slate-900">
+          Passo {Math.min(index + 1, total)} de {total}
+        </div>
+        <button
+          onClick={() => setShowHelp(v => !v)}
+          className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center gap-2"
+          type="button"
+        >
+          <Info size={14} className="text-slate-500" />
+          Dica
+        </button>
+      </div>
+
+      {/* progresso */}
+      <div className="h-2 bg-slate-100">
+        <div className="h-2 bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
+      </div>
+
+      <div className="p-5">
+        {!showResult ? (
+          <>
+            <h3 className="text-lg font-black text-slate-900">{step.title}</h3>
+
+            {showHelp && (
+              <div className="mt-3 bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-700">
+                {step.help}
+              </div>
+            )}
+
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setAnswer('sim')}
+                className={`py-3 rounded-2xl font-black border transition ${
+                  answers[step.id] === 'sim' ? 'bg-green-600 text-white border-green-600' : 'bg-white border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                Sim
+              </button>
+              <button
+                type="button"
+                onClick={() => setAnswer('nao')}
+                className={`py-3 rounded-2xl font-black border transition ${
+                  answers[step.id] === 'nao' ? 'bg-orange-600 text-white border-orange-600' : 'bg-white border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                Não
+              </button>
+              <button
+                type="button"
+                onClick={() => setAnswer('nao_sei')}
+                className={`py-3 rounded-2xl font-black border transition ${
+                  answers[step.id] === 'nao_sei' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                Não sei
+              </button>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => setIndex(i => Math.max(0, i - 1))}
+                disabled={index === 0}
+                className={`px-4 py-3 rounded-2xl font-black border transition ${
+                  index === 0 ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-white border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                Voltar
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIndex(i => (isLast ? i : i + 1))}
+                disabled={!canNext}
+                className={`flex-1 px-4 py-3 rounded-2xl font-black transition ${
+                  canNext ? 'bg-blue-600 text-white hover:opacity-90' : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                }`}
+              >
+                {isLast ? 'Ver resultado' : 'Próximo'}
+              </button>
+            </div>
+
+            <p className="text-[11px] text-slate-500 mt-4">
+              *Resultado informativo. Para confirmação, consulte os canais oficiais.
+            </p>
+          </>
+        ) : (
+          <div className={`rounded-3xl border p-5 ${result.boxClass}`}>
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">{result.icon}</div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900">{result.title}</h3>
+                <p className="text-sm text-slate-700 mt-2">{result.text}</p>
+
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {result.actions.map(a => (
+                    <button
+                      key={a.jump}
+                      type="button"
+                      onClick={() => onJump(a.jump)}
+                      className="py-3 rounded-2xl font-black bg-slate-900 text-white hover:opacity-90 transition"
+                    >
+                      {a.label}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={restart}
+                  className="mt-3 w-full py-3 rounded-2xl font-black border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center justify-center gap-2"
+                >
+                  <RotateCcw size={18} className="text-slate-700" />
+                  Refazer simulação
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
