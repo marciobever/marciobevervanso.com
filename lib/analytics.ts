@@ -1,7 +1,7 @@
 
 // Utility for Google Analytics 4 Interactions
 
-const GA_MEASUREMENT_ID = 'G-SE2RJB817M';
+const GA_MEASUREMENT_ID = 'G-T6NBQM2JPM';
 
 declare global {
   interface Window {
