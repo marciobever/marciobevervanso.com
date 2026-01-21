@@ -27,34 +27,14 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
       const pubads = window.googletag.pubads();
 
       // 1. Configurações Globais e SRA (Single Request Architecture)
-      // SRA é crucial para o bom funcionamento conjunto de Anchor + Interstitial
       pubads.enableSingleRequest();
 
       // 2. Targeting Global
       pubads.setTargeting('site', 'beneficios.receitapopular.com.br');
       pubads.setTargeting('page_view', currentView);
-      // Cache Buster: Tenta forçar uma nova "sessão" para o AdServer entregar mais Interstitials
       pubads.setTargeting('session_ts', Date.now().toString());
 
-      // 3. Definição de Slots Especiais (Fora da página)
-
-      // Interstitial
-      const interstitialSlot = window.googletag.defineOutOfPageSlot(
-        '/23287346478/marciobevervanso.com/marciobevervanso.com_Interstitial',
-        window.googletag.enums.OutOfPageFormat.INTERSTITIAL
-      );
-
-      // Anchor (Topo)
-      const anchorSlot = window.googletag.defineOutOfPageSlot(
-        '/23287346478/marciobevervanso.com/marciobevervanso.com_Anchor',
-        window.googletag.enums.OutOfPageFormat.TOP_ANCHOR
-      );
-
-      // Adiciona o serviço aos slots especiais se foram criados com sucesso
-      if (interstitialSlot) interstitialSlot.addService(pubads);
-      if (anchorSlot) anchorSlot.addService(pubads);
-
-      // 4. Configurações de Performance
+      // 3. Configurações de Performance
       pubads.enableLazyLoad({
         fetchMarginPercent: 200,
         renderMarginPercent: 100,
@@ -63,13 +43,8 @@ export const AdManager: React.FC<AdManagerProps> = ({ currentView }) => {
 
       pubads.collapseEmptyDivs();
 
-      // 5. Habilita os serviços
+      // 4. Habilita os serviços
       window.googletag.enableServices();
-
-      // 6. Exibe os slots especiais
-      // Nota: Em SRA, define-se antes e exibe-se depois ou junto.
-      if (interstitialSlot) window.googletag.display(interstitialSlot);
-      if (anchorSlot) window.googletag.display(anchorSlot);
     });
   }, []); // Dependência vazia, roda apenas uma vez no load da página
 
