@@ -227,8 +227,8 @@ function App() {
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
-            <FinancialSection onNavigate={handleNavigate} />
             <ActionPayBanners />
+            <FinancialSection onNavigate={handleNavigate} />
             <CadUnicoSection onNavigate={handleNavigate} />
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
               <StoriesGallery onNavigate={handleNavigate} />

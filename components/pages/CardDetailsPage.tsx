@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { CreditCardProduct, ViewState } from '../../types';
 import { CreditCardVisual } from '../CreditCardVisual';
 import { AdSlot } from '../AdSlot';
+import { ActionPayBanners } from '../ActionPayBanners';
 import { Check, X, Star, AlertTriangle, ArrowRight, ShieldCheck, ChevronLeft, CreditCard, Banknote, Calendar } from 'lucide-react';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 
@@ -88,6 +89,7 @@ const CardDetailsPage: React.FC<Props> = ({ card, onNavigate, onBack }) => {
          </div>
 
          <div className="container mx-auto px-4 -mt-8 relative z-20">
+            <ActionPayBanners />
 
             <div className="max-w-4xl mx-auto">
 
