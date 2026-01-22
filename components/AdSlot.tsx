@@ -98,7 +98,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({
   };
 
   return (
-    <div className={`w-full mx-auto my-8 ${className}`}>
+    <div className={`w-full mx-auto ${className}`}>
       <div className="flex flex-col items-center justify-center">
 
         {/* Ad Wrapper */}
@@ -106,8 +106,8 @@ export const AdSlot: React.FC<AdSlotProps> = ({
 
           {/* Label de Publicidade */}
           {!forceAffiliate && !showAffiliate && (
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-2 rounded-full border border-gray-100">
-              <span className="text-[9px] text-gray-400 font-semibold tracking-[0.2em] uppercase">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-2 rounded-full border border-gray-100 shadow-sm">
+              <span className="text-[8px] text-gray-400 font-bold tracking-[0.2em] uppercase">
                 {label}
               </span>
             </div>
@@ -115,7 +115,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({
 
           {/* Container Send Web Push (Substituindo AdSense/GAM) */}
           {!forceAffiliate && !showAffiliate && (
-            <div className="flex justify-center items-center w-full min-h-[100px] my-2">
+            <div className="flex justify-center items-center w-full min-h-[50px]">
               <div className='send-web-push-ads' ></div>
             </div>
           )}
