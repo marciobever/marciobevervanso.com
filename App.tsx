@@ -225,7 +225,7 @@ function App() {
             />
             <Hero onNavigate={handleNavigate} />
             <div className="container mx-auto px-4 md:px-6 z-[30] relative -mt-4 mb-4">
-              <AdSlot id="Content1" label="Destaque Principal" className="my-0 md:my-0 shadow-xl rounded-2xl overflow-hidden bg-white" />
+              <AdSlot id="Content1" label="Destaque Principal" className="my-0 md:my-0 bg-transparent" />
             </div>
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
 
