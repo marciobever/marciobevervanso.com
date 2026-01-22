@@ -13,6 +13,7 @@ import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
 
+import { ActionPayBanners } from './components/ActionPayBanners';
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
 import { FloatingChat } from './components/FloatingChat';
@@ -227,12 +228,13 @@ function App() {
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
             <FinancialSection onNavigate={handleNavigate} />
-
+            <ActionPayBanners />
             <CadUnicoSection onNavigate={handleNavigate} />
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
               <StoriesGallery onNavigate={handleNavigate} />
             </div>
             <FaqSection />
+            <ActionPayBanners />
 
           </>
         );

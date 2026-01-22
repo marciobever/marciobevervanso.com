@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AdSlot } from '../AdSlot';
+import { ActionPayBanners } from '../ActionPayBanners';
 import { Eye, Zap, ThumbsUp, MessageCircle, Home, ChevronRight, CheckCircle2, ArrowRight, FileText } from 'lucide-react';
 import { Quiz, ViewState } from '../../types';
 import QuizPage from '../QuizPage';
@@ -121,6 +122,9 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
             <article className="prose prose-lg prose-slate max-w-none bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
                {children}
             </article>
+
+            {/* Random Affiliate Banner */}
+            <ActionPayBanners />
 
             {/* COMMENTS */}
             <div className="mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
