@@ -224,17 +224,20 @@ function App() {
               description="Portal informativo independente. Consulte o Calendário Bolsa Família 2025, regras do BPC/LOAS, CNH Social e Empréstimos."
             />
             <Hero onNavigate={handleNavigate} />
+            <div className="container mx-auto px-4 md:px-6 z-[30] relative -mt-4 mb-4">
+              <AdSlot id="Content1" label="Destaque Principal" className="my-0 md:my-0 shadow-xl rounded-2xl overflow-hidden bg-white" />
+            </div>
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
-            <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
+
             <BenefitList onNavigate={handleNavigate} />
-            <ActionPayBanners />
+            <ActionPayBanners variant="fgts" />
             <FinancialSection onNavigate={handleNavigate} />
             <CadUnicoSection onNavigate={handleNavigate} />
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
               <StoriesGallery onNavigate={handleNavigate} />
             </div>
             <FaqSection />
-            <ActionPayBanners />
+            <ActionPayBanners variant="supersim" />
 
           </>
         );

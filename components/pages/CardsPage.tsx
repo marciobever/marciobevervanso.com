@@ -62,7 +62,7 @@ const CardsPage: React.FC<Props> = ({ onViewDetails }) => {
         </header>
 
         <AdSlot id="Content1" label="Ofertas de Crédito" />
-        <ActionPayBanners />
+        <ActionPayBanners variant="supersim" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20 mt-20">
           {CREDIT_CARDS.map((card) => (

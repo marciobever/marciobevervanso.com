@@ -89,7 +89,7 @@ const CardDetailsPage: React.FC<Props> = ({ card, onNavigate, onBack }) => {
          </div>
 
          <div className="container mx-auto px-4 -mt-8 relative z-20">
-            <ActionPayBanners />
+            <ActionPayBanners variant="generic" />
 
             <div className="max-w-4xl mx-auto">
 
