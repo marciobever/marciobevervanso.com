@@ -230,7 +230,7 @@ function App() {
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
 
             <BenefitList onNavigate={handleNavigate} />
-            <ActionPayBanners variant="fgts" />
+            <ActionPayBanners variant="credspot" />
             <FinancialSection onNavigate={handleNavigate} />
             <CadUnicoSection onNavigate={handleNavigate} />
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
