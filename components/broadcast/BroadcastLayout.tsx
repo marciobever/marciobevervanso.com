@@ -99,7 +99,6 @@ export const BroadcastLayout: React.FC<BroadcastLayoutProps> = ({
                      id="Content1"
                      label="Patrocinado"
                      eagerLoad={true}
-                     eagerLoad={true}
                   />
                </div>
             </header>
