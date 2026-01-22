@@ -224,8 +224,8 @@ function App() {
               description="Portal informativo independente. Consulte o Calendário Bolsa Família 2025, regras do BPC/LOAS, CNH Social e Empréstimos."
             />
             <Hero onNavigate={handleNavigate} />
-            <div className="container mx-auto px-4 md:px-6 z-[30] relative -mt-8 -mb-6">
-              <AdSlot id="Content1" label="Publicidade" className="bg-transparent transform scale-90 md:scale-100 origin-center" />
+            <div className="container mx-auto px-4 md:px-6 z-[30] relative my-6 flex justify-center">
+              <AdSlot id="Content1" label="Publicidade" className="bg-transparent" />
             </div>
             <StartHere onNavigate={handleNavigate} onOpenConsultation={() => setIsConsultationOpen(true)} />
 
