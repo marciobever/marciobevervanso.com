@@ -231,9 +231,7 @@ export const InsurancePage: React.FC<Props> = ({ onQuote }) => {
                </div>
             </div>
 
-            <div className="mt-12">
-               <AdSlot id="Content2" label="Publicidade Rodapé" />
-            </div>
+
 
          </div>
       </div>

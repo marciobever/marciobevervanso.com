@@ -26,7 +26,7 @@ import {
 import { Quiz, ViewState } from '../../types';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 import { MetaHead } from '../seo/MetaHead';
-import { CredspotBanner, SuperSimBanner } from '../ActionPayBanners';
+
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -213,7 +213,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
           </div>
         </section>
 
-        <SuperSimBanner />
+
 
         {/* 3. REGRA DE PROTEÇÃO (High CPC Ad bait) */}
         <section id="regra-protecao">
@@ -343,7 +343,7 @@ export const BolsaFamiliaLP: React.FC<Props> = ({ onNavigate, quizzes }) => {
           </div>
         </section>
 
-        <CredspotBanner />
+
 
         {/* 8. DESBLOQUEIO (Dwell time builder) */}
         <section id="desbloquear">

@@ -98,8 +98,8 @@ export const AllBenefitsPage: React.FC<Props> = ({ onNavigate }) => {
                            key={cat.id}
                            onClick={() => setFilter(cat.id)}
                            className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${filter === cat.id
-                                 ? 'bg-brand-blue border-brand-blue text-white shadow-md transform scale-105'
-                                 : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'
+                              ? 'bg-brand-blue border-brand-blue text-white shadow-md transform scale-105'
+                              : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'
                               }`}
                         >
                            <cat.icon size={16} />
@@ -184,9 +184,7 @@ export const AllBenefitsPage: React.FC<Props> = ({ onNavigate }) => {
                </div>
             )}
 
-            <div className="mt-16">
-               <AdSlot id="Content2" label="Publicidade Rodapé" />
-            </div>
+
 
          </div>
       </div>

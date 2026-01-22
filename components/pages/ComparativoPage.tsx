@@ -305,9 +305,7 @@ export const ComparativoPage: React.FC = () => {
                </button>
             </div>
 
-            <div className="mt-8">
-               <AdSlot id="Content2" label="Publicidade Rodapé" />
-            </div>
+
 
          </div>
       </div>

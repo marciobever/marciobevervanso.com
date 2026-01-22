@@ -124,7 +124,7 @@ const BPCGuide: React.FC = () => {
               <em>Dica de Ouro:</em> Gastos com medicamentos, fraldas e alimentação especial que não são fornecidos pelo SUS podem ser deduzidos do cálculo da renda, facilitando a aprovação.
             </p>
 
-            <AdSlot id="Content5" label="Oferta INSS" />
+
 
             <h2>O Processo de Perícia (Para PcD)</h2>
             <p>
@@ -151,7 +151,7 @@ const BPCGuide: React.FC = () => {
                 <li className="flex gap-2"><CheckCircle2 size={16} className="text-brand-blue" /> Laudos Médicos (PcD)</li>
               </ul>
             </div>
-            <AdSlot id="Content2" label="Publicidade Lateral" />
+
           </div>
 
         </div>

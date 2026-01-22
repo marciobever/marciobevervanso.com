@@ -75,15 +75,14 @@ export const CalendariosPage: React.FC = () => {
                </p>
             </div>
 
-            <AdSlot id="Content1" label="Publicidade Topo" />
-
             {/* Navigation Tabs */}
+            <AdSlot id="TopAd" label="Publicidade Topo" className="mb-8" />
             <div className="flex flex-wrap justify-center gap-2 mb-8">
                <button
                   onClick={() => setActiveTab('bolsa')}
                   className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 ${activeTab === 'bolsa'
-                        ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30'
-                        : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
+                     ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30'
+                     : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
                      }`}
                >
                   <Wallet size={18} /> Bolsa Família & Vale Gás
@@ -91,8 +90,8 @@ export const CalendariosPage: React.FC = () => {
                <button
                   onClick={() => setActiveTab('inss')}
                   className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 ${activeTab === 'inss'
-                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
-                        : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
+                     ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
+                     : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
                      }`}
                >
                   <Landmark size={18} /> INSS & BPC
@@ -100,8 +99,8 @@ export const CalendariosPage: React.FC = () => {
                <button
                   onClick={() => setActiveTab('pemeia')}
                   className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 ${activeTab === 'pemeia'
-                        ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
-                        : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
+                     ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
+                     : 'bg-white text-gray-500 hover:bg-gray-50 border border-gray-200'
                      }`}
                >
                   <CalendarClock size={18} /> Pé-de-Meia
@@ -248,9 +247,7 @@ export const CalendariosPage: React.FC = () => {
 
             </div>
 
-            <div className="mt-8">
-               <AdSlot id="Content2" label="Publicidade Rodapé" />
-            </div>
+
 
          </div>
       </div>

@@ -161,9 +161,7 @@ const BolsaFamiliaGuide: React.FC = () => {
                      </li>
                   </ul>
 
-                  <div className="my-8">
-                     <AdSlot id="Content5" label="Publicidade Contextual" />
-                  </div>
+
 
                   <h2 id="regras">Regras de Elegibilidade</h2>
                   <p>
@@ -227,7 +225,7 @@ const BolsaFamiliaGuide: React.FC = () => {
                         </div>
                      </div>
 
-                     <AdSlot id="Content1" label="Oferta Especial" />
+
                   </div>
                </aside>
 

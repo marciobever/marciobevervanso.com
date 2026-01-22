@@ -220,8 +220,8 @@ export const BenefitsByStatePage: React.FC<Props> = ({ onNavigate }) => {
                       </div>
                     </div>
                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${prog.status === 'Aberto' ? 'bg-green-100 text-green-700' :
-                        prog.status === 'Encerrado' ? 'bg-red-100 text-red-700' :
-                          'bg-blue-100 text-blue-700'
+                      prog.status === 'Encerrado' ? 'bg-red-100 text-red-700' :
+                        'bg-blue-100 text-blue-700'
                       }`}>
                       {prog.status}
                     </span>
@@ -271,9 +271,7 @@ export const BenefitsByStatePage: React.FC<Props> = ({ onNavigate }) => {
           </button>
         </div>
 
-        <div className="mt-8">
-          <AdSlot id="Content2" label="Publicidade Rodapé" />
-        </div>
+
 
       </div>
     </div>

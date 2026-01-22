@@ -61,6 +61,8 @@ export const LoansPage: React.FC = () => {
                </p>
             </header>
 
+            <AdSlot id="Content1" label="Ofertas de Crédito" />
+
             {/* Hero Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
                {LOAN_OFFERS.map((loan) => (
@@ -109,8 +111,7 @@ export const LoansPage: React.FC = () => {
                ))}
             </div>
 
-            {/* FORCED AFFILIATE BANNER FOR HIGHER CONVERSION ON LOAN PAGE */}
-            <AdSlot id="Content1" label="Simulação de Crédito" className="my-12" forceAffiliate={true} />
+
 
             {/* Educational Section - How it works */}
             <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 mb-12">
@@ -219,9 +220,7 @@ export const LoansPage: React.FC = () => {
                </div>
             </div>
 
-            <div className="mt-12">
-               <AdSlot id="Content2" label="Mais Ofertas" />
-            </div>
+
 
          </div>
       </div>

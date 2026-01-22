@@ -121,9 +121,7 @@ const CardsPage: React.FC<Props> = ({ onViewDetails }) => {
           ))}
         </div>
 
-        <div className="mt-16">
-          <AdSlot id="Content2" label="Mais Opções" />
-        </div>
+
 
         {/* SEO Text Content at Bottom */}
         <div className="mt-20 max-w-4xl mx-auto prose prose-slate">
