@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Banknote, CreditCard, ArrowRight, Umbrella, Zap, Star } from 'lucide-react';
 import { ViewState } from '../types';
-import { CredspotBanner, SuperSimBanner } from './ActionPayBanners';
+
 
 interface Props {
    onNavigate: (view: ViewState) => void;
@@ -21,21 +21,7 @@ const FinancialSection: React.FC<Props> = ({ onNavigate }) => {
             </div>
 
             {/* ActionPay Featured Banners */}
-            <div className="mb-12 space-y-6">
-               <div className="flex items-center gap-2 mb-4">
-                  <Star className="text-yellow-400 fill-yellow-400" size={20} />
-                  <h3 className="text-lg font-bold text-gray-700">Recomendado para Você</h3>
-               </div>
 
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="transform transition-transform hover:-translate-y-1">
-                     <CredspotBanner className="!my-0 !max-w-none h-full shadow-lg" />
-                  </div>
-                  <div className="transform transition-transform hover:-translate-y-1">
-                     <SuperSimBanner className="!my-0 !max-w-none h-full shadow-lg" />
-                  </div>
-               </div>
-            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
