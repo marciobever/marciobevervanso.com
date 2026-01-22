@@ -115,7 +115,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({
 
           {/* Container Send Web Push (Substituindo AdSense/GAM) */}
           {!forceAffiliate && !showAffiliate && (
-            <div style={{ width: '100%', marginTop: '1rem', marginBottom: '1rem', minHeight: '400px' }}>
+            <div className="flex justify-center items-center w-full" style={{ marginTop: '1rem', marginBottom: '1rem', minHeight: '400px' }}>
               <div className='send-web-push-ads' ></div>
             </div>
           )}
