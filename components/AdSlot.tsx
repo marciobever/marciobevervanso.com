@@ -69,8 +69,10 @@ export const AdSlot: React.FC<AdSlotProps> = ({
   eagerLoad = false,
   disableFallback = false
 }) => {
-  const adRef = useRef<HTMLDivElement>(null);
-  const slotRef = useRef<any>(null);
+  // Always use the props to avoid linter errors, even if unused in new logic
+  // id, refreshKey, eagerLoad might be unused now for SendWebPush if it handles reload automatically
+  // but we keep the interface compatible.
+
   const [showAffiliate, setShowAffiliate] = useState(forceAffiliate);
 
   // Decide qual banner mostrar baseado no contexto (label)
@@ -91,88 +93,6 @@ export const AdSlot: React.FC<AdSlotProps> = ({
     }
   }, [disableFallback, forceAffiliate]);
 
-  useEffect(() => {
-    if (forceAffiliate) return;
-
-    const element = adRef.current;
-    if (!element) return;
-
-    let observer: IntersectionObserver | null = null;
-
-    const loadAd = () => {
-      if (window.googletag && window.googletag.cmd) {
-        window.googletag.cmd.push(() => {
-          // Limpeza
-          if (slotRef.current) {
-            window.googletag.destroySlots([slotRef.current]);
-          }
-
-          // Define o Slot do AdSense/Ad Manager
-          const slotPath = `/23287346478/marciobevervanso.com/marciobevervanso.com_${id}`;
-          const slotSizes = [[250, 250], [300, 250], [336, 280], [300, 600], 'fluid'];
-
-          const mapping = window.googletag.sizeMapping()
-            .addSize([0, 0], ['fluid', [300, 250], [336, 280]])
-            .addSize([768, 0], ['fluid', [336, 280], [728, 90], [970, 90]])
-            .build();
-
-          const slot = window.googletag.defineSlot(slotPath, slotSizes, id);
-
-          if (slot) {
-            slot.defineSizeMapping(mapping);
-            slot.addService(window.googletag.pubads());
-            slotRef.current = slot;
-
-            // LISTENER DE COLAPSO
-            window.googletag.pubads().addEventListener('slotRenderEnded', (event: any) => {
-              if (event.slot === slot) {
-                if (event.isEmpty) {
-                  // Só mostra afiliado se fallback NÃO estiver desativado
-                  if (!disableFallback) {
-                    setShowAffiliate(true);
-                  }
-                } else {
-                  setShowAffiliate(false);
-                }
-              }
-            });
-
-            window.googletag.display(id);
-            window.googletag.pubads().refresh([slot]);
-          }
-        });
-      } else {
-        // Se o script do Google não existir (AdBlock), mostra afiliado se permitido
-        if (!disableFallback) {
-          setShowAffiliate(true);
-        }
-      }
-    };
-
-    if (eagerLoad) {
-      loadAd();
-    } else {
-      observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          loadAd();
-          if (observer) observer.disconnect();
-        }
-      }, { rootMargin: '200px' });
-
-      observer.observe(element);
-    }
-
-    return () => {
-      if (observer) observer.disconnect();
-      if (window.googletag && window.googletag.cmd && slotRef.current) {
-        window.googletag.cmd.push(() => {
-          window.googletag.destroySlots([slotRef.current]);
-          slotRef.current = null;
-        });
-      }
-    };
-  }, [id, refreshKey, forceAffiliate, eagerLoad, disableFallback]);
-
   const handleBannerClick = () => {
     window.location.href = content.link;
   };
@@ -182,10 +102,10 @@ export const AdSlot: React.FC<AdSlotProps> = ({
       <div className="flex flex-col items-center justify-center">
 
         {/* Ad Wrapper */}
-        <div className="w-full relative flex justify-center items-center min-h-[50px]">
+        <div className="w-full relative flex justify-center items-center">
 
           {/* Label de Publicidade */}
-          {!showAffiliate && (
+          {!forceAffiliate && !showAffiliate && (
             <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10 bg-white/80 backdrop-blur-sm px-2 rounded-full border border-gray-100">
               <span className="text-[9px] text-gray-400 font-semibold tracking-[0.2em] uppercase">
                 {label}
@@ -193,19 +113,16 @@ export const AdSlot: React.FC<AdSlotProps> = ({
             </div>
           )}
 
-          {/* Container do Google AdSense (Fica oculto se showAffiliate for true) */}
-          {!forceAffiliate && (
-            <div
-              id={id}
-              ref={adRef}
-              // Removed explicit min-height here to allow container to shrink if empty, or grow if huge.
-              // Removed overflow-hidden from active state.
-              className={`ad-container flex justify-center items-center bg-transparent transition-all duration-300 w-full ${showAffiliate ? 'h-0 opacity-0 overflow-hidden absolute' : 'opacity-100 relative min-h-[250px]'}`}
-            ></div>
+          {/* Container Send Web Push (Substituindo AdSense/GAM) */}
+          {!forceAffiliate && !showAffiliate && (
+            <div style={{ width: '100%', marginTop: '1rem', marginBottom: '1rem', minHeight: '400px' }}>
+              <div className='send-web-push-ads' ></div>
+            </div>
           )}
 
-          {/* BANNER DO AFILIADO (Fallback ou Forçado) */}
-          {showAffiliate && (
+          {/* BANNER DO AFILIADO (Force ou Fallback - lógica manual) */}
+          {/* Nota: Send Web Push não tem evento de callback fácil aqui, então o fallback automático não vai funcionar como no GPT */}
+          {(forceAffiliate) && (
             <div
               onClick={handleBannerClick}
               className={`w-full max-w-4xl relative overflow-hidden rounded-2xl shadow-xl cursor-pointer group bg-gradient-to-r ${content.gradient} transition-transform hover:scale-[1.01] hover:shadow-2xl`}
