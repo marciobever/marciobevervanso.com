@@ -12,7 +12,7 @@ import { ViewState, Quiz } from './types';
 import { Analytics } from './lib/analytics';
 import { ConsultationModal } from './components/ConsultationModal';
 import { AdSlot } from './components/AdSlot';
-import { AdManager } from './components/AdManager';
+
 import { NotificationBar } from './components/NotificationBar';
 import { FloatingShare } from './components/FloatingShare';
 import { FloatingChat } from './components/FloatingChat';
@@ -322,7 +322,7 @@ function App() {
   return (
     <SEOProvider>
       <div className="min-h-screen bg-brand-light font-sans text-brand-dark flex flex-col">
-        <AdManager currentView={currentView} />
+
         <NotificationBar onNavigate={handleNavigate} />
         <Header onNavigate={handleNavigate} />
         <main className="flex-grow">
