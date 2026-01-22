@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { CREDIT_CARDS } from '../../constants';
 import { CreditCardVisual } from '../CreditCardVisual';
 import { AdSlot } from '../AdSlot';
+import { ActionPayBanners } from '../ActionPayBanners';
 import { Check, Star, Info } from 'lucide-react';
 import { SchemaMarkup } from '../seo/SchemaMarkup';
 import { MetaHead } from '../seo/MetaHead';
@@ -61,6 +62,7 @@ const CardsPage: React.FC<Props> = ({ onViewDetails }) => {
         </header>
 
         <AdSlot id="Content1" label="Ofertas de Crédito" />
+        <ActionPayBanners />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20 mt-20">
           {CREDIT_CARDS.map((card) => (

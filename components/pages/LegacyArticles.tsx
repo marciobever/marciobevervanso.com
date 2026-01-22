@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { BroadcastLayout } from '../broadcast/BroadcastLayout';
+import { ActionPayBanners } from '../ActionPayBanners';
 import { Quiz, ViewState } from '../../types';
 import { Smile, DollarSign, Home, Droplets, Fuel, Baby, Scale, FileText, CheckCircle2 } from 'lucide-react';
 
@@ -42,6 +43,7 @@ export const BrasilSorridentePrivadoPage: React.FC<Props> = ({ onNavigate, quizz
         <h4 className="font-bold text-blue-900 flex items-center gap-2 mb-2"><Smile /> Evolução do Atendimento</h4>
         <p className="text-sm text-blue-800">Antigamente, o SUS era focado apenas em extração. Hoje, os CEOs (Centros de Especialidades) realizam canais, tratamento de gengiva e até próteses com material de qualidade similar ao particular.</p>
       </div>
+      <ActionPayBanners />
       <p>A principal vantagem do SUS é a <strong>gratuidade total</strong>. Enquanto um plano privado básico tem carência e cobra coparticipação para procedimentos complexos, o Brasil Sorridente cobre tudo, desde que você tenha paciência com a fila de espera.</p>
     </BroadcastLayout>
   );
@@ -60,6 +62,7 @@ export const BrasilSorridenteOdontoPage: React.FC<Props> = ({ onNavigate, quizze
       quizTriggerLabel="Consultar Cobertura"
     >
       <h3>Ortodontia e Implantes</h3>
+      <ActionPayBanners />
       <p>A grande dúvida é sobre aparelhos e implantes. Embora existam na tabela do SUS, eles não estão em todas as cidades. Geralmente, são oferecidos em parceria com Universidades Federais ou em grandes centros urbanos (CEOs Tipo III).</p>
       <p>Para próteses removíveis (dentaduras e pontes), a cobertura é nacional e muito eficiente, devolvendo o sorriso e a capacidade de mastigação para milhares de idosos.</p>
     </BroadcastLayout>
@@ -84,6 +87,7 @@ export const BeneficiosFamiliaPage: React.FC<Props> = ({ onNavigate, quizzes }) 
         <li><strong>Moradia:</strong> Faixa 1 do Minha Casa Minha Vida gratuita.</li>
         <li><strong>Educação:</strong> Pé-de-Meia para estudantes do ensino médio.</li>
       </ul>
+      <ActionPayBanners />
       <p>O segredo para acessar tudo isso é um só: <strong>CadÚnico atualizado</strong>.</p>
     </BroadcastLayout>
   );
