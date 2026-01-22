@@ -227,13 +227,13 @@ function App() {
             <AdSlot id="Content1" label="Destaque Principal" className="my-12 md:my-16" />
             <BenefitList onNavigate={handleNavigate} />
             <FinancialSection onNavigate={handleNavigate} />
-            <AdSlot id="Content2" label="Publicidade" className="my-12 md:my-16" />
+
             <CadUnicoSection onNavigate={handleNavigate} />
             <div id="web-stories" className="bg-slate-50 border-t border-gray-200 py-12">
               <StoriesGallery onNavigate={handleNavigate} />
             </div>
             <FaqSection />
-            <AdSlot id="Content3" label="Mais Informações" className="my-12 md:my-16" />
+
           </>
         );
       case 'dashboard': return <Dashboard quizzes={quizzes} setQuizzes={setQuizzes} onTakeQuiz={handleStartQuiz} />;
